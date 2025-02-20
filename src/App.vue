@@ -4,6 +4,8 @@
     <TheHero />
     <Features />
     <benefits-section />
+    <CommunityCTA />
+    <TestimonialsSection />
   </div>
 </template>
 
@@ -12,6 +14,9 @@ import TheNavbar from "./components/Navbar.vue";
 import TheHero from "./components/TheHero.vue";
 import Features from "./components/Features.vue";
 import BenefitsSection from "./components/BenefitsSection.vue";
+import CommunityCTA from "./components/CommunityCTA.vue";
+import TestimonialsSection from "./components/TestimonialsSection.vue";
+
 
 export default {
   name: "App",
@@ -20,6 +25,8 @@ export default {
     TheHero,
     Features,
     BenefitsSection,
+    CommunityCTA,
+    TestimonialsSection,
   },
 };
 </script>

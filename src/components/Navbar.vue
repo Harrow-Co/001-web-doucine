@@ -6,12 +6,16 @@
         src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/b50c9fde289ac20a7a765b5b6329bc7df93b9511011838f82a9d74943f3e2070"
         alt="Logo"
       />
-      <div class="navbar-content"></div>
-      <div class="navbar-menu">
+      <button class="hamburger" @click="toggleMenu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }">
         <div class="nav-links">
           <router-link to="/" class="nav-link">Accueil</router-link>
-          <router-link to="/events" class="nav-link">Événements</router-link>
-          <router-link to="/about" class="nav-link">À propos</router-link>
+          <router-link to="/" class="nav-link">Événements</router-link>
+          <router-link to="/" class="nav-link">À propos</router-link>
           <div class="nav-dropdown">
             <span class="nav-link">Nos Actions</span>
             <img
@@ -33,17 +37,28 @@
 <script>
 export default {
   name: "TheNavbar",
+  data() {
+    return {
+      isMenuOpen: false
+    }
+  },
+  methods: {
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen;
+    }
+  }
 };
 </script>
 
 <style scoped>
 .navbar {
-  background-color: #fff;
+  background-color: #c1121f;
   min-height: 72px;
   width: 100%;
   padding: 0 64px;
   display: flex;
   align-items: center;
+  position: fixed;
 }
 
 .navbar-container {
@@ -55,7 +70,7 @@ export default {
 }
 
 .navbar-logo {
-  width: 35px;
+  width: 50px;
   aspect-ratio: 0.92;
   object-fit: contain;
 }
@@ -100,6 +115,27 @@ export default {
   gap: 16px;
 }
 
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 30px;
+  height: 25px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 10;
+}
+
+.hamburger span {
+  width: 30px;
+  height: 3px;
+  background: #000;
+  border-radius: 10px;
+  transition: all 0.3s linear;
+}
+
 @media (max-width: 991px) {
   .navbar {
     padding: 0 20px;
@@ -109,8 +145,46 @@ export default {
     max-width: 100%;
   }
 
+  .hamburger {
+    display: flex;
+  }
+
   .navbar-menu {
-    max-width: 100%;
+    display: none;
+    position: absolute;
+    top: 72px;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .navbar-menu.is-active {
+    display: flex;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .nav-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .nav-actions button {
+    width: 100%;
+  }
+
+  .nav-dropdown {
+    width: 100%;
+    justify-content: space-between;
   }
 }
 </style>

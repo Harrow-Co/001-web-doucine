@@ -1,22 +1,16 @@
 <template>
   <div class="home">
-    <benefits-section />
+    <community-c-t-a />
   </div>
 </template>
 
 <script>
-import BenefitsSection from "@/components/BenefitsSection.vue";
+import CommunityCTA from "@/components/CommunityCTA.vue";
 
 export default {
   name: "HomePage",
   components: {
-    BenefitsSection,
+    CommunityCTA,
   },
 };
 </script>
-
-<style scoped>
-.home {
-  width: 100%;
-}
-</style>

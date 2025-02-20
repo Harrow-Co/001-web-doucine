@@ -1,7 +1,7 @@
 <template>
   <section class="hero">
     <div class="hero-content">
-      <h1 class="hero-title">Unissons nos forces pour un avenir meilleur</h1>
+      <h1 class="hero-title">Vivre ensemble pour bien vieillir</h1>
       <p class="hero-description">
         Bienvenue chez DOUCINE, où chaque événement crée des liens précieux
         entre les générations. Rejoignez-nous pour célébrer la vie et renforcer
@@ -14,7 +14,7 @@
     </div>
     <img
       class="hero-image"
-      src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/d7fa4f3a68eaeba4ad6b5be86a3cf4a38e7b197b88567b2671cdf56d7de036e4"
+      src="https://cdn.pixabay.com/photo/2022/06/12/02/11/family-7257182_1280.jpg"
       alt="Hero"
     />
   </section>
@@ -42,9 +42,10 @@ export default {
 }
 
 .hero-title {
-  font-size: 56px;
+  font-size: 55px;
   font-weight: 700;
   line-height: 67px;
+  margin-top: 50px;
 }
 
 .hero-description {
@@ -62,9 +63,10 @@ export default {
 
 .hero-image {
   width: 100%;
-  aspect-ratio: 1.78;
+  /* aspect-ratio: 1.78; */
   object-fit: contain;
   margin-top: 80px;
+  border-radius: 50px;
 }
 
 @media (max-width: 991px) {
