@@ -14,8 +14,8 @@
       <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }">
         <div class="nav-links">
           <router-link to="/" class="nav-link">Accueil</router-link>
-          <router-link to="/" class="nav-link">Événements</router-link>
-          <router-link to="/" class="nav-link">À propos</router-link>
+          <router-link to="/evenement" class="nav-link">Événements</router-link>
+          <router-link to="/apropos" class="nav-link">À Propos</router-link>
           <div class="nav-dropdown">
             <span class="nav-link">Nos Actions</span>
             <img
@@ -70,8 +70,8 @@ export default {
 }
 
 .navbar-logo {
-  width: 50px;
-  aspect-ratio: 0.92;
+  width: 55px;
+  /* aspect-ratio: 0.92; */
   object-fit: contain;
 }
 
@@ -93,8 +93,9 @@ export default {
 }
 
 .nav-link {
+  color: white;
   text-decoration: none;
-  color: inherit;
+  transition: color 0.3s ease;
 }
 
 .nav-dropdown {
@@ -182,9 +183,15 @@ export default {
     width: 100%;
   }
 
+
   .nav-dropdown {
     width: 100%;
     justify-content: space-between;
   }
+}
+
+.router-link-active {
+  color: #ffd700;
+  font-weight: bold;
 }
 </style>

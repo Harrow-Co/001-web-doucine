@@ -1,7 +1,7 @@
 <template>
   <section class="features">
     <div class="features-header">
-      <span class="features-tag">Connexion</span>
+      <!-- <span class="features-tag">Connexion</span> -->
       <h2 class="features-title">
         Découvrez nos initiatives pour tous les âges
       </h2>

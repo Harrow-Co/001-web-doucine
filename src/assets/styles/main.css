@@ -6,12 +6,7 @@
 }
 
 body {
-  font-family:
-    Roboto,
-    -apple-system,
-    Roboto,
-    Helvetica,
-    sans-serif;
+  font-family: Roboto, -apple-system, Roboto, Helvetica, sans-serif;
   line-height: 1.5;
   color: #000000;
   background-color: #ffffff;
@@ -33,6 +28,7 @@ h6 {
   display: inline-block;
   padding: 12px 24px;
   border: 1px solid #000;
+  border-radius: 5px;
   font-size: 16px;
   font-weight: 400;
   cursor: pointer;
@@ -44,9 +40,20 @@ h6 {
   color: #fff;
 }
 
+.btn-primary:hover {
+  background-color: #ffd700;
+  border-color: #ffd700;
+  color: #000;
+}
+
 .btn-secondary {
   background-color: transparent;
   color: #000;
+}
+
+.btn-secondary:hover {
+  border-color: #ffd700;
+  color: #ffd700;
 }
 
 /* Layout */
