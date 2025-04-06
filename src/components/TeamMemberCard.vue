@@ -44,24 +44,26 @@ export default {
 <style scoped>
 .team-member-card {
   display: flex;
-  min-width: 240px;
+  min-width: 220px;
   flex-direction: column;
-  align-items: stretch;
+  align-items: center;
   justify-content: start;
   flex: 1;
   flex-shrink: 1;
   flex-basis: 0%;
+
 }
 
 .member-image {
   aspect-ratio: 1.03;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
-  width: 100%;
+  width: 70%;
+  border-radius: 40px;
 }
 
 .content {
-  margin-top: 24px;
+  margin-top: 16px;
   width: 100%;
   font-family:
     Roboto,
@@ -78,36 +80,40 @@ export default {
 }
 
 .name {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
 }
 
 .job-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 400;
 }
 
 .description {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 24px;
-  margin-top: 16px;
+  line-height: 20px;
+  margin-top: 12px;
+  width: 60%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .social-icons {
   align-self: center;
   display: flex;
-  margin-top: 24px;
-  align-items: start;
-  gap: 14px;
-  justify-content: start;
+  margin-top: 16px;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
 }
 
 .social-icon {
   aspect-ratio: 1;
   object-fit: contain;
   object-position: center;
-  width: 24px;
+  width: 20px;
   flex-shrink: 0;
 }
 </style>

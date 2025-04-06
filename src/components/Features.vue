@@ -1,5 +1,5 @@
 <template>
-  <section class="features">
+  <section class="features section">
     <div class="features-header">
       <!-- <span class="features-tag">Connexion</span> -->
       <h2 class="features-title">
@@ -18,14 +18,16 @@
         :key="index"
         class="feature-card"
       >
-        <img :src="feature.icon" :alt="feature.title" class="feature-icon" />
+        <div class="feature-icon-wrapper" :class="`feature-icon-wrapper-${index + 1}`">
+          <img :src="feature.icon" :alt="feature.title" class="feature-icon" />
+        </div>
         <h3 class="feature-title">{{ feature.title }}</h3>
         <p class="feature-description">{{ feature.description }}</p>
       </div>
     </div>
 
     <div class="features-actions">
-      <button class="btn btn-secondary">Rejoindre</button>
+      <button class="btn btn-primary">Rejoindre</button>
       <div class="link-button">
         <span>En savoir plus</span>
         <img
@@ -88,53 +90,108 @@ export default {
 }
 
 .features-title {
-  font-size: 48px;
-  line-height: 58px;
+  font-size: 42px;
+  line-height: 1.3;
   margin-top: 16px;
+  color: #2A3040;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 20px;
+}
+
+.features-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #EB1A3A 0%, #FBB018 100%);
+  border-radius: 2px;
 }
 
 .features-description {
   font-size: 18px;
-  line-height: 27px;
+  line-height: 1.7;
   margin-top: 24px;
+  color: #4D5259;
 }
 
 .features-grid {
   display: flex;
-  gap: 48px;
+  gap: 32px;
   margin-top: 80px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .feature-card {
   flex: 1;
-  min-width: 240px;
+  min-width: 280px;
+  max-width: 350px;
   text-align: center;
+  padding: 40px 24px;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  background-color: #FAFAFA;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.feature-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.feature-icon-wrapper-1 {
+  background: #EB1A3A;
+}
+
+.feature-icon-wrapper-2 {
+  background: #FBB018;
+}
+
+.feature-icon-wrapper-3 {
+  background: #5DC8E6;
 }
 
 .feature-icon {
-  width: 48px;
+  width: 40px;
   aspect-ratio: 1;
   object-fit: contain;
+  filter: invert(1) brightness(2);
 }
 
 .feature-title {
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 700;
-  line-height: 42px;
-  margin-top: 24px;
+  line-height: 1.3;
+  margin-top: 16px;
+  color: #2A3040;
 }
 
 .feature-description {
   font-size: 16px;
-  line-height: 24px;
-  margin-top: 24px;
+  line-height: 1.6;
+  margin-top: 16px;
+  color: #4D5259;
 }
 
 .features-actions {
   display: flex;
   gap: 24px;
   margin-top: 80px;
+  align-items: center;
 }
 
 .link-button {
@@ -142,12 +199,20 @@ export default {
   align-items: center;
   gap: 8px;
   cursor: pointer;
+  color: #5DC8E6;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.link-button:hover {
+  transform: translateX(4px);
 }
 
 .link-icon {
   width: 24px;
   aspect-ratio: 1;
   object-fit: contain;
+  filter: invert(69%) sepia(61%) saturate(490%) hue-rotate(164deg) brightness(94%) contrast(87%);
 }
 
 @media (max-width: 991px) {
@@ -156,12 +221,17 @@ export default {
   }
 
   .features-title {
-    font-size: 40px;
-    line-height: 54px;
+    font-size: 36px;
+    line-height: 1.3;
   }
 
   .features-grid {
     margin-top: 40px;
+    gap: 24px;
+  }
+  
+  .feature-card {
+    padding: 30px 20px;
   }
 }
 </style>

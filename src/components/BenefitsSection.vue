@@ -1,5 +1,5 @@
 <template>
-  <section class="benefits-section">
+  <section class="benefits-section section">
     <div class="benefits-container">
       <div class="benefits-content">
         <div class="benefits-text-content">
@@ -15,46 +15,46 @@
         </div>
         <div class="benefits-list">
           <div class="benefits-list-item">
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/fb13c70beb97a25de79494075a55c55caea66c0339d6de07220a50f623343a84?placeholderIfAbsent=true"
-              alt=""
-              class="check-icon"
-            />
+            <div class="check-icon-wrapper">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
             <div class="list-item-text">
               Renforcez vos liens intergénérationnels avec DOUCINE.
             </div>
           </div>
           <div class="benefits-list-item">
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/fb13c70beb97a25de79494075a55c55caea66c0339d6de07220a50f623343a84?placeholderIfAbsent=true"
-              alt=""
-              class="check-icon"
-            />
+            <div class="check-icon-wrapper">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
             <div class="list-item-text">
               Vivez des expériences mémorables avec votre communauté.
             </div>
           </div>
           <div class="benefits-list-item">
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/fb13c70beb97a25de79494075a55c55caea66c0339d6de07220a50f623343a84?placeholderIfAbsent=true"
-              alt=""
-              class="check-icon"
-            />
+            <div class="check-icon-wrapper">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
             <div class="list-item-text">
               Participez à des activités enrichissantes et amusantes.
             </div>
           </div>
         </div>
       </div>
-      <img
-        loading="lazy"
-        :srcset="imageSrcSet"
-        alt="Événements DOUCINE en action"
-        class="benefits-image"
-      />
+      <div class="benefits-image-container">
+        <img
+          loading="lazy"
+          :srcset="imageSrcSet"
+          alt="Événements DOUCINE en action"
+          class="benefits-image"
+        />
+        <div class="benefits-image-decoration"></div>
+      </div>
     </div>
   </section>
 </template>
@@ -76,19 +76,14 @@ export default {
 
 <style scoped>
 .benefits-section {
-  background-color: rgba(255, 255, 255, 1);
-  display: flex;
+  background-color: #fff;
   padding: 112px 64px;
+  display: flex;
   flex-direction: column;
   overflow: hidden;
   align-items: stretch;
-  font-family:
-    Roboto,
-    -apple-system,
-    Roboto,
-    Helvetica,
-    sans-serif;
-  color: #000000;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #2A3040;
   justify-content: center;
 }
 
@@ -97,7 +92,7 @@ export default {
   width: 100%;
   align-items: center;
   gap: 80px;
-  justify-content: flex-start;
+  justify-content: space-between;
   flex-wrap: wrap;
 }
 
@@ -115,24 +110,37 @@ export default {
 }
 
 .benefits-heading {
-  font-size: 40px;
+  font-size: 38px;
   font-weight: 700;
-  line-height: 48px;
+  line-height: 1.3;
+  color: #2A3040;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.benefits-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #FBB018 0%, #EB1A3A 100%);
+  border-radius: 2px;
 }
 
 .benefits-description {
   font-size: 18px;
   font-weight: 400;
-  line-height: 27px;
+  line-height: 1.7;
   margin-top: 24px;
+  color: #4D5259;
 }
 
 .benefits-list {
-  margin-top: 32px;
+  margin-top: 40px;
   width: 100%;
   padding: 8px 0;
-  font-size: 16px;
-  font-weight: 400;
 }
 
 .benefits-list-item {
@@ -140,27 +148,32 @@ export default {
   width: 100%;
   align-items: center;
   gap: 16px;
-  justify-content: flex-start;
-  flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
-.benefits-list-item:not(:first-child) {
-  margin-top: 16px;
-}
-
-.check-icon {
-  aspect-ratio: 1;
-  object-fit: contain;
-  object-position: center;
-  width: 16px;
-  align-self: stretch;
-  margin: auto 0;
+.check-icon-wrapper {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #5DC8E6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
 }
 
 .list-item-text {
+  align-self: center;
+  color: #2A3040;
+  font-size: 16px;
+  font-weight: 500;
+  flex: 1;
+}
+
+.benefits-image-container {
+  position: relative;
   align-self: stretch;
-  margin: auto 0;
+  min-width: 240px;
   flex: 1;
   flex-shrink: 1;
   flex-basis: 0%;
@@ -168,15 +181,24 @@ export default {
 
 .benefits-image {
   aspect-ratio: 0.96;
-  object-fit: contain;
-  object-position: center;
+  object-fit: cover;
+  border-radius: 24px;
   width: 100%;
-  align-self: stretch;
-  min-width: 240px;
-  margin: auto 0;
-  flex: 1;
-  flex-shrink: 1;
-  flex-basis: 0%;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 20px 40px rgba(251, 176, 24, 0.15);
+}
+
+.benefits-image-decoration {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  background: linear-gradient(135deg, #FBB018 0%, rgba(251, 176, 24, 0.3) 100%);
+  opacity: 0.4;
+  border-radius: 24px;
+  bottom: -20px;
+  right: -20px;
+  z-index: 1;
 }
 
 @media (max-width: 991px) {
@@ -186,18 +208,16 @@ export default {
 
   .benefits-container {
     max-width: 100%;
-    gap: 40px;
+    gap: 60px;
   }
 
-  .benefits-content,
-  .benefits-text-content,
-  .benefits-heading,
-  .benefits-description,
-  .benefits-list,
-  .benefits-list-item,
-  .list-item-text,
-  .benefits-image {
-    max-width: 100%;
+  .benefits-heading {
+    font-size: 32px;
+  }
+  
+  .benefits-image-decoration {
+    bottom: -10px;
+    right: -10px;
   }
 }
 </style>

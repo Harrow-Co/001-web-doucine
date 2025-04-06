@@ -1,6 +1,7 @@
 <template>
-  <section class="testimonials">
+  <section class="testimonials section">
     <div class="testimonials__header">
+      <span class="testimonials__tag">Expériences</span>
       <h2 class="testimonials__title">Témoignages clients</h2>
       <p class="testimonials__subtitle">
         Une expérience enrichissante et mémorable pour tous.
@@ -79,51 +80,90 @@ export default {
 
 <style scoped>
 .testimonials {
-  background-color: rgba(255, 255, 255, 1);
+  background: #fff;
   display: flex;
   padding: 112px 64px;
   flex-direction: column;
   overflow: hidden;
   align-items: stretch;
+  position: relative;
+}
+
+.testimonials:before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(93, 200, 230, 0.05) 100%);
+  z-index: 0;
 }
 
 .testimonials__header {
   align-self: center;
   width: 560px;
   max-width: 100%;
-  font-family:
-    Roboto,
-    -apple-system,
-    Roboto,
-    Helvetica,
-    sans-serif;
-  color: #000000;
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
   text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.testimonials__tag {
+  display: inline-block;
+  background: rgba(235, 26, 58, 0.1);
+  color: #EB1A3A;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 16px;
 }
 
 .testimonials__title {
-  font-size: 48px;
+  font-size: 42px;
   font-weight: 700;
   line-height: 1.2;
+  color: #2A3040;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 20px;
+}
+
+.testimonials__title:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, #EB1A3A 0%, #FBB018 100%);
+  border-radius: 2px;
 }
 
 .testimonials__subtitle {
   font-size: 18px;
   font-weight: 400;
   margin-top: 24px;
+  color: #4D5259;
+  line-height: 1.7;
 }
 
 .testimonials__content {
   margin-top: 80px;
   width: 100%;
+  position: relative;
+  z-index: 1;
 }
 
 .testimonials__grid {
   display: flex;
   width: 100%;
-  align-items: flex-start;
-  gap: 32px;
-  justify-content: flex-start;
+  align-items: stretch;
+  gap: 24px;
+  justify-content: center;
   flex-wrap: wrap;
 }
 
@@ -133,11 +173,15 @@ export default {
   }
 
   .testimonials__title {
-    font-size: 40px;
+    font-size: 36px;
   }
 
   .testimonials__content {
     margin-top: 40px;
+  }
+  
+  .testimonials__grid {
+    gap: 20px;
   }
 }
 </style>

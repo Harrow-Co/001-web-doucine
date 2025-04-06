@@ -1,6 +1,11 @@
 <template>
-  <section class="hero">
+  <section class="hero" id="home">
     <div class="hero-content">
+      <img
+        class="navbar-logo"
+        src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/b50c9fde289ac20a7a765b5b6329bc7df93b9511011838f82a9d74943f3e2070"
+        alt="Logo"
+      />
       <h1 class="hero-title">Vivre ensemble pour bien vieillir</h1>
       <p class="hero-description">
         Bienvenue chez DOUCINE, où chaque événement crée des liens précieux
@@ -27,60 +32,108 @@ export default {
 </script>
 
 <style scoped>
+.navbar-logo {
+  width: 200px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05);
+}
+
 .hero {
-  background-color: #fff;
+  background: linear-gradient(135deg, #fff 0%, #f5f7fa 100%);
   padding: 112px 64px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  border-radius: 0 0 40px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(93, 200, 230, 0.05) 0%,
+    rgba(93, 200, 230, 0.15) 100%
+  );
+  border-radius: 0 0 0 100%;
+  z-index: 0;
 }
 
 .hero-content {
   align-self: center;
   max-width: 768px;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .hero-title {
-  font-size: 55px;
-  font-weight: 700;
-  line-height: 67px;
-  margin-top: 50px;
+  font-size: 60px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-top: 40px;
+  background: linear-gradient(90deg, #eb1a3a 0%, #fbb018 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.5px;
 }
 
 .hero-description {
   font-size: 18px;
-  line-height: 27px;
+  line-height: 1.7;
   margin-top: 24px;
+  color: #4d5259;
 }
 
 .hero-actions {
   display: flex;
   justify-content: center;
   gap: 16px;
-  margin-top: 32px;
+  margin-top: 40px;
 }
 
 .hero-image {
-  width: 100%;
-  /* aspect-ratio: 1.78; */
-  object-fit: contain;
-  margin-top: 80px;
-  border-radius: 50px;
+  width: 85%;
+  max-width: 1100px;
+  margin: 80px auto 0;
+  border-radius: 24px;
+  box-shadow: 0 20px 40px rgba(93, 200, 230, 0.2);
+  object-fit: cover;
+  aspect-ratio: 16/9;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-image:hover {
+  transform: translateY(-10px);
 }
 
 @media (max-width: 991px) {
   .hero {
     padding: 100px 20px;
+    border-radius: 0 0 30px 30px;
   }
 
   .hero-title {
-    font-size: 40px;
-    line-height: 54px;
+    font-size: 42px;
+    line-height: 1.2;
   }
 
   .hero-image {
-    margin-top: 40px;
+    width: 100%;
+    margin-top: 50px;
   }
 }
 </style>

@@ -1,11 +1,13 @@
 <template>
   <nav class="navbar">
     <div class="navbar-container">
-      <img
-        class="navbar-logo"
+      <router-link to="/">
+        <img
+          class="navbar-logo"
         src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/b50c9fde289ac20a7a765b5b6329bc7df93b9511011838f82a9d74943f3e2070"
         alt="Logo"
       />
+      </router-link>
       <button class="hamburger" @click="toggleMenu">
         <span></span>
         <span></span>
@@ -52,13 +54,18 @@ export default {
 
 <style scoped>
 .navbar {
-  background-color: #c1121f;
+  background-color: #fff;
   min-height: 72px;
   width: 100%;
   padding: 0 64px;
   display: flex;
   align-items: center;
   position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
 }
 
 .navbar-container {
@@ -71,8 +78,12 @@ export default {
 
 .navbar-logo {
   width: 55px;
-  /* aspect-ratio: 0.92; */
   object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05);
 }
 
 .navbar-menu {
@@ -89,25 +100,53 @@ export default {
   min-width: 240px;
   align-items: center;
   gap: 32px;
-  color: #000;
 }
 
 .nav-link {
-  color: white;
+  color: #2A3040;
   text-decoration: none;
-  transition: color 0.3s ease;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 5px 0;
+}
+
+.nav-link:hover {
+  color: #EB1A3A;
+}
+
+.nav-link:after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(90deg, #EB1A3A 0%, #FBB018 100%);
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover:after {
+  width: 100%;
 }
 
 .nav-dropdown {
   display: flex;
   align-items: center;
   gap: 4px;
+  cursor: pointer;
 }
 
 .dropdown-icon {
   width: 24px;
   aspect-ratio: 1;
   object-fit: contain;
+  filter: invert(69%) sepia(61%) saturate(490%) hue-rotate(164deg) brightness(94%) contrast(87%);
+  transition: transform 0.3s ease;
+}
+
+.nav-dropdown:hover .dropdown-icon {
+  transform: rotate(180deg);
 }
 
 .nav-actions {
@@ -132,7 +171,7 @@ export default {
 .hamburger span {
   width: 30px;
   height: 3px;
-  background: #000;
+  background: #EB1A3A;
   border-radius: 10px;
   transition: all 0.3s linear;
 }
@@ -158,8 +197,9 @@ export default {
     width: 100%;
     background: #fff;
     flex-direction: column;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 30px 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 20px 20px;
   }
 
   .navbar-menu.is-active {
@@ -175,14 +215,13 @@ export default {
   .nav-actions {
     flex-direction: column;
     width: 100%;
-    gap: 10px;
-    margin-top: 20px;
+    gap: 15px;
+    margin-top: 25px;
   }
 
   .nav-actions button {
     width: 100%;
   }
-
 
   .nav-dropdown {
     width: 100%;
@@ -191,7 +230,13 @@ export default {
 }
 
 .router-link-active {
-  color: #ffd700;
-  font-weight: bold;
+  color: #EB1A3A;
+  font-weight: 600;
+}
+
+.router-link-active:after {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #EB1A3A 0%, #FBB018 100%);
 }
 </style>
