@@ -1,10 +1,10 @@
 <template>
-  <section class="hero" id="home">
+  <section class="hero" id="home" role="banner">
     <div class="hero-content">
       <img
         class="navbar-logo animate-fade-in"
         src="@/assets/logo_doucine.png"
-        alt="Logo"
+        alt="Logo de l'association Doucine"
       />
       <h1 class="hero-title animate-slide-up">Vivre ensemble pour bien vieillir</h1>
       <p class="hero-description animate-slide-up delay-2">
@@ -13,14 +13,14 @@
         notre communauté.
       </p>
       <div class="hero-actions animate-fade-in delay-4">
-        <button class="btn btn-primary">Participer</button>
-        <button class="btn btn-secondary">En savoir plus</button>
+        <button class="btn btn-primary" aria-label="Participer à nos activités">Participer</button>
+        <button class="btn btn-secondary" aria-label="En savoir plus sur Doucine">En savoir plus</button>
       </div>
     </div>
     <img
       class="hero-image animate-zoom delay-3"
       src="https://cdn.pixabay.com/photo/2022/06/12/02/11/family-7257182_1280.jpg"
-      alt="Hero"
+      alt="Famille multigénérationnelle partageant un moment convivial ensemble"
     />
   </section>
 </template>
@@ -82,7 +82,7 @@ export default {
   font-weight: 800;
   line-height: 1.2;
   margin-top: 40px;
-  background: linear-gradient(90deg, #eb1a3a 0%, #fbb018 100%);
+  background: linear-gradient(90deg, #db0428 0%, #d98400 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -93,7 +93,7 @@ export default {
   font-size: 18px;
   line-height: 1.7;
   margin-top: 24px;
-  color: #4d5259;
+  color: #333740;
 }
 
 .hero-actions {
@@ -101,6 +101,46 @@ export default {
   justify-content: center;
   gap: 16px;
   margin-top: 40px;
+}
+
+.btn {
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn-primary {
+  background-color: #bc0926;
+  color: white;
+  border: none;
+}
+
+.btn-primary {
+  background-color: #EB1A3A;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #D41735;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(235, 26, 58, 0.25);
+}
+
+.btn-secondary {
+  background-color: rgba(93, 200, 230, 0.15);
+  color: #2A3040;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(93, 200, 230, 0.25);
+  transform: translateY(-2px);
 }
 
 .hero-image {

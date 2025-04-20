@@ -1,7 +1,7 @@
 <template>
-  <footer class="footer">
+  <footer class="footer" role="contentinfo">
     <div class="footer__wave">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
         <path d="M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,42.7C1120,32,1280,32,1360,32L1440,32L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z" fill="#f8f9fa"></path>
       </svg>
     </div>
@@ -9,25 +9,25 @@
       <div class="footer__column footer__column--main">
         <div class="footer__info">
           <div class="footer__info-block">
-            <div class="footer__info-title">Adresse :</div>
-            <div class="footer__info-text">
+            <h3 class="footer__info-title">Adresse :</h3>
+            <address class="footer__info-text">
               17 rue du vieux puits, 97351 Matoury
-            </div>
+            </address>
           </div>
           <div class="footer__info-block">
-            <div class="footer__info-title">Contact :</div>
+            <h3 class="footer__info-title">Contact :</h3>
             <div class="footer__contact">
-              <a href="tel:0694205231" class="footer__link">
-                <span class="footer__link-icon">📞</span>0694 20 52 31
+              <a href="tel:0694205231" class="footer__link" aria-label="Téléphone: 0694 20 52 31">
+                <span class="footer__link-icon" aria-hidden="true">📞</span>0694 20 52 31
               </a>
-              <a href="mailto:doucine97351@gmail.com" class="footer__link">
-                <span class="footer__link-icon">✉️</span>doucine97351@gmail.com
+              <a href="mailto:doucine97351@gmail.com" class="footer__link" aria-label="Email: doucine97351@gmail.com">
+                <span class="footer__link-icon" aria-hidden="true">✉️</span>doucine97351@gmail.com
               </a>
             </div>
           </div>
         </div>
         <div class="footer__social">
-          <a href="#" class="footer__social-link">
+          <a href="#" class="footer__social-link" aria-label="Facebook">
             <img
               src="../assets/images/facebook.svg"
               alt="Facebook"
@@ -70,27 +70,28 @@
           <img
             class="navbar-logo"
             src="@/assets/logo_doucine.png"
-            alt="Logo"
+            alt="Logo Doucine"
           />
         </div>
       </div>
 
       <div class="footer__column footer__column--links">
-        <div class="footer__nav-title">Navigation</div>
-        <nav class="footer__nav">
+        <h2 class="footer__nav-title">Navigation</h2>
+        <nav class="footer__nav" aria-label="Liens de pied de page">
           <ul class="footer__nav-list">
-            <li><a href="/" class="footer__nav-link">Accueil</a></li>
-            <li><a href="/apropos" class="footer__nav-link">À propos</a></li>
+            <li><router-link to="/" class="footer__nav-link">Accueil</router-link></li>
+            <li><router-link to="/apropos" class="footer__nav-link">À propos</router-link></li>
             <!-- <li><a href="/services" class="footer__nav-link">Nos services</a></li> -->
-            <li><a href="/evenement" class="footer__nav-link">Événements</a></li>
-            <li><a href="/contact" class="footer__nav-link">Contact</a></li>
+            <li><router-link to="/evenement" class="footer__nav-link">Événements</router-link></li>
+            <li><router-link to="/contact" class="footer__nav-link">Contact</router-link></li>
           </ul>
           <ul class="footer__nav-list">
-            <li><a href="/faq" class="footer__nav-link">FAQ</a></li>
+            <li><router-link to="/faq" class="footer__nav-link">FAQ</router-link></li>
             <!-- <li><a href="/blog" class="footer__nav-link">Blog</a></li>
             <li><a href="/devis" class="footer__nav-link">Demander un devis</a></li> -->
-            <li><a href="/recrutement" class="footer__nav-link">Recrutement</a></li>
-            <li><a href="/mentions-legales" class="footer__nav-link">Mentions légales</a></li>
+            <li><router-link to="/recrutement" class="footer__nav-link">Recrutement</router-link></li>
+            <li><router-link to="/mentions-legales" class="footer__nav-link">Mentions légales</router-link></li>
+            <li><router-link to="/politique-confidentialite" class="footer__nav-link">Politique de confidentialité</router-link></li>
           </ul>
         </nav>
       </div>
@@ -101,17 +102,26 @@
         <div class="footer__copyright">
           © 2025 Doucine. Tous droits réservés.
         </div>
-        <!-- <div class="footer__legal">
-          <a href="#" class="footer__legal-link">Politique de confidentialité</a>
-          <a href="#" class="footer__legal-link">Conditions de service</a>
-          <a href="#" class="footer__legal-link">Paramètres des cookies</a>
-        </div> -->
+        <div class="footer__legal">
+          <router-link to="/politique-confidentialite" class="footer__legal-link">Politique de confidentialité</router-link>
+          <router-link to="/conditions-utilisation" class="footer__legal-link">Conditions d'utilisation</router-link>
+          <button 
+            id="cookie-settings" 
+            class="footer__legal-link cookie-settings-btn" 
+            @click="openCookieSettings"
+            aria-label="Ouvrir les paramètres des cookies"
+          >
+            Paramètres des cookies
+          </button>
+        </div>
         <div class="footer__made-by">
           Site réalisé par
           <a
             href="https://harrowco.fr"
             class="footer__legal-link footer__brand-link"
             target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Site web de Harrow&Co, s'ouvre dans un nouvel onglet"
             >Harrow&Co</a
           >
         </div>
@@ -123,6 +133,17 @@
 <script>
 export default {
   name: "TheFooter",
+  methods: {
+    openCookieSettings() {
+      // Émet un événement pour ouvrir les paramètres des cookies
+      this.$emit('open-cookie-settings');
+      
+      // Si vous utilisez un gestionnaire de cookies externe, vous pouvez appeler sa fonction ici
+      if (window.openCookieConsent) {
+        window.openCookieConsent();
+      }
+    }
+  }
 };
 </script>
 
@@ -198,206 +219,148 @@ export default {
   padding: 30px;
   border-radius: 50%;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  transform: rotate(-3deg);
-  transition: all 0.5s ease;
-  display: inline-block;
-}
-
-.footer__logo-container:hover {
-  transform: rotate(0deg) scale(1.1);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .footer__info {
-  align-self: stretch;
-  margin-top: 32px;
+  display: flex;
   width: 100%;
-  font-size: 16px;
-  color: #2a3040;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .footer__info-block {
-  width: 100%;
-  margin-top: 24px;
-  padding-left: 16px;
-  border-left: 3px solid #5dc8e6;
-  transition: all 0.3s ease;
-}
-
-.footer__info-block:hover {
-  border-left-color: #eb1a3a;
-  transform: translateX(5px);
-}
-
-.footer__info-block:first-child {
-  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .footer__info-title {
-  font-weight: 600;
   color: #2a3040;
-  margin-bottom: 8px;
+  font-weight: 700;
   font-size: 18px;
+  margin: 0;
 }
 
 .footer__info-text {
-  font-weight: 400;
-  line-height: 1.6;
   font-size: 16px;
+  color: #4d5259;
+  font-style: normal;
 }
 
 .footer__contact {
-  width: 100%;
-  font-weight: 400;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .footer__link {
   display: flex;
   align-items: center;
+  gap: 10px;
+  color: #4d5259;
   text-decoration: none;
-  color: #2a3040;
-  margin-bottom: 10px;
   transition: all 0.3s ease;
-  padding: 8px 0;
-  font-size: 16px;
-}
-
-.footer__link-icon {
-  margin-right: 10px;
-  font-size: 18px;
 }
 
 .footer__link:hover {
-  color: #eb1a3a;
-  transform: translateX(5px);
+  color: #5dc8e6;
+}
+
+.footer__link:focus {
+  outline: none;
+}
+
+.footer__link-icon {
+  color: #5dc8e6;
+  font-size: 18px;
 }
 
 .footer__social {
   display: flex;
-  margin-top: 32px;
-  align-items: center;
   gap: 16px;
+  margin-top: 24px;
 }
 
 .footer__social-link {
   display: flex;
+  width: 42px;
+  height: 42px;
+  background: #f1f5f9;
+  border-radius: 50%;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
 }
 
 .footer__social-link:hover {
-  transform: translateY(-5px) rotate(10deg);
+  background: #5dc8e6;
+  transform: translateY(-2px);
 }
 
-.footer__social-link:nth-child(1):hover {
-  background: #4267B2;
-}
-
-.footer__social-link:nth-child(2):hover {
-  background: #1DA1F2;
-}
-
-.footer__social-link:nth-child(3):hover {
-  background: #E1306C;
-}
-
-.footer__social-link:nth-child(4):hover {
-  background: #0077B5;
-}
-
-.footer__social-link:nth-child(5):hover {
-  background: #FF0000;
+.footer__social-link:focus {
+  outline: none;
 }
 
 .footer__social-icon {
   width: 20px;
   height: 20px;
-  filter: invert(30%) sepia(10%) saturate(1000%) hue-rotate(174deg) brightness(94%) contrast(87%);
-  transition: all 0.3s ease;
-}
-
-.footer__social-link:hover .footer__social-icon {
-  filter: brightness(0) invert(1);
+  object-fit: contain;
 }
 
 .footer__column--links {
-  align-items: flex-start;
-  gap: 24px;
-  overflow: hidden;
-  font-size: 16px;
-  color: #2a3040;
-  font-weight: 500;
-  justify-content: flex-start;
-  flex: 1;
-  flex-shrink: 1;
-  flex-basis: 0%;
-  background: white;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  width: 32%;
+  flex-direction: column;
+  width: 25%;
 }
 
 .footer__nav-title {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  color: #eb1a3a;
-  position: relative;
-  padding-bottom: 10px;
-}
-
-.footer__nav-title::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 40px;
-  height: 3px;
-  background: linear-gradient(90deg, #eb1a3a 0%, #fbb018 100%);
-  border-radius: 3px;
+  color: #2a3040;
+  font-weight: 700;
+  font-size: 18px;
+  margin: 0 0 24px;
 }
 
 .footer__nav {
   display: flex;
   gap: 40px;
-  width: 100%;
+  flex-wrap: wrap;
 }
 
 .footer__nav-list {
-  flex: 1;
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .footer__nav-link {
-  display: block;
-  padding: 10px 0;
-  color: #2a3040;
+  color: #4d5259;
   text-decoration: none;
   transition: all 0.3s ease;
   position: relative;
   font-size: 16px;
+  padding-left: 20px;
 }
 
 .footer__nav-link::before {
   content: "→";
-  opacity: 0;
-  margin-right: -15px;
+  position: absolute;
+  left: 0;
+  opacity: 0.7;
   transition: all 0.3s ease;
-  font-size: 18px;
+  margin-right: 0;
 }
 
 .footer__nav-link:hover {
-  color: #fbb018;
-  padding-left: 20px;
+  color: #5dc8e6;
+}
+
+.footer__nav-link:focus {
+  outline: none;
 }
 
 .footer__nav-link:hover::before {
@@ -448,6 +411,15 @@ export default {
   font-size: 16px;
 }
 
+.cookie-settings-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: inherit;
+  padding: 0 3px;
+}
+
 .footer__legal-link::after {
   content: "";
   position: absolute;
@@ -465,6 +437,10 @@ export default {
 
 .footer__legal-link:hover::after {
   width: 100%;
+}
+
+.footer__legal-link:focus {
+  outline: none;
 }
 
 .footer__brand-link {

@@ -157,12 +157,18 @@
         </div>
       </div>
     </div>
+    <TheFooter />
   </div>
 </template>
 
 <script>
+import TheFooter from "@/components/TheFooter.vue";
+
 export default {
   name: 'PageEvenement',
+  components: {
+    TheFooter
+  },
   data() {
     return {
       showModal: false,
@@ -221,6 +227,15 @@ export default {
     }
   },
   methods: {
+    navigateTo(elementId) {
+      const element = document.querySelector(elementId);
+      if (element) {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    },
     openModal(event) {
       this.selectedEvent = event;
       this.showModal = true;

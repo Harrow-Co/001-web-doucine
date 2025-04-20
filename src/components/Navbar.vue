@@ -1,19 +1,19 @@
 <template>
-  <nav class="navbar">
+  <nav class="navbar" aria-label="Navigation principale">
     <div class="navbar-container">
-      <router-link to="/" @click="closeMenu">
+      <router-link to="/" @click="closeMenu" aria-label="Accueil - Doucine">
         <img
           class="navbar-logo"
-        src="@/assets/logo_doucine.png"
-        alt="Logo"
-      />
+          src="@/assets/logo_doucine.png"
+          alt="Logo Doucine"
+        />
       </router-link>
-      <button class="hamburger" @click="toggleMenu">
+      <button class="hamburger" @click="toggleMenu" aria-expanded="isMenuOpen" aria-label="Menu principal">
         <span></span>
         <span></span>
         <span></span>
       </button>
-      <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }">
+      <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }" role="navigation">
         <div class="nav-links">
           <router-link to="/" class="nav-link" @click="closeMenu">Accueil</router-link>
           <router-link to="/evenement" class="nav-link" @click="closeMenu">Événements</router-link>
@@ -21,32 +21,35 @@
           <div class="nav-dropdown" 
                @mouseover="handleDropdownHover" 
                @mouseleave="handleDropdownLeave" 
-               @click="toggleDropdown">
-            <span class="nav-link">Nos Actions</span>
+               @click="toggleDropdown"
+               role="menu"
+               aria-haspopup="true"
+               :aria-expanded="dropdownOpen">
+            <span class="nav-link" tabindex="0" role="menuitem">Nos Actions</span>
             <img
               class="dropdown-icon"
               src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/fee1f4da4fbc0ac2471ce1f6c2ea6132c2a43490c7dcf7518142e53de96c1a55"
-              alt="Dropdown"
+              alt="Ouvrir le menu déroulant"
             />
-            <div class="dropdown-menu" :class="{ 'is-active': dropdownOpen }">
-              <router-link to="/actions/domicile" class="dropdown-item" @click="closeMenu">
-                <i class="fas fa-home dropdown-icon-item"></i>
+            <div class="dropdown-menu" :class="{ 'is-active': dropdownOpen }" role="menu">
+              <router-link to="/actions/domicile" class="dropdown-item" @click="closeMenu" role="menuitem">
+                <i class="fas fa-home dropdown-icon-item" aria-hidden="true"></i>
                 Soutien à domicile
               </router-link>
-              <router-link to="/actions/activites" class="dropdown-item" @click="closeMenu">
-                <i class="fas fa-users dropdown-icon-item"></i>
+              <router-link to="/actions/activites" class="dropdown-item" @click="closeMenu" role="menuitem">
+                <i class="fas fa-users dropdown-icon-item" aria-hidden="true"></i>
                 Activités sociales
               </router-link>
-              <router-link to="/actions/bien-etre" class="dropdown-item" @click="closeMenu">
-                <i class="fas fa-spa dropdown-icon-item"></i>
+              <router-link to="/actions/bien-etre" class="dropdown-item" @click="closeMenu" role="menuitem">
+                <i class="fas fa-spa dropdown-icon-item" aria-hidden="true"></i>
                 Ateliers bien-être
               </router-link>
-              <router-link to="/actions/prevention" class="dropdown-item" @click="closeMenu">
-                <i class="fas fa-heartbeat dropdown-icon-item"></i>
+              <router-link to="/actions/prevention" class="dropdown-item" @click="closeMenu" role="menuitem">
+                <i class="fas fa-heartbeat dropdown-icon-item" aria-hidden="true"></i>
                 Prévention santé
               </router-link>
-              <router-link to="/actions/administratif" class="dropdown-item" @click="closeMenu">
-                <i class="fas fa-file-alt dropdown-icon-item"></i>
+              <router-link to="/actions/administratif" class="dropdown-item" @click="closeMenu" role="menuitem">
+                <i class="fas fa-file-alt dropdown-icon-item" aria-hidden="true"></i>
                 Soutien administratif
               </router-link>
             </div>
@@ -74,6 +77,8 @@ export default {
   methods: {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
+      // Annoncer l'état du menu pour les lecteurs d'écran
+      this.announceMenuState();
     },
     closeMenu() {
       // Ferme le menu si on est sur mobile
@@ -87,6 +92,8 @@ export default {
       if (this.isMobile) {
         event.preventDefault();
         this.dropdownOpen = !this.dropdownOpen;
+        // Annoncer l'état du sous-menu pour les lecteurs d'écran
+        this.announceDropdownState();
       }
     },
     handleDropdownHover() {
@@ -103,6 +110,50 @@ export default {
     },
     checkMobile() {
       this.isMobile = window.innerWidth <= 991;
+    },
+    announceMenuState() {
+      // Aide à l'accessibilité: annonce l'état du menu principal
+      const message = this.isMenuOpen ? 'Menu ouvert' : 'Menu fermé';
+      this.announceForScreenReader(message);
+    },
+    announceDropdownState() {
+      // Aide à l'accessibilité: annonce l'état du sous-menu
+      const message = this.dropdownOpen ? 'Sous-menu ouvert' : 'Sous-menu fermé';
+      this.announceForScreenReader(message);
+    },
+    announceForScreenReader(message) {
+      // Crée un élément pour les lecteurs d'écran
+      const announcement = document.createElement('div');
+      announcement.setAttribute('aria-live', 'polite');
+      announcement.setAttribute('class', 'sr-only');
+      announcement.textContent = message;
+      document.body.appendChild(announcement);
+      
+      // Supprime l'élément après un court délai
+      setTimeout(() => {
+        document.body.removeChild(announcement);
+      }, 1000);
+    },
+    handleKeyDown(event) {
+      // Gestion du clavier pour l'accessibilité
+      if (event.key === 'Escape') {
+        this.closeMenu();
+      }
+      
+      // Permettre la navigation par clavier dans le menu déroulant
+      if (this.dropdownOpen && event.key === 'Tab') {
+        const dropdownItems = document.querySelectorAll('.dropdown-item');
+        const firstItem = dropdownItems[0];
+        const lastItem = dropdownItems[dropdownItems.length - 1];
+        
+        if (event.shiftKey && document.activeElement === firstItem) {
+          // Si l'utilisateur fait Shift+Tab sur le premier élément, fermer le dropdown
+          this.dropdownOpen = false;
+        } else if (!event.shiftKey && document.activeElement === lastItem) {
+          // Si l'utilisateur fait Tab sur le dernier élément, fermer le dropdown
+          this.dropdownOpen = false;
+        }
+      }
     }
   },
   mounted() {
@@ -127,11 +178,15 @@ export default {
         this.dropdownOpen = false;
       }
     });
+    
+    // Gestionnaire d'événement pour l'accessibilité clavier
+    document.addEventListener('keydown', this.handleKeyDown);
   },
   beforeDestroy() {
     // Nettoyage des écouteurs d'événements
     window.removeEventListener('resize', this.checkMobile);
     document.removeEventListener('click', () => {});
+    document.removeEventListener('keydown', this.handleKeyDown);
   }
 };
 </script>
@@ -197,6 +252,10 @@ export default {
 
 .nav-link:hover {
   color: #EB1A3A;
+}
+
+.nav-link:focus {
+  outline: none;
 }
 
 .nav-link:after {
@@ -271,6 +330,11 @@ export default {
   color: #EB1A3A;
 }
 
+.dropdown-item:focus {
+  outline: none;
+  background-color: rgba(235, 26, 58, 0.03);
+}
+
 .dropdown-icon-item {
   margin-right: 12px;
   color: #FBB018;
@@ -282,6 +346,18 @@ export default {
   display: flex;
   align-items: center;
   gap: 16px;
+}
+
+.btn {
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn:focus {
+  outline: none;
 }
 
 .hamburger {
@@ -297,12 +373,28 @@ export default {
   z-index: 10;
 }
 
+.hamburger:focus {
+  outline: none;
+}
+
 .hamburger span {
   width: 30px;
   height: 3px;
   background: #EB1A3A;
   border-radius: 10px;
   transition: all 0.3s linear;
+}
+
+/* Classe pour les éléments destinés aux lecteurs d'écran uniquement */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 
 @media (max-width: 991px) {
