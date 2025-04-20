@@ -17,11 +17,11 @@
           <div class="footer__info-block">
             <div class="footer__info-title">Contact :</div>
             <div class="footer__contact">
-              <a href="tel:1800123456" class="footer__link">
-                <span class="footer__link-icon">📞</span>0694 12 34 56
+              <a href="tel:0694205231" class="footer__link">
+                <span class="footer__link-icon">📞</span>0694 20 52 31
               </a>
-              <a href="mailto:info@relume.io" class="footer__link">
-                <span class="footer__link-icon">✉️</span>info@doucine.fr
+              <a href="mailto:doucine97351@gmail.com" class="footer__link">
+                <span class="footer__link-icon">✉️</span>doucine97351@gmail.com
               </a>
             </div>
           </div>
@@ -69,7 +69,7 @@
         <div class="footer__logo-container">
           <img
             class="navbar-logo"
-            src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/b50c9fde289ac20a7a765b5b6329bc7df93b9511011838f82a9d74943f3e2070"
+            src="@/assets/logo_doucine.png"
             alt="Logo"
           />
         </div>
@@ -80,15 +80,15 @@
         <nav class="footer__nav">
           <ul class="footer__nav-list">
             <li><a href="/" class="footer__nav-link">Accueil</a></li>
-            <li><a href="/a-propos" class="footer__nav-link">À propos</a></li>
-            <li><a href="/services" class="footer__nav-link">Nos services</a></li>
-            <li><a href="/projets" class="footer__nav-link">Réalisations</a></li>
+            <li><a href="/apropos" class="footer__nav-link">À propos</a></li>
+            <!-- <li><a href="/services" class="footer__nav-link">Nos services</a></li> -->
+            <li><a href="/evenement" class="footer__nav-link">Événements</a></li>
             <li><a href="/contact" class="footer__nav-link">Contact</a></li>
           </ul>
           <ul class="footer__nav-list">
             <li><a href="/faq" class="footer__nav-link">FAQ</a></li>
-            <li><a href="/blog" class="footer__nav-link">Blog</a></li>
-            <li><a href="/devis" class="footer__nav-link">Demander un devis</a></li>
+            <!-- <li><a href="/blog" class="footer__nav-link">Blog</a></li>
+            <li><a href="/devis" class="footer__nav-link">Demander un devis</a></li> -->
             <li><a href="/recrutement" class="footer__nav-link">Recrutement</a></li>
             <li><a href="/mentions-legales" class="footer__nav-link">Mentions légales</a></li>
           </ul>

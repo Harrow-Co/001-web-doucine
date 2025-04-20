@@ -1,10 +1,10 @@
 <template>
   <nav class="navbar">
     <div class="navbar-container">
-      <router-link to="/">
+      <router-link to="/" @click="closeMenu">
         <img
           class="navbar-logo"
-        src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/b50c9fde289ac20a7a765b5b6329bc7df93b9511011838f82a9d74943f3e2070"
+        src="@/assets/logo_doucine.png"
         alt="Logo"
       />
       </router-link>
@@ -15,10 +15,10 @@
       </button>
       <div class="navbar-menu" :class="{ 'is-active': isMenuOpen }">
         <div class="nav-links">
-          <router-link to="/" class="nav-link">Accueil</router-link>
-          <router-link to="/evenement" class="nav-link">Événements</router-link>
-          <router-link to="/apropos" class="nav-link">À Propos</router-link>
-          <div class="nav-dropdown">
+          <router-link to="/" class="nav-link" @click="closeMenu">Accueil</router-link>
+          <router-link to="/evenement" class="nav-link" @click="closeMenu">Événements</router-link>
+          <router-link to="/apropos" class="nav-link" @click="closeMenu">À Propos</router-link>
+          <div class="nav-dropdown" @click="closeMenu">
             <span class="nav-link">Nos Actions</span>
             <img
               class="dropdown-icon"
@@ -28,8 +28,8 @@
           </div>
         </div>
         <div class="nav-actions">
-          <button class="btn btn-secondary">Rejoindre</button>
-          <button class="btn btn-primary">S'inscrire</button>
+          <button class="btn btn-secondary" @click="closeMenu">Rejoindre</button>
+          <button class="btn btn-primary" @click="closeMenu">S'inscrire</button>
         </div>
       </div>
     </div>
@@ -47,7 +47,30 @@ export default {
   methods: {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
+    },
+    closeMenu() {
+      // Ferme le menu si on est sur mobile
+      if (window.innerWidth <= 991) {
+        this.isMenuOpen = false;
+      }
     }
+  },
+  mounted() {
+    // Gestionnaire d'événement pour fermer le menu au redimensionnement
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 991) {
+        this.isMenuOpen = false;
+      }
+    });
+
+    // Fermer le menu lors d'un changement de route
+    this.$router.afterEach(() => {
+      this.closeMenu();
+    });
+  },
+  beforeDestroy() {
+    // Nettoyage de l'écouteur d'événement
+    window.removeEventListener('resize', () => {});
   }
 };
 </script>

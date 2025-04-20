@@ -1,11 +1,11 @@
 <template>
   <div class="home">
     <TheHero />
-    <Features />
-    <benefits-section />
-    <community-c-t-a />
-    <TestimonialsSection />
-    <TeamSection />
+    <Features class="animate-section" />
+    <benefits-section class="animate-section" />
+    <community-c-t-a class="animate-section" />
+    <TestimonialsSection class="animate-section" />
+    <TeamSection class="animate-section" />
     <TheFooter />
   </div>
 </template>
@@ -30,5 +30,21 @@ export default {
     TeamSection,
     TheFooter,
   },
+  mounted() {
+    // Initialize Intersection Observer to trigger animations
+    const sections = document.querySelectorAll('.animate-section');
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.2 });
+    
+    sections.forEach(section => {
+      observer.observe(section);
+    });
+  }
 };
 </script>

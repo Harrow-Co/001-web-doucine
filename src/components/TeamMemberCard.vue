@@ -13,10 +13,10 @@
         <div class="name">{{ member.name }}</div>
         <div class="job-title">{{ member.title }}</div>
       </div>
-      <div class="description">{{ member.description }}</div>
+      <!-- <div class="description">{{ member.description }}</div> -->
     </div>
 
-    <div class="social-icons">
+    <!-- <div class="social-icons">
       <img
         v-for="(icon, index) in member.socialIcons"
         :key="index"
@@ -25,7 +25,7 @@
         loading="lazy"
         alt="Social media icon"
       />
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -44,7 +44,7 @@ export default {
 <style scoped>
 .team-member-card {
   display: flex;
-  min-width: 220px;
+  max-width: 500px;
   flex-direction: column;
   align-items: center;
   justify-content: start;
@@ -58,7 +58,7 @@ export default {
   aspect-ratio: 1.03;
   object-fit: cover;
   object-position: center;
-  width: 70%;
+  width: 50%;
   border-radius: 40px;
 }
 

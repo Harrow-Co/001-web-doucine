@@ -2,23 +2,23 @@
   <section class="hero" id="home">
     <div class="hero-content">
       <img
-        class="navbar-logo"
-        src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/b50c9fde289ac20a7a765b5b6329bc7df93b9511011838f82a9d74943f3e2070"
+        class="navbar-logo animate-fade-in"
+        src="@/assets/logo_doucine.png"
         alt="Logo"
       />
-      <h1 class="hero-title">Vivre ensemble pour bien vieillir</h1>
-      <p class="hero-description">
+      <h1 class="hero-title animate-slide-up">Vivre ensemble pour bien vieillir</h1>
+      <p class="hero-description animate-slide-up delay-2">
         Bienvenue chez DOUCINE, où chaque événement crée des liens précieux
         entre les générations. Rejoignez-nous pour célébrer la vie et renforcer
         notre communauté.
       </p>
-      <div class="hero-actions">
+      <div class="hero-actions animate-fade-in delay-4">
         <button class="btn btn-primary">Participer</button>
         <button class="btn btn-secondary">En savoir plus</button>
       </div>
     </div>
     <img
-      class="hero-image"
+      class="hero-image animate-zoom delay-3"
       src="https://cdn.pixabay.com/photo/2022/06/12/02/11/family-7257182_1280.jpg"
       alt="Hero"
     />

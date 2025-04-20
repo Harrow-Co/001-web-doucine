@@ -1,5 +1,5 @@
 <template>
-  <div class="how-it-works-section">
+  <div class="apropos-page">
     <HowItWorks />
   </div>
 </template>
@@ -14,4 +14,18 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.apropos-page {
+  padding-top: 80px;
+  min-height: 100vh;
+  background-color: #FAFAFA;
+}
+
+@media (max-width: 991px) {
+  .apropos-page {
+    padding-top: 60px;
+  }
+}
+</style>
 

@@ -18,6 +18,7 @@ export default {
 
 <style>
 @import "./assets/styles/main.css";
+@import "./assets/styles/animations.css";
 
 #app {
   font-family: Roboto, -apple-system, Roboto, Helvetica, sans-serif;
