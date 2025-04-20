@@ -18,13 +18,38 @@
           <router-link to="/" class="nav-link" @click="closeMenu">Accueil</router-link>
           <router-link to="/evenement" class="nav-link" @click="closeMenu">Événements</router-link>
           <router-link to="/apropos" class="nav-link" @click="closeMenu">À Propos</router-link>
-          <div class="nav-dropdown" @click="closeMenu">
+          <div class="nav-dropdown" 
+               @mouseover="handleDropdownHover" 
+               @mouseleave="handleDropdownLeave" 
+               @click="toggleDropdown">
             <span class="nav-link">Nos Actions</span>
             <img
               class="dropdown-icon"
               src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/fee1f4da4fbc0ac2471ce1f6c2ea6132c2a43490c7dcf7518142e53de96c1a55"
               alt="Dropdown"
             />
+            <div class="dropdown-menu" :class="{ 'is-active': dropdownOpen }">
+              <router-link to="/actions/domicile" class="dropdown-item" @click="closeMenu">
+                <i class="fas fa-home dropdown-icon-item"></i>
+                Soutien à domicile
+              </router-link>
+              <router-link to="/actions/activites" class="dropdown-item" @click="closeMenu">
+                <i class="fas fa-users dropdown-icon-item"></i>
+                Activités sociales
+              </router-link>
+              <router-link to="/actions/bien-etre" class="dropdown-item" @click="closeMenu">
+                <i class="fas fa-spa dropdown-icon-item"></i>
+                Ateliers bien-être
+              </router-link>
+              <router-link to="/actions/prevention" class="dropdown-item" @click="closeMenu">
+                <i class="fas fa-heartbeat dropdown-icon-item"></i>
+                Prévention santé
+              </router-link>
+              <router-link to="/actions/administratif" class="dropdown-item" @click="closeMenu">
+                <i class="fas fa-file-alt dropdown-icon-item"></i>
+                Soutien administratif
+              </router-link>
+            </div>
           </div>
         </div>
         <div class="nav-actions">
@@ -41,7 +66,9 @@ export default {
   name: "TheNavbar",
   data() {
     return {
-      isMenuOpen: false
+      isMenuOpen: false,
+      dropdownOpen: false,
+      isMobile: false
     }
   },
   methods: {
@@ -50,15 +77,41 @@ export default {
     },
     closeMenu() {
       // Ferme le menu si on est sur mobile
-      if (window.innerWidth <= 991) {
+      if (this.isMobile) {
         this.isMenuOpen = false;
       }
+      this.dropdownOpen = false;
+    },
+    toggleDropdown(event) {
+      // Sur mobile, on toggle le dropdown au clic
+      if (this.isMobile) {
+        event.preventDefault();
+        this.dropdownOpen = !this.dropdownOpen;
+      }
+    },
+    handleDropdownHover() {
+      // Sur desktop, on ouvre au survol
+      if (!this.isMobile) {
+        this.dropdownOpen = true;
+      }
+    },
+    handleDropdownLeave() {
+      // Sur desktop, on ferme quand on quitte la zone
+      if (!this.isMobile) {
+        this.dropdownOpen = false;
+      }
+    },
+    checkMobile() {
+      this.isMobile = window.innerWidth <= 991;
     }
   },
   mounted() {
+    this.checkMobile();
+    
     // Gestionnaire d'événement pour fermer le menu au redimensionnement
     window.addEventListener('resize', () => {
-      if (window.innerWidth > 991) {
+      this.checkMobile();
+      if (!this.isMobile) {
         this.isMenuOpen = false;
       }
     });
@@ -67,10 +120,18 @@ export default {
     this.$router.afterEach(() => {
       this.closeMenu();
     });
+    
+    // Fermer le dropdown quand on clique à l'extérieur
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('.nav-dropdown') && this.dropdownOpen) {
+        this.dropdownOpen = false;
+      }
+    });
   },
   beforeDestroy() {
-    // Nettoyage de l'écouteur d'événement
-    window.removeEventListener('resize', () => {});
+    // Nettoyage des écouteurs d'événements
+    window.removeEventListener('resize', this.checkMobile);
+    document.removeEventListener('click', () => {});
   }
 };
 </script>
@@ -158,6 +219,7 @@ export default {
   align-items: center;
   gap: 4px;
   cursor: pointer;
+  position: relative;
 }
 
 .dropdown-icon {
@@ -170,6 +232,50 @@ export default {
 
 .nav-dropdown:hover .dropdown-icon {
   transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border-radius: 12px;
+  min-width: 250px;
+  padding: 16px 0;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  z-index: 5;
+}
+
+.dropdown-menu.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: #2A3040;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(235, 26, 58, 0.05);
+  color: #EB1A3A;
+}
+
+.dropdown-icon-item {
+  margin-right: 12px;
+  color: #FBB018;
+  width: 16px;
+  text-align: center;
 }
 
 .nav-actions {
@@ -250,6 +356,30 @@ export default {
     width: 100%;
     justify-content: space-between;
   }
+  
+  .dropdown-menu {
+    position: relative;
+    width: 100%;
+    min-width: unset;
+    box-shadow: none;
+    border-radius: 8px;
+    padding: 0;
+    background-color: #f9f9f9;
+    margin-top: 10px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+  
+  .dropdown-menu.is-active {
+    max-height: 300px;
+    padding: 10px 0;
+  }
+  
+  .dropdown-item {
+    padding: 10px 15px;
+    font-size: 15px;
+  }
 }
 
 .router-link-active {
@@ -263,3 +393,4 @@ export default {
   background: linear-gradient(90deg, #EB1A3A 0%, #FBB018 100%);
 }
 </style>
+
