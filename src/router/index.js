@@ -4,6 +4,7 @@ import Evenement from "../views/Evenement.vue";
 import Apropos from "../views/Apropos.vue";
 import AboutUs from "../views/AboutUs.vue";
 import PolitiqueConfidentialite from "../views/PolitiqueConfidentialite.vue";
+import NotFound from "../views/NotFound.vue";
 
 Vue.use(VueRouter);
 
@@ -43,6 +44,12 @@ const routes = [
     name: "ConditionsUtilisation",
     component: () => import("../views/ConditionsUtilisation.vue"),
   },
+  // Route 404 pour toutes les URL non définies
+  {
+    path: "*",
+    name: "NotFound",
+    component: NotFound
+  }
 ];
 
 const router = new VueRouter({
