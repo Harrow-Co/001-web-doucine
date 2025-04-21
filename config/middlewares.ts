@@ -28,7 +28,10 @@ export default [
         'https://association-doucine.fr',
         'https://www.association-doucine.fr',
         'https://pg.association-doucine.fr',
-        'https://cms-doucine.up.railway.app'
+        'https://cms-doucine.up.railway.app',
+        'https://cms.association-doucine.fr',
+        'https://pts3ft9e.up.railway.app',
+        '*'
       ],
     },
   },
