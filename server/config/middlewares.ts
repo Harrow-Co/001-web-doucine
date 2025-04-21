@@ -7,7 +7,12 @@ export default [
     config: {
       enabled: true,
       headers: '*',
-      origin: ['*']
+      origin: [
+        'https://v1doucine.netlify.app',
+        'http://localhost:8080',
+        'http://localhost:3000',
+        'https://fj7gblur.up.railway.app'
+      ]
     }
   },
   'strapi::poweredBy',

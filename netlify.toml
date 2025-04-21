@@ -1,8 +1,24 @@
 [build]
-  publish = "dist"
   command = "npm run build"
+  publish = "dist"
 
+# Redirection pour le routage Vue.js
 [[redirects]]
   from = "/*"
   to = "/index.html"
-  status = 200 
+  status = 200
+
+# Variables d'environnement pour la production
+[context.production.environment]
+  VUE_APP_API_URL = "https://fj7gblur.up.railway.app"
+
+# Variables d'environnement pour le déploiement de preview
+[context.deploy-preview.environment]
+  VUE_APP_API_URL = "https://fj7gblur.up.railway.app"
+
+# Configuration des en-têtes de sécurité
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block" 

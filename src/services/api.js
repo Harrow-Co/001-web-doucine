@@ -6,11 +6,16 @@ const apiClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000
+  timeout: 15000
 });
 
 // Méthodes pour gérer les événements
 export const eventService = {
+  // Vérifier la santé de l'API
+  checkHealth() {
+    return apiClient.get('/health');
+  },
+
   // Récupérer tous les événements
   getEvents() {
     return apiClient.get('/events?populate=*');
