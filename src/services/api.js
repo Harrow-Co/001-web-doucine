@@ -30,8 +30,15 @@ export const eventService = {
   getUpcomingEvents() {
     const today = new Date().toISOString().split('T')[0];
     console.log("Today's date for filtering:", today);
-    // Récupérer les événements avec les champs imbriqués spécifiques
-    return apiClient.get(`/events?populate[0]=image&populate[1]=details&populate[2]=details.activities&populate[3]=details.pricing&sort=date:asc`);
+    console.log("API URL being called:", `${process.env.VUE_APP_API_URL}/api/events?populate[0]=image&populate[1]=details&populate[2]=details.activities&populate[3]=details.pricing&sort=date:asc`);
+    
+    // Tentative avec le nouveau format Strapi v5
+    try {
+      return apiClient.get(`/events?populate[0]=image&populate[1]=details&populate[2]=details.activities&populate[3]=details.pricing&sort=date:asc`);
+    } catch (error) {
+      console.error("Error with standard call, trying fallback:", error);
+      return this.getDefaultEvents();
+    }
   },
 
   // Récupérer les événements passés
