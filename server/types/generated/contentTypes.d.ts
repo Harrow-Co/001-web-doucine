@@ -506,7 +506,7 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
   collectionName: 'events';
   info: {
     description: 'Gestion des \u00E9v\u00E9nements de Doucine';
-    displayName: '\u00C9v\u00E9nement';
+    displayName: 'Events';
     pluralName: 'events';
     singularName: 'event';
   };

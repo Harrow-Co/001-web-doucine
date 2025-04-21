@@ -56,8 +56,8 @@
           </div>
         </div>
         <div class="nav-actions">
-          <button class="btn btn-secondary" @click="closeMenu">Rejoindre</button>
-          <button class="btn btn-primary" @click="closeMenu">S'inscrire</button>
+          <button class="btn btn-secondary" @click="showContactModal">Rejoindre</button>
+          <button class="btn btn-primary" @click="showRegistrationModal">S'inscrire</button>
         </div>
       </div>
     </div>
@@ -86,6 +86,20 @@ export default {
         this.isMenuOpen = false;
       }
       this.dropdownOpen = false;
+    },
+    showContactModal() {
+      // Ferme le menu
+      this.closeMenu();
+      
+      // Alerte temporaire en attendant l'implémentation
+      alert("La fonctionnalité de contact sera bientôt disponible. Veuillez nous contacter par email à contact@association-doucine.fr");
+    },
+    showRegistrationModal() {
+      // Ferme le menu
+      this.closeMenu();
+      
+      // Pour l'instant, rediriger vers la page des événements
+      this.$router.push('/evenement');
     },
     toggleDropdown(event) {
       // Sur mobile, on toggle le dropdown au clic
