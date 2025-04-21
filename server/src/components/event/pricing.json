@@ -1,0 +1,26 @@
+{
+  "collectionName": "components_event_pricings",
+  "info": {
+    "displayName": "Pricing",
+    "description": "Tarifs pour l'événement"
+  },
+  "options": {},
+  "attributes": {
+    "description": {
+      "type": "string",
+      "required": true
+    },
+    "amount": {
+      "type": "decimal",
+      "required": true
+    },
+    "category": {
+      "type": "string",
+      "description": "Ex: Adulte, Enfant, etc."
+    },
+    "includes": {
+      "type": "string",
+      "description": "Ce qui est inclus dans le tarif (ex: Restauration + Transport)"
+    }
+  }
+} 

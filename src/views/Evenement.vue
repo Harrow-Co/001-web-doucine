@@ -24,37 +24,58 @@
       </div>
 
       <div class="events-grid">
-        <div v-for="(event, index) in events" :key="event.id" 
-             class="event-card animate-card"
-             :style="{'--delay': `${0.1 + index * 0.1}s`}"
-             @click="openModal(event)">
-          <div class="event-image-container">
-            <img :src="event.image" :alt="event.title" class="event-image" />
-            <div class="event-date animate-pulse">
-              <span class="day">{{ event.date.day }}</span>
-              <span class="month">{{ event.date.month }}</span>
-            </div>
-          </div>
-          <div class="event-content">
-            <h3 class="event-title">{{ event.title }}</h3>
-            <p class="event-description">{{ event.description }}</p>
-            
-            <div class="event-details-container">
-              <div class="event-details">
-                <div class="detail">
-                  <i class="fas fa-clock"></i>
-                  <span>{{ event.time }}</span>
-                </div>
-                <div class="detail">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span>{{ event.location }}</span>
-                </div>
+        <!-- Indicateur de chargement -->
+        <div v-if="loading" class="loading-container">
+          <div class="loading-spinner"></div>
+          <p class="loading-text">Chargement des événements...</p>
+        </div>
+        
+        <!-- Message d'erreur -->
+        <div v-else-if="error" class="error-container">
+          <p class="error-message">{{ error }}</p>
+          <button class="btn btn-primary" @click="fetchEvents">Réessayer</button>
+        </div>
+        
+        <!-- Aucun événement trouvé -->
+        <div v-else-if="events.length === 0" class="no-events-container">
+          <p class="no-events-message">Aucun événement à venir pour le moment.</p>
+          <p>Revenez bientôt pour découvrir nos prochains événements !</p>
+        </div>
+        
+        <!-- Liste des événements -->
+        <template v-else>
+          <div v-for="(event, index) in events" :key="event.id" 
+               class="event-card animate-card"
+               :style="{'--delay': `${0.1 + index * 0.1}s`}"
+               @click="openModal(event)">
+            <div class="event-image-container">
+              <img :src="event.image" :alt="event.titre" class="event-image" />
+              <div class="event-date animate-pulse">
+                <span class="day">{{ event.date.jour }}</span>
+                <span class="month">{{ event.date.mois }}</span>
               </div>
             </div>
-            
-            <button class="btn btn-primary event-btn">Voir les détails</button>
+            <div class="event-content">
+              <h3 class="event-title">{{ event.titre }}</h3>
+              <p class="event-description">{{ event.description }}</p>
+              
+              <div class="event-details-container">
+                <div class="event-details">
+                  <div class="detail">
+                    <i class="fas fa-clock"></i>
+                    <span>{{ event.horaire }}</span>
+                  </div>
+                  <div class="detail">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ event.lieu }}</span>
+                  </div>
+                </div>
+              </div>
+              
+              <button class="btn btn-primary event-btn">Voir les détails</button>
+            </div>
           </div>
-        </div>
+        </template>
       </div>
     </section>
 
@@ -77,11 +98,11 @@
         <div class="modal-content" v-if="selectedEvent">
           <div class="modal-columns">
             <div class="modal-flyer">
-              <img :src="selectedEvent.image" :alt="selectedEvent.title" class="flyer-image" />
+              <img :src="selectedEvent.image" :alt="selectedEvent.titre" class="flyer-image" />
             </div>
             
             <div class="modal-details">
-              <h2 class="modal-title animate-fade-in">{{ selectedEvent.title }}</h2>
+              <h2 class="modal-title animate-fade-in">{{ selectedEvent.titre }}</h2>
               
               <div class="modal-info-section animate-slide-right delay-1">
                 <h3 class="section-title">
@@ -89,7 +110,7 @@
                   Date et horaires
                 </h3>
                 <p class="date-info">{{ getFormattedDate(selectedEvent) }}</p>
-                <p>{{ selectedEvent.time }}</p>
+                <p>{{ selectedEvent.horaire }}</p>
               </div>
               
               <div class="modal-info-section animate-slide-right delay-2">
@@ -97,7 +118,7 @@
                   <i class="fas fa-map-marker-alt section-icon"></i>
                   Lieu
                 </h3>
-                <p>{{ selectedEvent.location }}</p>
+                <p>{{ selectedEvent.lieu }}</p>
                 <p v-if="selectedEvent.details.destination">Destination : {{ selectedEvent.details.destination }}</p>
               </div>
               
@@ -163,6 +184,8 @@
 
 <script>
 import TheFooter from "@/components/TheFooter.vue";
+import { eventService } from "@/services/api";
+import * as dateFormatter from "@/utils/dateFormatter";
 
 export default {
   name: 'PageEvenement',
@@ -173,57 +196,18 @@ export default {
     return {
       showModal: false,
       selectedEvent: null,
-      events: [
-        {
-          id: 1,
-          title: 'GÉNÉR\'ACTIONS – Balade en Famille',
-          description: 'Partez à la découverte de l\'îlot des Caïmans à Sinnamary. Une journée en pleine nature pour observer les caïmans et partager des moments de détente en famille.',
-          date: { day: '29', month: 'MAR', year: '2025' },
-          time: '7h00 - 16h00',
-          location: 'Départ : Family Plaza',
-          image: require('@/assets/images/PHOTO-2025-03-13-20-39-40.jpg'),
-          details: {
-            destination: 'L\'îlot des Caïmans à Sinnamary',
-            activities: ['Visite des caïmans', 'Détente en pleine nature'],
-            pricing: ['50 € / adulte', '30 € / enfant (Restauration + Transport inclus)'],
-            registration: '19/03/25',
-            contact: '0694 20 52 31',
-            email: 'doucine97351@gmail.com'
-          }
-        },
-        {
-          id: 2,
-          title: 'GÉNÉR\'ACTION – Bien-Être',
-          description: 'Une journée dédiée au bien-être avec divers ateliers pour prendre soin de vous et apprendre des techniques à pratiquer au quotidien.',
-          date: { day: '26', month: 'AVR', year: '2025' },
-          time: '8h30 - 16h00',
-          location: 'Maison des Associations de Cogneau-Lamirande',
-          image: require('@/assets/images/IMG_8170.jpg'),
-          details: {
-            activities: ['Réflexologie', 'Atelier d\'auto massage', 'Atelier sur les sens', 'Atelier créatif et détente'],
-            pricing: ['15 € (Repas et collation inclus)'],
-            registration: '25/04/25',
-            contact: '0694 20 52 31',
-            email: 'doucine97351@gmail.com'
-          }
-        // },
-        // {
-        //   id: 3,
-        //   title: 'Séance Cinéma Intergénérationnelle',
-        //   description: 'Partagez un moment de cinéma convivial qui rassemble différentes générations. Une occasion parfaite pour échanger et créer des liens.',
-        //   date: { day: '02', month: 'MAI', year: '2025' },
-        //   time: 'À partir de 9h',
-        //   location: 'Family Plaza Cinéma Agora',
-        //   image: require('@/assets/images/PHOTO-2025-03-13-20-39-40.jpg'),
-        //   details: {
-        //     activities: ['Séance cinéma intergénérationnelle', 'Collation incluse'],
-        //     pricing: ['10 €'],
-        //     registration: '25/04/25',
-        //     contact: '0690 26 30 33',
-        //     email: 'Doucine97351@gmail.com'
-        //   }
-        }
-      ]
+      events: [],
+      loading: true,
+      error: null
+    }
+  },
+  watch: {
+    events: {
+      handler(newEvents) {
+        console.log("Events array updated:", newEvents);
+        console.log("Number of events:", newEvents.length);
+      },
+      deep: true
     }
   },
   methods: {
@@ -246,26 +230,186 @@ export default {
       document.body.style.overflow = ''; // Re-enable scrolling
     },
     getFormattedDate(event) {
-      const months = {
-        'JAN': 'Janvier',
-        'FEV': 'Février',
-        'MAR': 'Mars',
-        'AVR': 'Avril',
-        'MAI': 'Mai',
-        'JUN': 'Juin',
-        'JUL': 'Juillet',
-        'AOU': 'Août',
-        'SEP': 'Septembre',
-        'OCT': 'Octobre',
-        'NOV': 'Novembre',
-        'DEC': 'Décembre'
+      // Formater la date depuis le format ISO
+      if (event.attributes && event.attributes.date) {
+        return dateFormatter.formatEventDate(event.attributes.date);
+      } else if (event.date) {
+        // Support du format de date personnalisé
+        const fullDate = `${event.date.annee}-${this.getMonthNumber(event.date.mois)}-${event.date.jour}`;
+        return dateFormatter.formatEventDate(fullDate);
+      }
+      
+      return '';
+    },
+    
+    // Convertir l'abréviation du mois en numéro
+    getMonthNumber(abbr) {
+      const monthMap = {
+        'JAN': '01', 'FEV': '02', 'MAR': '03', 'AVR': '04', 'MAI': '05', 'JUN': '06', 
+        'JUL': '07', 'AOU': '08', 'SEP': '09', 'OCT': '10', 'NOV': '11', 'DEC': '12'
+      };
+      return monthMap[abbr] || '01';
+    },
+    
+    // Méthodes pour récupérer les données depuis l'API
+    async fetchEvents() {
+      try {
+        this.loading = true;
+        console.log("Fetching events from API...");
+        
+        // Récupérer les événements depuis l'API Strapi
+        const response = await eventService.getUpcomingEvents();
+        console.log("API Response:", response);
+        
+        if (response && response.data && response.data.data) {
+          const formattedEvents = this.formatEvents(response.data.data);
+          console.log("Formatted events:", formattedEvents);
+          this.events = formattedEvents;
+          this.error = null;
+        } else {
+          console.error("No events found in API response");
+          this.error = "Aucun événement trouvé";
+          this.events = [];
+        }
+      } catch (error) {
+        console.error("Error fetching events:", error);
+        this.error = "Impossible de charger les événements";
+        this.events = [];
+      } finally {
+        this.loading = false;
+      }
+    },
+    
+    // Formater les données reçues de l'API pour correspondre à notre structure
+    formatEvents(apiEvents) {
+      if (!apiEvents || !Array.isArray(apiEvents)) {
+        console.error("Invalid events data:", apiEvents);
+        return [];
+      }
+      
+      return apiEvents.map(event => {
+        try {
+          console.log("Processing event:", event);
+          
+          const { id, attributes } = event;
+          
+          if (!attributes) {
+            console.error("Event missing attributes:", event);
+            return null;
+          }
+          
+          if (!attributes.date) {
+            console.error("Event missing date:", attributes);
+            return null;
+          }
+          
+          const eventDate = new Date(attributes.date);
+          
+          // Create default details if none are provided
+          const defaultDetails = {
+            destination: '',
+            activities: [],
+            pricing: ['Prix non spécifié'],
+            registration: '',
+            contact: attributes.contact || '0694 20 52 31',
+            email: attributes.email || 'doucine97351@gmail.com',
+            practicalInfo: ['Information non disponible']
+          };
+          
+          const formattedEvent = {
+            id,
+            titre: attributes.title || "Sans titre",
+            description: attributes.description || "Aucune description",
+            horaire: attributes.time || "Horaire non spécifié",
+            lieu: attributes.location || "Lieu non spécifié",
+            // Extraire la date pour l'affichage dans la carte
+            date: {
+              jour: eventDate.getDate().toString(),
+              mois: dateFormatter.getMonthAbbreviation(eventDate.getMonth()),
+              annee: eventDate.getFullYear().toString()
+            },
+            // Construire l'URL de l'image
+            image: attributes.image && attributes.image.data 
+              ? `${process.env.VUE_APP_API_URL || 'http://localhost:1337'}${attributes.image.data.attributes.url}`
+              : require('@/assets/images/PHOTO-2025-03-13-20-39-40.jpg'),
+            // Transformer les détails ou utiliser les valeurs par défaut
+            details: attributes.details ? this.formatEventDetails(attributes.details) : defaultDetails
+          };
+          
+          return formattedEvent;
+        } catch (err) {
+          console.error("Error formatting event:", err, event);
+          return null;
+        }
+      }).filter(event => event !== null); // Filter out any null events
+    },
+    
+    // Formater les détails de l'événement
+    formatEventDetails(details) {
+      if (!details) return {
+        destination: '',
+        activities: [],
+        pricing: ['Prix non spécifié'],
+        registration: '',
+        contact: 'Contact non spécifié',
+        email: 'Email non spécifié',
+        practicalInfo: ['Information non disponible']
       };
       
-      const fullMonth = months[event.date.month] || event.date.month;
-      return `Samedi ${event.date.day} ${fullMonth} ${event.date.year}`;
-    }
+      try {
+        // Formatter les activités
+        const activities = details.activities && Array.isArray(details.activities)
+          ? details.activities.map(activity => activity.name || activity.toString())
+          : [];
+        
+        // Formatter les tarifs
+        const pricing = details.pricing && Array.isArray(details.pricing)
+          ? details.pricing.map(price => {
+              if (typeof price === 'string') return price;
+              
+              let priceText = '';
+              if (price.amount) priceText = `${price.amount} € `;
+              if (price.category) priceText = `${priceText}/ ${price.category}`;
+              if (price.includes) priceText = `${priceText} (${price.includes})`;
+              return priceText || 'Prix non spécifié';
+            })
+          : ['Prix non spécifié'];
+        
+        // Informations pratiques
+        const practicalInfo = details.practicalInfo && Array.isArray(details.practicalInfo)
+          ? details.practicalInfo.map(info => info.info || info.toString())
+          : ['Information non disponible'];
+        
+        return {
+          destination: details.destination || '',
+          activities,
+          pricing,
+          // Formater la date d'inscription si disponible
+          registration: details.registration 
+            ? new Date(details.registration).toLocaleDateString('fr-FR')
+            : '',
+          contact: details.contact || 'Contact non spécifié',
+          email: details.email || 'Email non spécifié',
+          practicalInfo
+        };
+      } catch (err) {
+        console.error("Error formatting event details:", err, details);
+        return {
+          destination: '',
+          activities: [],
+          pricing: ['Prix non spécifié'],
+          registration: '',
+          contact: 'Contact non spécifié',
+          email: 'Email non spécifié',
+          practicalInfo: ['Information non disponible']
+        };
+      }
+    },
   },
   mounted() {
+    // Charger les événements depuis l'API
+    this.fetchEvents();
+    
     // Initialize Intersection Observer to trigger animations
     const sections = document.querySelectorAll('.animate-section');
     
@@ -954,5 +1098,54 @@ export default {
   height: auto;
   border-radius: 8px;
   margin: 20px 0;
+}
+
+/* Styles pour le chargement et les erreurs */
+.loading-container,
+.error-container,
+.no-events-container {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #EB1A3A;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text,
+.error-message,
+.no-events-message {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.error-message {
+  color: #EB1A3A;
+  font-weight: 600;
+}
+
+.no-events-message {
+  font-weight: 600;
+  font-size: 20px;
 }
 </style> 

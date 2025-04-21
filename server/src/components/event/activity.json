@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_event_activities",
+  "info": {
+    "displayName": "Activity",
+    "description": "Activités proposées lors de l'événement"
+  },
+  "options": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    }
+  }
+} 
