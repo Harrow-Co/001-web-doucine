@@ -10,11 +10,11 @@
 
 # Variables d'environnement pour la production
 [context.production.environment]
-  VUE_APP_API_URL = "https://9nywpf0b.up.railway.app"
+  VUE_APP_API_URL = "https://api.association-doucine.fr"
 
 # Variables d'environnement pour le déploiement de preview
 [context.deploy-preview.environment]
-  VUE_APP_API_URL = "https://9nywpf0b.up.railway.app"
+  VUE_APP_API_URL = "https://api.association-doucine.fr"
 
 # Configuration des en-têtes de sécurité
 [[headers]]

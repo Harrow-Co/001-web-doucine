@@ -11,7 +11,10 @@ export default [
         'https://v1doucine.netlify.app',
         'http://localhost:8080',
         'http://localhost:3000',
-        'https://9nywpf0b.up.railway.app'
+        'https://9nywpf0b.up.railway.app',
+        'https://association-doucine.fr',
+        'https://www.association-doucine.fr',
+        'https://api.association-doucine.fr'
       ]
     }
   },
