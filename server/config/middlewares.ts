@@ -14,7 +14,8 @@ export default [
         'https://9nywpf0b.up.railway.app',
         'https://association-doucine.fr',
         'https://www.association-doucine.fr',
-        'https://api.association-doucine.fr'
+        'https://api.association-doucine.fr',
+        'https://cms.association-doucine.fr'
       ]
     }
   },
