@@ -5,22 +5,11 @@ export default [
   {
     name: 'strapi::cors',
     config: {
-      enabled: true,
       headers: '*',
-      origin: [
-        'https://v1doucine.netlify.app',
-        'http://localhost:8080',
-        'http://localhost:3000',
-        'https://9nywpf0b.up.railway.app',
-        'https://association-doucine.fr',
-        'https://www.association-doucine.fr',
-        'https://api.association-doucine.fr',
-        'https://cms.association-doucine.fr',
-        'https://pg.association-doucine.fr',
-        'https://cms-doucine.up.railway.app',
-        'https://pts3ft9e.up.railway.app',
-        '*'
-      ]
+      origin: ['*'],
+      methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+      expose: ['Content-Type', 'Authorization', 'X-Frame-Options'],
+      credentials: true
     }
   },
   'strapi::poweredBy',

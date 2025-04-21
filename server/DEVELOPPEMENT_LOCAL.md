@@ -66,6 +66,34 @@ Puis lancez le frontend :
 npm run serve
 ```
 
+## Configuration CORS
+
+Le backend Strapi est configuré pour accepter les requêtes de toutes les origines (`origin: ['*']`). Cette configuration fonctionne bien pour le développement, mais pour la production, vous devriez restreindre les origines autorisées.
+
+Pour modifier la configuration CORS, éditez le fichier `server/config/middlewares.ts` :
+
+```typescript
+{
+  name: 'strapi::cors',
+  config: {
+    headers: '*',
+    // Remplacez ['*'] par une liste d'origines autorisées pour la production
+    origin: ['https://association-doucine.fr', 'https://www.association-doucine.fr'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    expose: ['Content-Type', 'Authorization', 'X-Frame-Options'],
+    credentials: true
+  }
+}
+```
+
+### Résolution des problèmes CORS courants
+
+Si vous rencontrez des erreurs CORS comme "Access-Control-Allow-Origin header is missing" :
+
+1. Vérifiez que l'URL frontend est correctement listée dans la configuration des origines
+2. Assurez-vous que le serveur Strapi est démarré et accessible
+3. Vérifiez si le proxy ou le firewall ne bloque pas les en-têtes CORS
+
 ## En cas de problème
 
 Si vous rencontrez des erreurs de connexion à la base de données :

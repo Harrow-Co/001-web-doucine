@@ -59,13 +59,21 @@ Ce document résume les améliorations et corrections apportées au site web de 
 - Optimisation du chargement des images avec des solutions temporaires
 - Configuration simplifiée de la base de données en développement avec SQLite
 
-## 6. Documentation
+## 6. Correction des problèmes CORS
+
+- Mise à jour de la configuration CORS dans le backend Strapi pour résoudre les erreurs de requêtes cross-origin
+- Suppression de l'option "enabled" dépréciée qui générait des avertissements dans les logs
+- Configuration de CORS avec origin: ['*'] pour accepter les requêtes de toutes les origines (à ajuster pour la production)
+- Ajout des en-têtes d'exposition et méthodes HTTP supportées
+- Configuration des credentials pour permettre l'authentification cross-origin
+
+## 7. Documentation
 
 - Création d'un guide d'installation et de configuration pour les développeurs (DEVELOPPEMENT_LOCAL.md)
 - Détection automatique des problèmes de connexion à la base de données avec suggestions de solutions
 - Amélioration de la documentation des paramètres d'environnement
 
-## 7. À faire prochainement
+## 8. À faire prochainement
 
 1. Remplacer les images d'arrière-plan temporaires par des images définitives pour chaque page
 2. Créer les pages détaillées pour le système de rendez-vous et de contact
@@ -73,7 +81,7 @@ Ce document résume les améliorations et corrections apportées au site web de 
 4. Mettre à jour les liens de partage social
 5. Ajouter des métadonnées pour le SEO
 
-## 8. Instructions de déploiement
+## 9. Instructions de déploiement
 
 Lors du prochain déploiement, vérifiez:
 1. Que le paramètre `DATABASE_SSL=true` est bien configuré sur l'environnement de production
