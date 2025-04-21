@@ -26,7 +26,9 @@ export default [
         'http://localhost:3000',
         'https://v1doucine.netlify.app',
         'https://association-doucine.fr',
-        'https://www.association-doucine.fr'
+        'https://www.association-doucine.fr',
+        'https://pg.association-doucine.fr',
+        'https://cms-doucine.up.railway.app'
       ],
     },
   },
