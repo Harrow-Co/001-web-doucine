@@ -31,6 +31,7 @@ apiClient.interceptors.response.use(
           break;
         case 500:
           console.error('Erreur serveur interne');
+          console.error('Détails:', response.data && response.data.error ? response.data.error : 'Pas de détails disponibles');
           break;
         default:
           console.error(`Erreur ${response.status}`);
@@ -47,7 +48,11 @@ apiClient.interceptors.response.use(
 export const eventService = {
   // Vérifier la santé de l'API
   checkHealth() {
-    return apiClient.get('/health');
+    return apiClient.get('/health')
+      .catch(error => {
+        console.error('Erreur lors de la vérification de santé de l\'API:', error);
+        return Promise.reject(error);
+      });
   },
 
   // Récupérer tous les événements

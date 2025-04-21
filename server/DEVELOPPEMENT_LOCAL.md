@@ -68,23 +68,44 @@ npm run serve
 
 ## Configuration CORS
 
-Le backend Strapi est configuré pour accepter les requêtes de toutes les origines (`origin: ['*']`). Cette configuration fonctionne bien pour le développement, mais pour la production, vous devriez restreindre les origines autorisées.
+Le backend Strapi est configuré pour accepter les requêtes depuis des origines spécifiques définies directement dans le fichier `middlewares.ts`. Par défaut, les domaines suivants sont autorisés:
 
-Pour modifier la configuration CORS, éditez le fichier `server/config/middlewares.ts` :
+- https://association-doucine.fr
+- https://www.association-doucine.fr
+- http://localhost:8080
+- http://localhost:1337
+- * (toutes les origines, pour le développement)
+
+Vous pouvez modifier les origines autorisées en éditant la configuration CORS dans le fichier `server/config/middlewares.ts` :
 
 ```typescript
 {
   name: 'strapi::cors',
   config: {
     headers: '*',
-    // Remplacez ['*'] par une liste d'origines autorisées pour la production
-    origin: ['https://association-doucine.fr', 'https://www.association-doucine.fr'],
+    origin: ['https://association-doucine.fr', 'https://www.association-doucine.fr', 'http://localhost:8080', 'http://localhost:1337', '*'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     expose: ['Content-Type', 'Authorization', 'X-Frame-Options'],
-    credentials: true
+    credentials: true,
+    maxAge: 86400
   }
 }
 ```
+
+Pour la production, il est recommandé de supprimer l'entrée `'*'` de la liste des origines pour des raisons de sécurité.
+
+### Configuration de l'URL publique
+
+Dans le fichier `.env`, configurez l'URL publique du serveur Strapi:
+
+```
+# Server
+HOST=0.0.0.0
+PORT=1337
+URL=http://localhost:1337
+```
+
+Cette URL est utilisée par Strapi pour générer les liens absolus, comme les URLs des médias et des API.
 
 ### Résolution des problèmes CORS courants
 
@@ -93,6 +114,8 @@ Si vous rencontrez des erreurs CORS comme "Access-Control-Allow-Origin header is
 1. Vérifiez que l'URL frontend est correctement listée dans la configuration des origines
 2. Assurez-vous que le serveur Strapi est démarré et accessible
 3. Vérifiez si le proxy ou le firewall ne bloque pas les en-têtes CORS
+4. Si vous utilisez un proxy en production, assurez-vous qu'il transmet correctement les en-têtes CORS
+5. Pour les environnements de production, vérifiez que le code 502 Bad Gateway n'est pas causé par des problèmes de configuration du serveur
 
 ## En cas de problème
 
