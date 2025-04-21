@@ -24,7 +24,9 @@ export default [
         'http://localhost:1337',
         'http://localhost:8080',
         'http://localhost:3000',
-        'https://v1doucine.netlify.app'
+        'https://v1doucine.netlify.app',
+        'https://association-doucine.fr',
+        'https://www.association-doucine.fr'
       ],
     },
   },
