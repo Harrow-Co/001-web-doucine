@@ -25,8 +25,8 @@ export const eventService = {
   getUpcomingEvents() {
     const today = new Date().toISOString().split('T')[0];
     console.log("Today's date for filtering:", today);
-    // Récupérer les événements dont la date est supérieure ou égale à aujourd'hui
-    return apiClient.get(`/events?populate=*&filters[date][$gte]=${today}&sort=date:asc`);
+    // Récupérer les événements avec les champs imbriqués spécifiques
+    return apiClient.get(`/events?populate[0]=image&populate[1]=details&populate[2]=details.activities&populate[3]=details.pricing&sort=date:asc`);
   },
 
   // Récupérer les événements passés
