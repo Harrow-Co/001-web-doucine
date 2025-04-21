@@ -122,26 +122,26 @@
                 <p v-if="selectedEvent.details.destination">Destination : {{ selectedEvent.details.destination }}</p>
               </div>
               
-              <div class="modal-info-section animate-slide-right delay-3" v-if="selectedEvent.details.activities">
+              <div class="modal-info-section animate-slide-right delay-3" v-if="selectedEvent.details && selectedEvent.details.activities && selectedEvent.details.activities.length > 0">
                 <h3 class="section-title">
                   <i class="fas fa-tasks section-icon"></i>
                   Activités
                 </h3>
                 <ul class="modal-list">
                   <li v-for="(activity, index) in selectedEvent.details.activities" :key="index">
-                    {{ activity }}
+                    {{ typeof activity === 'string' ? activity : (activity.name || activity.description || activity) }}
                   </li>
                 </ul>
               </div>
               
-              <div class="modal-info-section animate-slide-right delay-4">
+              <div class="modal-info-section animate-slide-right delay-4" v-if="selectedEvent.details && selectedEvent.details.pricing && selectedEvent.details.pricing.length > 0">
                 <h3 class="section-title">
                   <i class="fas fa-tag section-icon"></i>
                   Tarifs
                 </h3>
                 <ul class="modal-list">
                   <li v-for="(price, index) in selectedEvent.details.pricing" :key="index">
-                    {{ price }}
+                    {{ formatPrice(price) }}
                   </li>
                 </ul>
               </div>
@@ -234,9 +234,18 @@ export default {
       if (event.attributes && event.attributes.date) {
         return dateFormatter.formatEventDate(event.attributes.date);
       } else if (event.date) {
-        // Support du format de date personnalisé
-        const fullDate = `${event.date.annee}-${this.getMonthNumber(event.date.mois)}-${event.date.jour}`;
-        return dateFormatter.formatEventDate(fullDate);
+        // Pour les dates au format du composant
+        if (typeof event.date === 'object' && event.date.jour && event.date.mois && event.date.annee) {
+          const monthNumber = this.getMonthNumber(event.date.mois);
+          const fullDate = `${event.date.annee}-${monthNumber}-${event.date.jour}`;
+          console.log("Date reconstruite pour formatage:", fullDate);
+          return dateFormatter.formatEventDate(fullDate);
+        }
+        // Pour les dates en format ISO direct
+        else if (typeof event.date === 'string') {
+          console.log("Date directe à formater:", event.date);
+          return dateFormatter.formatEventDate(event.date);
+        }
       }
       
       return '';
@@ -259,11 +268,12 @@ export default {
         
         // Récupérer les événements depuis l'API Strapi
         const response = await eventService.getUpcomingEvents();
-        console.log("API Response:", response);
+        console.log("API Response structure:", JSON.stringify(response.data));
         
         if (response && response.data && response.data.data) {
+          console.log("Number of events retrieved:", response.data.data.length);
           const formattedEvents = this.formatEvents(response.data.data);
-          console.log("Formatted events:", formattedEvents);
+          console.log("Final formatted events:", formattedEvents);
           this.events = formattedEvents;
           this.error = null;
         } else {
@@ -289,53 +299,134 @@ export default {
       
       return apiEvents.map(event => {
         try {
-          console.log("Processing event:", event);
+          console.log("Processing event with full structure:", JSON.stringify(event));
           
-          const { id, attributes } = event;
-          
-          if (!attributes) {
-            console.error("Event missing attributes:", event);
+          if (!event) {
+            console.error("Event is null or undefined");
             return null;
           }
           
-          if (!attributes.date) {
-            console.error("Event missing date:", attributes);
+          // Pour les réponses de l'API Strapi, les événements n'ont pas d'attributs imbriqués
+          // Les données sont directement au niveau supérieur
+          const { 
+            id, 
+            title, 
+            description, 
+            date, 
+            time, 
+            location, 
+            image, 
+            details 
+          } = event;
+          
+          if (!date) {
+            console.error("Event missing date:", event);
             return null;
           }
           
-          const eventDate = new Date(attributes.date);
+          console.log("Date d'origine de Strapi:", date);
+          const eventDate = new Date(date);
+          console.log("Date convertie en objet Date:", eventDate);
+          console.log("Jour:", eventDate.getDate());
+          console.log("Mois:", eventDate.getMonth());
+          console.log("Année:", eventDate.getFullYear());
           
-          // Create default details if none are provided
-          const defaultDetails = {
-            destination: '',
-            activities: [],
-            pricing: ['Prix non spécifié'],
-            registration: '',
-            contact: attributes.contact || '0694 20 52 31',
-            email: attributes.email || 'doucine97351@gmail.com',
+          // Correction pour éviter les erreurs de fuseau horaire
+          // Utiliser directement la date ISO pour éviter les problèmes de timezone
+          const dateParts = date.split('-');
+          const year = parseInt(dateParts[0]);
+          const month = parseInt(dateParts[1]) - 1; // Les mois commencent à 0 en JavaScript
+          const day = parseInt(dateParts[2]);
+          
+          console.log("Parties de date extraites:", year, month, day);
+          
+          // Construire l'URL de l'image si disponible
+          let imageUrl = require('@/assets/images/PHOTO-2025-03-13-20-39-40.jpg');
+          if (image) {
+            // Vérifier si l'URL est correctement formatée
+            if (image.url) {
+              imageUrl = `${process.env.VUE_APP_API_URL || 'http://localhost:1337'}${image.url}`;
+              console.log("Constructed image URL:", imageUrl);
+            } else if (image.formats && image.formats.medium) {
+              imageUrl = `${process.env.VUE_APP_API_URL || 'http://localhost:1337'}${image.formats.medium.url}`;
+              console.log("Using medium format image:", imageUrl);
+            }
+          }
+          
+          // Extraire les détails de l'événement
+          const eventDetails = details || {};
+          console.log("Event details from API:", JSON.stringify(eventDetails));
+          
+          // Vérifier la structure des activités et tarifs
+          console.log("Activities structure:", eventDetails.activities);
+          console.log("Pricing structure:", eventDetails.pricing);
+          
+          // Récupérer les activities depuis le champ activities_list si disponible
+          // Dans Strapi, les champs de type liste sont souvent stockés avec un suffixe _list
+          let activitiesList = [];
+          if (eventDetails.activities_list && Array.isArray(eventDetails.activities_list)) {
+            activitiesList = eventDetails.activities_list;
+          } else if (eventDetails.activities && Array.isArray(eventDetails.activities)) {
+            activitiesList = eventDetails.activities;
+          }
+          
+          // Récupérer les tarifs depuis le champ pricing_list si disponible
+          let pricingList = ['Prix non spécifié'];
+          if (eventDetails.pricing_list && Array.isArray(eventDetails.pricing_list)) {
+            pricingList = eventDetails.pricing_list;
+          } else if (eventDetails.pricing && Array.isArray(eventDetails.pricing)) {
+            pricingList = eventDetails.pricing;
+          } else if (eventDetails.pricing && typeof eventDetails.pricing === 'object') {
+            // Si pricing est un objet unique et non un tableau
+            pricingList = [eventDetails.pricing];
+          }
+          
+          // Pour les événements sans détails structurés, créer des valeurs par défaut à partir de tarif et activity
+          if (eventDetails.tarif && (!pricingList.length || pricingList[0] === 'Prix non spécifié')) {
+            if (typeof eventDetails.tarif === 'string') {
+              pricingList = [eventDetails.tarif];
+            } else if (typeof eventDetails.tarif === 'object') {
+              pricingList = [eventDetails.tarif];
+            }
+          }
+          
+          console.log("Final pricing list:", pricingList);
+          
+          if (eventDetails.activity && activitiesList.length === 0) {
+            activitiesList = [eventDetails.activity];
+          }
+          
+          const formattedDetails = {
+            destination: eventDetails.destination || '',
+            activities: activitiesList,
+            pricing: pricingList,
+            registration: eventDetails.registration 
+              ? new Date(eventDetails.registration).toLocaleDateString('fr-FR')
+              : '',
+            contact: eventDetails.contact || '0694 20 52 31',
+            email: eventDetails.email || 'doucine97351@gmail.com',
             practicalInfo: ['Information non disponible']
           };
           
           const formattedEvent = {
             id,
-            titre: attributes.title || "Sans titre",
-            description: attributes.description || "Aucune description",
-            horaire: attributes.time || "Horaire non spécifié",
-            lieu: attributes.location || "Lieu non spécifié",
+            titre: title || "Sans titre",
+            description: description || "Aucune description",
+            horaire: time || "Horaire non spécifié",
+            lieu: location || "Lieu non spécifié",
             // Extraire la date pour l'affichage dans la carte
             date: {
-              jour: eventDate.getDate().toString(),
-              mois: dateFormatter.getMonthAbbreviation(eventDate.getMonth()),
-              annee: eventDate.getFullYear().toString()
+              jour: day.toString(),
+              mois: dateFormatter.getMonthAbbreviation(month),
+              annee: year.toString()
             },
-            // Construire l'URL de l'image
-            image: attributes.image && attributes.image.data 
-              ? `${process.env.VUE_APP_API_URL || 'http://localhost:1337'}${attributes.image.data.attributes.url}`
-              : require('@/assets/images/PHOTO-2025-03-13-20-39-40.jpg'),
-            // Transformer les détails ou utiliser les valeurs par défaut
-            details: attributes.details ? this.formatEventDetails(attributes.details) : defaultDetails
+            // Utiliser l'URL d'image construite
+            image: imageUrl,
+            // Utiliser les détails formatés
+            details: formattedDetails
           };
           
+          console.log("Formatted event:", formattedEvent);
           return formattedEvent;
         } catch (err) {
           console.error("Error formatting event:", err, event);
@@ -404,6 +495,43 @@ export default {
           practicalInfo: ['Information non disponible']
         };
       }
+    },
+    formatPrice(price) {
+      if (typeof price === 'string') {
+        return price;
+      } else if (typeof price === 'object') {
+        let priceText = '';
+        // Si l'objet a un prix ou un montant
+        if (price.amount || price.price) {
+          const amount = price.amount || price.price;
+          priceText = `${amount} €`;
+        }
+        
+        // Si l'objet a une catégorie
+        if (price.category) {
+          // Si nous avons déjà un prix, ajouter une séparation
+          if (priceText) {
+            priceText = `${priceText} - ${price.category}`;
+          } else {
+            priceText = price.category;
+          }
+        }
+        
+        // Informations supplémentaires (inclus, description, etc.)
+        if (price.includes) {
+          priceText = `${priceText} (${price.includes})`;
+        } else if (price.description) {
+          priceText = `${priceText} (${price.description})`;
+        }
+        
+        // Si nous avons construit un texte de prix
+        if (priceText) {
+          return priceText;
+        }
+      }
+      
+      // Valeur par défaut si aucun format reconnu
+      return 'Prix non spécifié';
     },
   },
   mounted() {

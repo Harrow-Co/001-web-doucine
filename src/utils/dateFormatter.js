@@ -51,16 +51,28 @@ export const formatDate = (isoDate, options = {}) => {
  * @returns {string} - Date formatée avec jour de la semaine
  */
 export const formatEventDate = (isoDate) => {
-  const date = new Date(isoDate);
+  console.log("Date ISO à formater:", isoDate);
+  
+  // Utiliser une approche qui évite les problèmes de fuseau horaire
+  const dateParts = isoDate.split('T')[0].split('-');
+  const year = parseInt(dateParts[0]);
+  const month = parseInt(dateParts[1]) - 1; // Les mois commencent à 0 en JavaScript
+  const day = parseInt(dateParts[2]);
+  
+  // Créer la date avec les parties extraites (en spécifiant UTC)
+  const date = new Date(Date.UTC(year, month, day));
+  console.log("Date créée pour formatage:", date);
   
   const dayNames = ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'];
-  const dayOfWeek = dayNames[date.getDay()];
+  const dayOfWeek = dayNames[date.getUTCDay()];
   
-  const day = date.getDate();
-  const monthIndex = date.getMonth();
-  const year = date.getFullYear();
+  const dayNumber = date.getUTCDate();
+  const monthIndex = date.getUTCMonth();
+  const yearNumber = date.getUTCFullYear();
   
-  return `${dayOfWeek} ${day} ${getMonthName(monthIndex)} ${year}`;
+  console.log("Jour:", dayNumber, "Mois:", monthIndex, "Année:", yearNumber);
+  
+  return `${dayOfWeek} ${dayNumber} ${getMonthName(monthIndex)} ${yearNumber}`;
 };
 
 export default {

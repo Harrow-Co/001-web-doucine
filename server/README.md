@@ -173,3 +173,37 @@ Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/
 ---
 
 <sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+
+## Déploiement sur Railway
+
+Ce projet est configuré pour être déployé sur Railway. Voici les étapes pour un déploiement réussi:
+
+### Configuration de la base de données
+
+1. Créez une base de données PostgreSQL sur Railway
+2. Railway devrait injecter automatiquement la variable `DATABASE_URL` dans votre service
+3. Assurez-vous que les variables d'environnement suivantes sont configurées:
+   - `DATABASE_CLIENT=postgres`
+   - `DATABASE_POOL_MIN=0`
+   - `DATABASE_POOL_MAX=5`
+   - `DATABASE_CONNECTION_TIMEOUT=60000`
+   - `DATABASE_SSL_REJECT_UNAUTHORIZED=false`
+
+### Résolution des problèmes de connexion
+
+Si vous rencontrez l'erreur "Knex: Timeout acquiring a connection", vérifiez que:
+
+1. La base de données PostgreSQL est accessible
+2. Les paramètres de pool de connexion sont correctement configurés
+3. Vérifiez les journaux de démarrage pour voir les variables d'environnement détectées
+
+### Secrets et variables d'environnement
+
+N'oubliez pas de générer et configurer les secrets suivants:
+- `APP_KEYS` (générez avec `node -e "console.log(require('crypto').randomBytes(16).toString('base64'))"`)
+- `API_TOKEN_SALT`
+- `ADMIN_JWT_SECRET`
+- `TRANSFER_TOKEN_SALT`
+- `JWT_SECRET`
+
+Ces valeurs ne doivent jamais être partagées ou versionnées dans Git.
