@@ -3,8 +3,12 @@
 ## Correction des configurations
 - Correction des problèmes de configuration SSL pour la base de données PostgreSQL en production avec `DATABASE_SSL=true`.
 - Harmonisation des URL API dans les fichiers de configuration:
-  - `.env`: URL API mis à jour pour le développement local (`http://localhost:1337`).
+  - `.env`: URL API mis à jour pour le déploiement sur Railway (`https://cms.association-doucine.fr`).
   - `.env.production`: Configuration complète pour l'environnement de production.
+- Résolution des problèmes CORS avec Railway:
+  - Configuration CORS mise à jour pour accepter les requêtes depuis tous les domaines autorisés.
+  - Configuration spécifique pour l'environnement de production dans `server/config/env/production/server.ts`.
+  - Ajout de la configuration proxy pour fonctionner correctement derrière le proxy de Railway.
 
 ## Améliorations du code
 - Amélioration du service API (`src/services/api.js`):
