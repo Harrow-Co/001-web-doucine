@@ -54,6 +54,9 @@
               </router-link>
             </div>
           </div>
+          <li class="nav-item">
+            <router-link to="/contact" class="nav-link">Contact</router-link>
+          </li>
         </div>
         <div class="nav-actions">
           <button class="btn btn-secondary" @click="showContactModal">Rejoindre</button>

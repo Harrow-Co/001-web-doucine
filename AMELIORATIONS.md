@@ -1,94 +1,58 @@
-# Améliorations apportées au projet Doucine
+# Améliorations et corrections apportées au site Doucine
 
-Ce document résume les améliorations et corrections apportées au site web de l'association Doucine.
+## Correction des configurations
+- Correction des problèmes de configuration SSL pour la base de données PostgreSQL en production avec `DATABASE_SSL=true`.
+- Harmonisation des URL API dans les fichiers de configuration:
+  - `.env`: URL API mis à jour pour le développement local (`http://localhost:1337`).
+  - `.env.production`: Configuration complète pour l'environnement de production.
 
-## 1. Correction des configurations
+## Améliorations du code
+- Amélioration du service API (`src/services/api.js`):
+  - Gestion des erreurs avancée avec des messages spécifiques selon les codes HTTP.
+  - Intercepteurs Axios pour capturer et traiter les erreurs de manière centralisée.
+  - Ajout de données de secours (fallback) en cas d'indisponibilité de l'API.
+- Modification de la configuration CORS dans le serveur Strapi:
+  - Ajout des origines autorisées dans `server/config/middlewares.ts`.
+  - Configuration conditionnelle des URL en fonction de l'environnement dans `server/config/server.ts`.
 
-### Configuration SSL de la base de données
-- Activé SSL pour la base de données PostgreSQL en production via le paramètre `DATABASE_SSL=true`
-- Cette modification est importante pour la sécurité des connexions à la base de données en production
+## Nouvelles fonctionnalités
+- Pages détaillées pour les différentes actions de l'association, avec animations et témoignages
+- Page Contact moderne et responsive avec formulaire de contact fonctionnel:
+  - Validation des données côté client.
+  - Connexion à l'API Strapi via le service contactService.
+  - Gestion des messages de succès et d'erreur.
+  - Conception responsive et accessible.
 
-### Harmonisation des URL d'API
-- Uniformisé les URL d'API entre les différents fichiers de configuration :
-  - `.env`: URL d'API mise à jour vers `https://cms.association-doucine.fr`
-  - `.env.production`: Déjà correctement configuré sur `https://cms.association-doucine.fr`
-  - `netlify.toml`: Déjà correctement configuré
+## Structure du projet
+- Nouveau dossier `src/views/actions/` pour organiser les pages d'actions.
+- Préparation de l'arborescence pour les nouvelles images.
 
-## 2. Améliorations du code
+## Performance et résilience
+- Amélioration de la résilience face aux problèmes de connexion API:
+  - Stratégie de repli (fallback) avec données locales en cas d'erreur.
+  - Système de retry pour les requêtes critiques.
+  - Gestion intelligente des timeout pour éviter les blocages de l'interface.
+- Optimisation du chargement des images:
+  - Solution temporaire avec des images placeholder.
+- Configuration de base de données simplifiée pour le développement:
+  - Utilisation de SQLite en développement local.
 
-### API Service
-- Ajout d'une gestion d'erreurs plus robuste avec des messages d'erreur spécifiques
-- Implémentation d'intercepteurs Axios pour une gestion globale des erreurs
-- Ajout de mécanismes de fallback pour continuer à fonctionner en cas d'indisponibilité de l'API
-- Simplification du code pour une meilleure maintenabilité
+## Documentation
+- Création d'un guide d'installation et configuration pour les développeurs (`DEVELOPPEMENT_LOCAL.md`).
+- Détection automatique des problèmes de connexion à la base de données avec suggestions de solutions.
+- Documentation renforcée des paramètres d'environnement.
 
-### Navigation et routage
-- Ajout des routes manquantes pour les sections d'actions mentionnées dans la navbar:
-  - /actions/domicile (Soutien à domicile)
-  - /actions/activites (Activités sociales)
-  - /actions/bien-etre (Ateliers bien-être)
-  - /actions/prevention (Prévention santé)
-  - /actions/administratif (Soutien administratif)
-- Création des composants Vue correspondants pour ces routes
+## À faire prochainement
+- Remplacer les images temporaires de background par les versions finales.
+- Ajouter des métadonnées SEO pour chaque page.
+- Ajouter les images manquantes pour les actions de l'association.
+- Créer les pages d'actions restantes avec un contenu détaillé.
+- Optimiser les performances générales du site pour les mobiles.
+- Ajouter une carte interactive Google Maps sur la page Contact
+- Remplacer les informations temporaires (adresse, téléphone, etc.) par les informations réelles de l'association
 
-## 3. Nouvelles fonctionnalités
-
-### Pages d'actions
-- Création de toutes les pages détaillées pour les différentes actions de l'association avec des designs cohérents :
-  - Page "Soutien à domicile" avec animations et présentation des services
-  - Page "Activités sociales" avec témoignages et galerie
-  - Page "Ateliers bien-être" avec présentation des bienfaits et activités
-  - Page "Prévention Santé" avec thématiques abordées et calendrier
-  - Page "Soutien Administratif" avec présentation de la démarche et FAQ
-
-### Fonctionnalités des boutons dans la navbar
-- Ajout de fonctionnalités aux boutons "Rejoindre" et "S'inscrire" dans la barre de navigation
-- Le bouton "Rejoindre" affiche un message de contact temporaire
-- Le bouton "S'inscrire" redirige vers la page des événements
-
-## 4. Structure du projet
-
-### Organisation des fichiers
-- Ajout du dossier `src/views/actions/` pour regrouper toutes les pages d'actions
-- Ajout de l'image placeholder-bg.jpg pour les arrière-plans temporaires
-
-## 5. Performance et résilience
-
-- Amélioration de la résilience de l'application face aux problèmes de connexion API
-- Utilisation de stratégies de fallback pour garantir que l'application reste fonctionnelle
-- Optimisation du chargement des images avec des solutions temporaires
-- Configuration simplifiée de la base de données en développement avec SQLite
-
-## 6. Correction des problèmes CORS
-
-- Mise à jour de la configuration CORS dans le backend Strapi pour résoudre les erreurs de requêtes cross-origin
-- Suppression de l'option "enabled" dépréciée qui générait des avertissements dans les logs
-- Configuration de CORS avec une liste statique d'origines autorisées pour améliorer la stabilité
-- Correction du problème d'accès aux variables d'environnement dans les middlewares
-- Ajout des en-têtes d'exposition, méthodes HTTP supportées et durée de cache (maxAge)
-- Configuration des credentials pour permettre l'authentification cross-origin
-- Résolution du problème de code 502 Bad Gateway affectant les requêtes API en production
-
-## 7. Documentation
-
-- Création d'un guide d'installation et de configuration pour les développeurs (DEVELOPPEMENT_LOCAL.md)
-- Détection automatique des problèmes de connexion à la base de données avec suggestions de solutions
-- Amélioration de la documentation des paramètres d'environnement
-
-## 8. À faire prochainement
-
-1. Remplacer les images d'arrière-plan temporaires par des images définitives pour chaque page
-2. Créer les pages détaillées pour le système de rendez-vous et de contact
-3. Intégrer un formulaire de contact fonctionnel
-4. Mettre à jour les liens de partage social
-5. Ajouter des métadonnées pour le SEO
-
-## 9. Instructions de déploiement
-
-Lors du prochain déploiement, vérifiez:
-1. Que le paramètre `DATABASE_SSL=true` est bien configuré sur l'environnement de production
-2. Que l'URL de l'API est correctement configurée pour pointer vers `https://cms.association-doucine.fr`
-3. Que les nouvelles routes sont correctement accessibles après déploiement 
-4. Que les images temporaires sont bien chargées et affichées
-5. Que la configuration CORS dans le fichier `middlewares.ts` inclut uniquement les domaines nécessaires en production (supprimer l'astérisque `'*'` de la liste des origines)
-6. Vérifiez le journal d'erreurs du serveur après déploiement pour détecter d'éventuels problèmes CORS ou proxy 
+## Instructions de déploiement
+- Vérifier que la configuration SSL est active pour la base de données en production.
+- S'assurer que les URL API sont correctement configurées pour l'environnement de production.
+- Vérifier les paramètres CORS pour permettre l'accès depuis les domaines autorisés.
+- Configurer le pool de connexions de la base de données pour éviter les timeouts. 

@@ -5,6 +5,7 @@ import Apropos from "../views/Apropos.vue";
 import AboutUs from "../views/AboutUs.vue";
 import PolitiqueConfidentialite from "../views/PolitiqueConfidentialite.vue";
 import NotFound from "../views/NotFound.vue";
+import Contact from '../views/Contact.vue'
 
 Vue.use(VueRouter);
 
@@ -69,6 +70,11 @@ const routes = [
     path: "/actions/administratif",
     name: "SoutienAdministratif",
     component: () => import("../views/actions/SoutienAdministratif.vue"),
+  },
+  {
+    path: '/contact',
+    name: 'Contact',
+    component: Contact
   },
   // Route 404 pour toutes les URL non définies
   {

@@ -6,7 +6,7 @@ export default [
     name: 'strapi::cors',
     config: {
       headers: '*',
-      origin: ['https://association-doucine.fr', 'https://www.association-doucine.fr', 'http://localhost:8080', 'http://localhost:1337', '*'],
+      origin: ['https://association-doucine.fr', 'https://www.association-doucine.fr', 'http://localhost:8080', 'http://localhost:3000', 'http://localhost:1337'],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       expose: ['Content-Type', 'Authorization', 'X-Frame-Options'],
       credentials: true,

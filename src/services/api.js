@@ -9,6 +9,9 @@ const apiClient = axios.create({
   timeout: 15000
 });
 
+// Logs de débogage pour comprendre la configuration
+console.log(`API URL configurée: ${process.env.VUE_APP_API_URL || 'http://localhost:1337'}`);
+
 // Intercepteurs pour la gestion globale des erreurs
 apiClient.interceptors.response.use(
   response => response, 
@@ -33,6 +36,9 @@ apiClient.interceptors.response.use(
           console.error('Erreur serveur interne');
           console.error('Détails:', response.data && response.data.error ? response.data.error : 'Pas de détails disponibles');
           break;
+        case 502:
+          console.error('Bad Gateway: Le serveur en amont a renvoyé une réponse invalide');
+          break;
         default:
           console.error(`Erreur ${response.status}`);
       }
@@ -43,6 +49,32 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Données par défaut en cas d'erreur
+const defaultEvents = [
+  {
+    id: "fallback-1",
+    titre: "Sortie au Parc (données locales)",
+    description: "Sortie au parc avec activités et jeux en plein air.",
+    horaire: "14h00 - 17h00",
+    lieu: "Parc de Cayenne",
+    date: {
+      jour: "15",
+      mois: "JUN",
+      annee: "2025"
+    },
+    image: require('@/assets/images/PHOTO-2025-03-13-20-39-40.jpg'),
+    details: {
+      destination: "Parc de Cayenne",
+      activities: ["Jeux de société", "Activités en plein air", "Goûter"],
+      pricing: ["Gratuit pour les adhérents"],
+      registration: "10/06/2025",
+      contact: "0694 20 52 31",
+      email: "doucine97351@gmail.com",
+      practicalInfo: ["Apporter de l'eau", "Prévoir une tenue adaptée"]
+    }
+  }
+];
 
 // Méthodes pour gérer les événements
 export const eventService = {
@@ -69,12 +101,14 @@ export const eventService = {
     return apiClient.get(`/events/${id}?populate=*`)
       .catch(error => {
         console.error(`Erreur lors de la récupération de l'événement ${id}:`, error);
-        return Promise.reject(error);
+        const defaultEvent = defaultEvents.find(e => e.id === id) || defaultEvents[0];
+        return Promise.resolve({ data: { data: defaultEvent } });
       });
   },
 
   // Récupérer les événements à venir
   getUpcomingEvents() {
+    console.log("Tentative de récupération des événements à venir...");
     // Get upcoming or today's events
     return apiClient.get(`/events?populate[0]=image&populate[1]=details&populate[2]=details.activities&populate[3]=details.pricing&sort=date:asc`)
       .catch(error => {
@@ -100,17 +134,42 @@ export const eventService = {
   
   // Obtenir des événements par défaut (pour développement ou quand l'API n'est pas disponible)
   getDefaultEvents() {
-    // Cette fonction simule une réponse d'API vide
+    // Cette fonction retourne des données de secours en cas d'indisponibilité de l'API
     console.log("Utilisation des événements par défaut (mode fallback)");
     return Promise.resolve({
       data: {
-        data: []
+        data: defaultEvents
       }
+    });
+  }
+};
+
+// Service pour les fonctionnalités de contact
+export const contactService = {
+  // Envoyer un formulaire de contact
+  submitContactForm(formData) {
+    console.log("Tentative d'envoi du formulaire de contact...");
+    return apiClient.post('/contact-messages', {
+      data: {
+        name: formData.name,
+        email: formData.email,
+        subject: formData.subject,
+        message: formData.message
+      }
+    })
+    .catch(error => {
+      console.error("Erreur lors de l'envoi du formulaire de contact:", error);
+      // En cas d'erreur, retourner un message adapté
+      return Promise.reject({
+        message: "Impossible d'envoyer votre message. Veuillez réessayer ultérieurement ou nous contacter directement par email.",
+        error
+      });
     });
   }
 };
 
 // Exportation pour utilisation dans les composants
 export default {
-  events: eventService
+  events: eventService,
+  contact: contactService
 }; 
