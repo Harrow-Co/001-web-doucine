@@ -20,7 +20,8 @@
   - Configuration conditionnelle des URL en fonction de l'environnement dans `server/config/server.ts`.
 
 ## Nouvelles fonctionnalités
-- Pages détaillées pour les différentes actions de l'association, avec animations et témoignages
+- **Pages d'actions détaillées** : Création des pages détaillées pour les différentes actions de l'association, avec animations et témoignages.
+- **Page de contact** : Ajout d'une page de contact moderne avec formulaire fonctionnel, informations de contact et espace pour carte interactive.
 - Formulaire de contact fonctionnel qui envoie les messages à l'API Strapi.
 - Intégration de la validation des formulaires côté client et serveur pour une meilleure expérience utilisateur.
 - Implémentation de messages de feedback pour les utilisateurs lors de la soumission du formulaire.
@@ -50,7 +51,10 @@
 - Documentation renforcée des paramètres d'environnement.
 
 ## À faire prochainement
-- Remplacer les images temporaires de background par les versions finales.
+- **Images** : Remplacer les images temporaires (placeholder-bg.jpg, placeholder-map.jpg) par les images définitives.
+- **SEO** : Ajouter les métadonnées pour l'optimisation des moteurs de recherche.
+- **Carte interactive** : Intégrer une carte Google Maps ou OpenStreetMap sur la page de contact.
+- **Formulaire de contact** : Tester complètement le formulaire avec le backend Strapi.
 - Ajouter des métadonnées SEO pour chaque page.
 - Ajouter les images manquantes pour les actions de l'association.
 - Créer les pages d'actions restantes avec un contenu détaillé.
@@ -80,4 +84,33 @@
     - `DATABASE_SSL=true`
     - `DATABASE_SSL_REJECT_UNAUTHORIZED=false`
     - `NODE_ENV=production`
-  - Poussez les modifications sur GitHub et déclenchez un redéploiement sur Railway. 
+  - Poussez les modifications sur GitHub et déclenchez un redéploiement sur Railway.
+
+## Améliorations et résolutions de problèmes
+
+## Problème CORS actuel
+
+Les logs montrent actuellement une erreur CORS lors de l'accès à `https://cms.association-doucine.fr` :
+```
+Blocage d'une requête multiorigines (Cross-Origin Request) : la politique « Same Origin » ne permet pas de consulter la ressource distante située sur https://cms.association-doucine.fr/api/events...
+```
+
+### Solution implémentée
+- Configuration du middleware CORS dans `server/config/middlewares.ts` pour autoriser toutes les origines
+- Préparation de la configuration pour Railway avec les fichiers nécessaires en production
+
+### Étapes de déploiement requises
+1. Déployer l'application Strapi sur Railway selon les instructions dans `RAILWAY_CONFIG.md`
+2. Vérifier que le service PostgreSQL est correctement provisionné
+3. Configurer les variables d'environnement selon la documentation
+4. Une fois déployé, les requêtes CORS fonctionneront correctement
+
+## Mode de repli (fallback)
+
+Notre système de repli fonctionne mais présente des problèmes de formatage de date avec les données locales :
+```
+Error formatting event: TypeError: a.split is not a function
+```
+
+### Solution à implémenter
+Mettre à jour la fonction de formatage des événements pour gérer correctement les dates dans le mode de repli. 

@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: "NotFound",
+  name: "NotFoundView",
   metaInfo: {
     title: "Page non trouvée | Doucine"
   }
