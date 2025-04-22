@@ -149,6 +149,23 @@ export const contactService = {
   // Envoyer un formulaire de contact
   submitContactForm(formData) {
     console.log("Tentative d'envoi du formulaire de contact...");
+    
+    // Validation de base côté client
+    if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+      console.error("Validation du formulaire échouée: champs manquants");
+      return Promise.reject({
+        message: "Tous les champs sont obligatoires."
+      });
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      console.error("Validation du formulaire échouée: email invalide");
+      return Promise.reject({
+        message: "L'adresse email n'est pas valide."
+      });
+    }
+    
     return apiClient.post('/contact-messages', {
       data: {
         name: formData.name,
@@ -159,7 +176,22 @@ export const contactService = {
     })
     .catch(error => {
       console.error("Erreur lors de l'envoi du formulaire de contact:", error);
-      // En cas d'erreur, retourner un message adapté
+      
+      // Messages d'erreur plus spécifiques selon le type d'erreur
+      if (error.response) {
+        const status = error.response.status;
+        if (status === 400) {
+          return Promise.reject({
+            message: "Validation échouée. Veuillez vérifier vos informations."
+          });
+        } else if (status === 500) {
+          return Promise.reject({
+            message: "Erreur serveur. Notre équipe a été notifiée."
+          });
+        }
+      }
+      
+      // Message d'erreur générique pour les autres cas
       return Promise.reject({
         message: "Impossible d'envoyer votre message. Veuillez réessayer ultérieurement ou nous contacter directement par email.",
         error

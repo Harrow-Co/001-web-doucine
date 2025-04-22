@@ -17,6 +17,9 @@
 
 ## Nouvelles fonctionnalités
 - Pages détaillées pour les différentes actions de l'association, avec animations et témoignages
+- Formulaire de contact fonctionnel qui envoie les messages à l'API Strapi.
+- Intégration de la validation des formulaires côté client et serveur pour une meilleure expérience utilisateur.
+- Implémentation de messages de feedback pour les utilisateurs lors de la soumission du formulaire.
 - Page Contact moderne et responsive avec formulaire de contact fonctionnel:
   - Validation des données côté client.
   - Connexion à l'API Strapi via le service contactService.
