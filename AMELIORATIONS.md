@@ -58,8 +58,26 @@
 - Ajouter une carte interactive Google Maps sur la page Contact
 - Remplacer les informations temporaires (adresse, téléphone, etc.) par les informations réelles de l'association
 
+## Déploiement en production
+- Mise à jour des fichiers de configuration pour la production :
+  - Création de `.env.production` avec l'URL de l'API en production
+  - Configuration optimisée de `vue.config.js` avec désactivation des source maps
+  - Scripts de build spécifiques à la production dans `package.json`
+- Ajustement de la configuration Strapi pour Railway :
+  - Configuration correcte de la base de données PostgreSQL avec support SSL
+  - Paramètres de pool de connexion optimisés pour éviter les déconnexions
+  - Prise en compte des variables d'environnement Railway
+
 ## Instructions de déploiement
-- Vérifier que la configuration SSL est active pour la base de données en production.
-- S'assurer que les URL API sont correctement configurées pour l'environnement de production.
-- Vérifier les paramètres CORS pour permettre l'accès depuis les domaines autorisés.
-- Configurer le pool de connexions de la base de données pour éviter les timeouts. 
+- Pour déployer le frontend :
+  ```bash
+  npm run build:prod  # Utilise .env.production
+  # Puis déployez le contenu du dossier dist sur votre hébergeur
+  ```
+- Pour le backend Strapi sur Railway :
+  - Assurez-vous que les variables d'environnement incluent :
+    - `DATABASE_URL`: URL de connexion PostgreSQL (fournie par Railway)
+    - `DATABASE_SSL=true`
+    - `DATABASE_SSL_REJECT_UNAUTHORIZED=false`
+    - `NODE_ENV=production`
+  - Poussez les modifications sur GitHub et déclenchez un redéploiement sur Railway. 

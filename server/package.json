@@ -1,45 +1,30 @@
 {
-  "name": "server",
-  "version": "0.1.0",
+  "name": "doucine-cms",
   "private": true,
-  "description": "A Strapi application",
+  "version": "0.1.0",
+  "description": "CMS Strapi pour le site de l'association Doucine",
   "scripts": {
-    "build": "strapi build",
-    "console": "strapi console",
-    "deploy": "strapi deploy",
-    "dev": "strapi develop",
     "develop": "strapi develop",
-    "seed:example": "node ./scripts/seed.js",
-    "start": "node ./scripts/env-check.js && strapi start",
-    "strapi": "strapi",
-    "upgrade": "npx @strapi/upgrade latest",
-    "upgrade:dry": "npx @strapi/upgrade latest --dry"
-  },
-  "dependencies": {
-    "@strapi/plugin-cloud": "5.12.5",
-    "@strapi/plugin-users-permissions": "5.12.5",
-    "@strapi/strapi": "5.12.5",
-    "better-sqlite3": "11.3.0",
-    "fs-extra": "^10.0.0",
-    "mime-types": "^2.1.27",
-    "pg": "^8.11.3",
-    "pg-connection-string": "^2.6.2",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router-dom": "^6.0.0",
-    "styled-components": "^6.0.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "typescript": "5.8.3"
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi"
   },
   "engines": {
-    "node": ">=18.0.0 <=22.x.x",
-    "npm": ">=6.0.0"
+    "node": ">=18.0.0 <=20.x.x",
+    "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "@strapi/strapi": "4.22.0",
+    "@strapi/plugin-users-permissions": "4.22.0",
+    "@strapi/plugin-i18n": "4.22.0",
+    "better-sqlite3": "9.4.0",
+    "pg": "^8.11.3"
+  },
+  "author": {
+    "name": "Doucine"
   },
   "strapi": {
-    "uuid": "9c24bf6d-bb66-4753-9e1e-bd9ea36c0293"
-  }
+    "uuid": "d50fef48-01b3-4b36-aea5-a252a89a8493"
+  },
+  "license": "MIT"
 }

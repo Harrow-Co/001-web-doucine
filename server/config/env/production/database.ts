@@ -1,17 +1,19 @@
-export default () => {
-  // Valeurs fixes pour la base de données Railway
-  return {
+export default ({ env }) => ({
+  connection: {
+    client: 'postgres',
     connection: {
-      client: 'postgres',
-      connection: {
-        host: "cms-doucine.railway.internal", // RAILWAY_PRIVATE_DOMAIN
-        port: 5432,
-        database: "railway", // POSTGRES_DB
-        user: "postgres", // POSTGRES_USER
-        password: "rNrnefvSynthLZhHMDFBGvywfwWhbXvI", // POSTGRES_PASSWORD
-        ssl: false, // Connexion interne qui ne nécessite pas de SSL
+      connectionString: env('DATABASE_URL'),
+      ssl: {
+        rejectUnauthorized: env.bool('DATABASE_SSL_REJECT_UNAUTHORIZED', false),
       },
-      debug: true,
     },
-  };
-}; 
+    pool: {
+      min: 0,
+      max: 5,
+      acquireTimeoutMillis: 60000,
+      createTimeoutMillis: 30000,
+      idleTimeoutMillis: 30000,
+    },
+    debug: false,
+  },
+}); 
