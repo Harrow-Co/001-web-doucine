@@ -1,6 +1,7 @@
 [build]
-  command = "npm run build"
+  command = "npm install && npm run build"
   publish = "dist"
+  environment = { NODE_VERSION = "16" }
 
 # Redirection pour le routage Vue.js
 [[redirects]]
@@ -13,4 +14,7 @@
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block" 
+    X-XSS-Protection = "1; mode=block"
+    Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: https:; img-src 'self' data: https:;"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin" 
