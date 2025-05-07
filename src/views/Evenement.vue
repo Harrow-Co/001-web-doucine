@@ -24,58 +24,38 @@
       </div>
 
       <div class="events-grid">
-        <!-- Indicateur de chargement -->
-        <div v-if="loading" class="loading-container">
-          <div class="loading-spinner"></div>
-          <p class="loading-text">Chargement des événements...</p>
-        </div>
-        
-        <!-- Message d'erreur -->
-        <div v-else-if="error" class="error-container">
-          <p class="error-message">{{ error }}</p>
-          <button class="btn btn-primary" @click="fetchEvents">Réessayer</button>
-        </div>
-        
-        <!-- Aucun événement trouvé -->
-        <div v-else-if="events.length === 0" class="no-events-container">
-          <p class="no-events-message">Aucun événement à venir pour le moment.</p>
-          <p>Revenez bientôt pour découvrir nos prochains événements !</p>
-        </div>
-        
         <!-- Liste des événements -->
-        <template v-else>
-          <div v-for="(event, index) in events" :key="event.id" 
-               class="event-card animate-card"
-               :style="{'--delay': `${0.1 + index * 0.1}s`}"
-               @click="openModal(event)">
-            <div class="event-image-container">
-              <img :src="event.image" :alt="event.titre" class="event-image" />
-              <div class="event-date animate-pulse">
-                <span class="day">{{ event.date.jour }}</span>
-                <span class="month">{{ event.date.mois }}</span>
-              </div>
-            </div>
-            <div class="event-content">
-              <h3 class="event-title">{{ event.titre }}</h3>
-              <p class="event-description">{{ event.description }}</p>
-              
-              <div class="event-details-container">
-                <div class="event-details">
-                  <div class="detail">
-                    <i class="fas fa-clock"></i>
-                    <span>{{ event.horaire }}</span>
-                  </div>
-                  <div class="detail">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>{{ event.lieu }}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <button class="btn btn-primary event-btn">Voir les détails</button>
+        <div v-for="(event, index) in events" :key="event.id" 
+             class="event-card animate-card"
+             :style="{'--delay': `${0.1 + index * 0.1}s`}"
+             @click="openModal(event)">
+          <div class="event-image-container">
+            <img :src="event.image" :alt="event.titre" class="event-image" />
+            <div class="event-date animate-pulse">
+              <span class="day">{{ event.date.jour }}</span>
+              <span class="month">{{ event.date.mois }}</span>
             </div>
           </div>
-        </template>
+          <div class="event-content">
+            <h3 class="event-title">{{ event.titre }}</h3>
+            <p class="event-description">{{ event.description }}</p>
+            
+            <div class="event-details-container">
+              <div class="event-details">
+                <div class="detail">
+                  <i class="fas fa-clock"></i>
+                  <span>{{ event.horaire }}</span>
+                </div>
+                <div class="detail">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span>{{ event.lieu }}</span>
+                </div>
+              </div>
+            </div>
+            
+            <button class="btn btn-primary event-btn">Voir les détails</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -184,8 +164,8 @@
 
 <script>
 import TheFooter from "@/components/TheFooter.vue";
-import { eventService } from "@/services/api";
 import * as dateFormatter from "@/utils/dateFormatter";
+import { events } from "@/data/eventData";
 
 export default {
   name: 'PageEvenement',
@@ -196,18 +176,7 @@ export default {
     return {
       showModal: false,
       selectedEvent: null,
-      events: [],
-      loading: true,
-      error: null
-    }
-  },
-  watch: {
-    events: {
-      handler(newEvents) {
-        console.log("Events array updated:", newEvents);
-        console.log("Number of events:", newEvents.length);
-      },
-      deep: true
+      events: events
     }
   },
   methods: {
@@ -230,22 +199,15 @@ export default {
       document.body.style.overflow = ''; // Re-enable scrolling
     },
     getFormattedDate(event) {
-      // Formater la date depuis le format ISO
-      if (event.attributes && event.attributes.date) {
-        return dateFormatter.formatEventDate(event.attributes.date);
-      } else if (event.date) {
-        // Pour les dates au format du composant
-        if (typeof event.date === 'object' && event.date.jour && event.date.mois && event.date.annee) {
-          const monthNumber = this.getMonthNumber(event.date.mois);
-          const fullDate = `${event.date.annee}-${monthNumber}-${event.date.jour}`;
-          console.log("Date reconstruite pour formatage:", fullDate);
-          return dateFormatter.formatEventDate(fullDate);
-        }
-        // Pour les dates en format ISO direct
-        else if (typeof event.date === 'string') {
-          console.log("Date directe à formater:", event.date);
-          return dateFormatter.formatEventDate(event.date);
-        }
+      // Pour les dates au format du composant
+      if (typeof event.date === 'object' && event.date.jour && event.date.mois && event.date.annee) {
+        const monthNumber = this.getMonthNumber(event.date.mois);
+        const fullDate = `${event.date.annee}-${monthNumber}-${event.date.jour}`;
+        return dateFormatter.formatEventDate(fullDate);
+      }
+      // Pour les dates en format ISO direct
+      else if (typeof event.date === 'string') {
+        return dateFormatter.formatEventDate(event.date);
       }
       
       return '';
@@ -260,242 +222,6 @@ export default {
       return monthMap[abbr] || '01';
     },
     
-    // Méthodes pour récupérer les données depuis l'API
-    async fetchEvents() {
-      try {
-        this.loading = true;
-        console.log("Fetching events from API...");
-        
-        // Récupérer les événements depuis l'API Strapi
-        const response = await eventService.getUpcomingEvents();
-        console.log("API Response structure:", JSON.stringify(response.data));
-        
-        if (response && response.data && response.data.data) {
-          console.log("Number of events retrieved:", response.data.data.length);
-          const formattedEvents = this.formatEvents(response.data.data);
-          console.log("Final formatted events:", formattedEvents);
-          this.events = formattedEvents;
-          this.error = null;
-        } else {
-          console.error("No events found in API response");
-          this.error = "Aucun événement trouvé";
-          this.events = [];
-        }
-      } catch (error) {
-        console.error("Error fetching events:", error);
-        this.error = "Impossible de charger les événements";
-        this.events = [];
-      } finally {
-        this.loading = false;
-      }
-    },
-    
-    // Formater les données reçues de l'API pour correspondre à notre structure
-    formatEvents(apiEvents) {
-      if (!apiEvents || !Array.isArray(apiEvents)) {
-        console.error("Invalid events data:", apiEvents);
-        return [];
-      }
-      
-      return apiEvents.map(event => {
-        try {
-          console.log("Processing event with full structure:", JSON.stringify(event));
-          
-          if (!event) {
-            console.error("Event is null or undefined");
-            return null;
-          }
-          
-          // Pour les réponses de l'API Strapi, les événements n'ont pas d'attributs imbriqués
-          // Les données sont directement au niveau supérieur
-          const { 
-            id, 
-            title, 
-            description, 
-            date, 
-            time, 
-            location, 
-            image, 
-            details 
-          } = event;
-          
-          if (!date) {
-            console.error("Event missing date:", event);
-            return null;
-          }
-          
-          console.log("Date d'origine de Strapi:", date);
-          const eventDate = new Date(date);
-          console.log("Date convertie en objet Date:", eventDate);
-          console.log("Jour:", eventDate.getDate());
-          console.log("Mois:", eventDate.getMonth());
-          console.log("Année:", eventDate.getFullYear());
-          
-          // Correction pour éviter les erreurs de fuseau horaire
-          // Utiliser directement la date ISO pour éviter les problèmes de timezone
-          const dateParts = date.split('-');
-          const year = parseInt(dateParts[0]);
-          const month = parseInt(dateParts[1]) - 1; // Les mois commencent à 0 en JavaScript
-          const day = parseInt(dateParts[2]);
-          
-          console.log("Parties de date extraites:", year, month, day);
-          
-          // Construire l'URL de l'image si disponible
-          let imageUrl = require('@/assets/images/PHOTO-2025-03-13-20-39-40.jpg');
-          if (image) {
-            // Vérifier si l'URL est correctement formatée
-            if (image.url) {
-              imageUrl = `${process.env.VUE_APP_API_URL || 'http://localhost:1337'}${image.url}`;
-              console.log("Constructed image URL:", imageUrl);
-            } else if (image.formats && image.formats.medium) {
-              imageUrl = `${process.env.VUE_APP_API_URL || 'http://localhost:1337'}${image.formats.medium.url}`;
-              console.log("Using medium format image:", imageUrl);
-            }
-          }
-          
-          // Extraire les détails de l'événement
-          const eventDetails = details || {};
-          console.log("Event details from API:", JSON.stringify(eventDetails));
-          
-          // Vérifier la structure des activités et tarifs
-          console.log("Activities structure:", eventDetails.activities);
-          console.log("Pricing structure:", eventDetails.pricing);
-          
-          // Récupérer les activities depuis le champ activities_list si disponible
-          // Dans Strapi, les champs de type liste sont souvent stockés avec un suffixe _list
-          let activitiesList = [];
-          if (eventDetails.activities_list && Array.isArray(eventDetails.activities_list)) {
-            activitiesList = eventDetails.activities_list;
-          } else if (eventDetails.activities && Array.isArray(eventDetails.activities)) {
-            activitiesList = eventDetails.activities;
-          }
-          
-          // Récupérer les tarifs depuis le champ pricing_list si disponible
-          let pricingList = ['Prix non spécifié'];
-          if (eventDetails.pricing_list && Array.isArray(eventDetails.pricing_list)) {
-            pricingList = eventDetails.pricing_list;
-          } else if (eventDetails.pricing && Array.isArray(eventDetails.pricing)) {
-            pricingList = eventDetails.pricing;
-          } else if (eventDetails.pricing && typeof eventDetails.pricing === 'object') {
-            // Si pricing est un objet unique et non un tableau
-            pricingList = [eventDetails.pricing];
-          }
-          
-          // Pour les événements sans détails structurés, créer des valeurs par défaut à partir de tarif et activity
-          if (eventDetails.tarif && (!pricingList.length || pricingList[0] === 'Prix non spécifié')) {
-            if (typeof eventDetails.tarif === 'string') {
-              pricingList = [eventDetails.tarif];
-            } else if (typeof eventDetails.tarif === 'object') {
-              pricingList = [eventDetails.tarif];
-            }
-          }
-          
-          console.log("Final pricing list:", pricingList);
-          
-          if (eventDetails.activity && activitiesList.length === 0) {
-            activitiesList = [eventDetails.activity];
-          }
-          
-          const formattedDetails = {
-            destination: eventDetails.destination || '',
-            activities: activitiesList,
-            pricing: pricingList,
-            registration: eventDetails.registration 
-              ? new Date(eventDetails.registration).toLocaleDateString('fr-FR')
-              : '',
-            contact: eventDetails.contact || '0694 20 52 31',
-            email: eventDetails.email || 'doucine97351@gmail.com',
-            practicalInfo: ['Information non disponible']
-          };
-          
-          const formattedEvent = {
-            id,
-            titre: title || "Sans titre",
-            description: description || "Aucune description",
-            horaire: time || "Horaire non spécifié",
-            lieu: location || "Lieu non spécifié",
-            // Extraire la date pour l'affichage dans la carte
-            date: {
-              jour: day.toString(),
-              mois: dateFormatter.getMonthAbbreviation(month),
-              annee: year.toString()
-            },
-            // Utiliser l'URL d'image construite
-            image: imageUrl,
-            // Utiliser les détails formatés
-            details: formattedDetails
-          };
-          
-          console.log("Formatted event:", formattedEvent);
-          return formattedEvent;
-        } catch (err) {
-          console.error("Error formatting event:", err, event);
-          return null;
-        }
-      }).filter(event => event !== null); // Filter out any null events
-    },
-    
-    // Formater les détails de l'événement
-    formatEventDetails(details) {
-      if (!details) return {
-        destination: '',
-        activities: [],
-        pricing: ['Prix non spécifié'],
-        registration: '',
-        contact: 'Contact non spécifié',
-        email: 'Email non spécifié',
-        practicalInfo: ['Information non disponible']
-      };
-      
-      try {
-        // Formatter les activités
-        const activities = details.activities && Array.isArray(details.activities)
-          ? details.activities.map(activity => activity.name || activity.toString())
-          : [];
-        
-        // Formatter les tarifs
-        const pricing = details.pricing && Array.isArray(details.pricing)
-          ? details.pricing.map(price => {
-              if (typeof price === 'string') return price;
-              
-              let priceText = '';
-              if (price.amount) priceText = `${price.amount} € `;
-              if (price.category) priceText = `${priceText}/ ${price.category}`;
-              if (price.includes) priceText = `${priceText} (${price.includes})`;
-              return priceText || 'Prix non spécifié';
-            })
-          : ['Prix non spécifié'];
-        
-        // Informations pratiques
-        const practicalInfo = details.practicalInfo && Array.isArray(details.practicalInfo)
-          ? details.practicalInfo.map(info => info.info || info.toString())
-          : ['Information non disponible'];
-        
-        return {
-          destination: details.destination || '',
-          activities,
-          pricing,
-          // Formater la date d'inscription si disponible
-          registration: details.registration 
-            ? new Date(details.registration).toLocaleDateString('fr-FR')
-            : '',
-          contact: details.contact || 'Contact non spécifié',
-          email: details.email || 'Email non spécifié',
-          practicalInfo
-        };
-      } catch (err) {
-        console.error("Error formatting event details:", err, details);
-        return {
-          destination: '',
-          activities: [],
-          pricing: ['Prix non spécifié'],
-          registration: '',
-          contact: 'Contact non spécifié',
-          email: 'Email non spécifié',
-          practicalInfo: ['Information non disponible']
-        };
-      }
-    },
     formatPrice(price) {
       if (typeof price === 'string') {
         return price;
@@ -535,9 +261,6 @@ export default {
     },
   },
   mounted() {
-    // Charger les événements depuis l'API
-    this.fetchEvents();
-    
     // Initialize Intersection Observer to trigger animations
     const sections = document.querySelectorAll('.animate-section');
     
@@ -1228,52 +951,135 @@ export default {
   margin: 20px 0;
 }
 
-/* Styles pour le chargement et les erreurs */
-.loading-container,
-.error-container,
-.no-events-container {
-  grid-column: 1 / -1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 300px;
-  text-align: center;
-  padding: 40px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+/* Styles pour l'animation des cartes */
+.animate-card {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.5s ease-out forwards;
+  animation-delay: var(--delay);
 }
 
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid #f3f3f3;
-  border-top: 5px solid #EB1A3A;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.animate-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.loading-text,
-.error-message,
-.no-events-message {
-  font-size: 18px;
-  margin-bottom: 20px;
+.animate-section.active {
+  opacity: 1;
+  transform: translateY(0);
 }
 
-.error-message {
-  color: #EB1A3A;
-  font-weight: 600;
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
-.no-events-message {
-  font-weight: 600;
-  font-size: 20px;
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+.animate-slide-right {
+  animation: slideRight 0.5s ease-out forwards;
+}
+
+.animate-zoom {
+  animation: zoom 0.3s ease-out forwards;
+}
+
+.animate-pulse {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.delay-1 {
+  animation-delay: 0.1s;
+}
+
+.delay-2 {
+  animation-delay: 0.2s;
+}
+
+.delay-3 {
+  animation-delay: 0.3s;
+}
+
+.delay-4 {
+  animation-delay: 0.4s;
+}
+
+.delay-5 {
+  animation-delay: 0.5s;
+}
+
+.delay-6 {
+  animation-delay: 0.6s;
+}
+
+.delay-7 {
+  animation-delay: 0.7s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style> 

@@ -19,7 +19,7 @@
     </div>
     <img
       class="hero-image animate-zoom delay-3"
-      src="https://cdn.pixabay.com/photo/2022/06/12/02/11/family-7257182_1280.jpg"
+      src="@/assets/FontHero.png"
       alt="Famille multigénérationnelle partageant un moment convivial ensemble"
     />
   </section>
