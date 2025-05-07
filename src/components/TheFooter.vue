@@ -105,14 +105,6 @@
         <div class="footer__legal">
           <router-link to="/politique-confidentialite" class="footer__legal-link">Politique de confidentialité</router-link>
           <router-link to="/conditions-utilisation" class="footer__legal-link">Conditions d'utilisation</router-link>
-          <button 
-            id="cookie-settings" 
-            class="footer__legal-link cookie-settings-btn" 
-            @click="openCookieSettings"
-            aria-label="Ouvrir les paramètres des cookies"
-          >
-            Paramètres des cookies
-          </button>
         </div>
         <div class="footer__made-by">
           Site réalisé par
@@ -132,18 +124,7 @@
 
 <script>
 export default {
-  name: "TheFooter",
-  methods: {
-    openCookieSettings() {
-      // Émet un événement pour ouvrir les paramètres des cookies
-      this.$emit('open-cookie-settings');
-      
-      // Si vous utilisez un gestionnaire de cookies externe, vous pouvez appeler sa fonction ici
-      if (window.openCookieConsent) {
-        window.openCookieConsent();
-      }
-    }
-  }
+  name: "TheFooter"
 };
 </script>
 
@@ -409,38 +390,6 @@ export default {
   position: relative;
   padding: 0 3px;
   font-size: 16px;
-}
-
-.cookie-settings-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  font-family: inherit;
-  padding: 0 3px;
-}
-
-.footer__legal-link::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 1px;
-  bottom: -2px;
-  left: 0;
-  background-color: #5dc8e6;
-  transition: all 0.3s ease;
-}
-
-.footer__legal-link:hover {
-  color: #5dc8e6;
-}
-
-.footer__legal-link:hover::after {
-  width: 100%;
-}
-
-.footer__legal-link:focus {
-  outline: none;
 }
 
 .footer__brand-link {

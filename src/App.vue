@@ -2,19 +2,19 @@
   <div id="app">
     <Navbar />
     <router-view />
-    <CookieConsent @consent-updated="handleCookieConsent" />
+    <Footer />
   </div>
 </template>
 
 <script>
 import Navbar from "./components/Navbar.vue";
-import CookieConsent from "./components/CookieConsent.vue";
+import Footer from "./components/TheFooter.vue";
 
 export default {
   name: "App",
   components: {
     Navbar,
-    CookieConsent
+    Footer
   },
   mounted() {
     // Détecter la navigation au clavier pour l'accessibilité
@@ -28,30 +28,6 @@ export default {
     window.addEventListener('mousedown', () => {
       document.body.classList.remove('using-keyboard');
     });
-  },
-  methods: {
-    handleCookieConsent(consentOptions) {
-      // Configurer les outils d'analyse et marketing en fonction des choix
-      console.log("Consentement aux cookies mis à jour:", consentOptions);
-      
-      // Si l'utilisateur a accepté les cookies analytiques, initialiser les outils d'analyse
-      if (consentOptions['cookie-analytics']) {
-        this.initAnalytics();
-      }
-      
-      // Si l'utilisateur a accepté les cookies marketing, initialiser les outils marketing
-      if (consentOptions['cookie-marketing']) {
-        this.initMarketing();
-      }
-    },
-    initAnalytics() {
-      // Initialiser les outils d'analyse comme Google Analytics
-      // Code à ajouter quand ces outils seront implémentés
-    },
-    initMarketing() {
-      // Initialiser les outils marketing
-      // Code à ajouter quand ces outils seront implémentés
-    }
   }
 };
 </script>

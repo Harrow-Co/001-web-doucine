@@ -24,14 +24,14 @@
             <i class="fas fa-phone-alt"></i>
             <div>
               <h3>Téléphone</h3>
-              <p>01 23 45 67 89</p>
+              <p>06 94 20 52 31</p>
             </div>
           </div>
           <div class="info-item">
             <i class="fas fa-envelope"></i>
             <div>
               <h3>Email</h3>
-              <p>contact@association-doucine.fr</p>
+              <p>doucine97351@gmail.com</p>
             </div>
           </div>
           <div class="info-item">

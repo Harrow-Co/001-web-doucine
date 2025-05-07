@@ -9,7 +9,9 @@
         </p>
         <div class="events-hero-actions animate-fade-in delay-2">
           <button class="btn btn-primary" @click="navigateTo('#evenement')">Voir les événements</button>
+          <router-link to="/contact">
           <button class="btn btn-secondary">Contactez-nous</button>
+          </router-link>
         </div>
       </div>
     </section>
@@ -66,7 +68,9 @@
         <p class="cta-description animate-slide-up delay-1">
           Nous sommes toujours à la recherche de nouvelles idées et collaborations pour enrichir notre communauté.
         </p>
+        <router-link to="/contact">
         <button class="btn btn-primary cta-btn animate-pulse delay-2">Proposer un événement</button>
+        </router-link>
       </div>
     </section>
 
@@ -163,15 +167,11 @@
 </template>
 
 <script>
-import TheFooter from "@/components/TheFooter.vue";
 import * as dateFormatter from "@/utils/dateFormatter";
 import { events } from "@/data/eventData";
 
 export default {
   name: 'PageEvenement',
-  components: {
-    TheFooter
-  },
   data() {
     return {
       showModal: false,
