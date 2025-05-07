@@ -6,7 +6,6 @@
     <community-c-t-a class="animate-section" />
     <TestimonialsSection class="animate-section" />
     <TeamSection class="animate-section" />
-    <TheFooter />
   </div>
 </template>
 
@@ -17,7 +16,6 @@ import BenefitsSection from "@/components/BenefitsSection.vue";
 import CommunityCTA from "@/components/CommunityCTA.vue";
 import TestimonialsSection from "@/components/TestimonialsSection.vue";
 import TeamSection from "@/components/TeamSection.vue";
-import TheFooter from "@/components/TheFooter.vue";
 
 export default {
   name: "HomePage",
@@ -28,7 +26,6 @@ export default {
     CommunityCTA, 
     TestimonialsSection,
     TeamSection,
-    TheFooter,
   },
   mounted() {
     // Initialize Intersection Observer to trigger animations
