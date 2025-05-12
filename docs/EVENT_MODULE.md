@@ -121,14 +121,7 @@ Elle permet de :
 - Modifier un événement existant
 - Supprimer un événement
 
-## Transition depuis Strapi
 
-Ce module d'événements est conçu pour fonctionner en parallèle avec Strapi, qui reste le backend principal pour les autres fonctionnalités du site. La stratégie de transition est la suivante :
-
-1. Développer le nouveau module d'événements avec ses propres API
-2. Migrer les données des événements depuis Strapi vers la nouvelle base de données SQLite
-3. Mettre à jour le frontend pour utiliser les nouvelles API d'événements
-4. Une fois la migration terminée et validée, désactiver ou supprimer les parties de Strapi liées aux événements
 
 ### Migration des données
 
