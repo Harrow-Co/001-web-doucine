@@ -1,0 +1,21 @@
+// tsconfig.server.json
+{
+  "compilerOptions": {
+    "target": "ES2016",                       // Cible JavaScript (ES2016 est largement compatible)
+    "module": "CommonJS",                     // Système de modules pour Node.js
+    "outDir": "./dist/server",                // Dossier de sortie pour le JS compilé
+    "rootDir": "./server",                    // Dossier racine des fichiers source TS
+    "strict": true,                           // Activer toutes les vérifications strictes de types
+    "esModuleInterop": true,                  // Permettre l'interopérabilité avec les modules CommonJS
+    "skipLibCheck": true,                     // Ne pas vérifier les types des fichiers de déclaration (.d.ts)
+    "forceConsistentCasingInFileNames": true, // Assurer la cohérence de la casse des noms de fichiers
+    "resolveJsonModule": true,                // Permettre d'importer des fichiers JSON
+    "sourceMap": true,                        // Générer des sourcemaps pour le débogage
+    "baseUrl": ".",                           // Répertoire de base pour résoudre les chemins non relatifs
+    "paths": {
+      "@/*": ["src/*"]                       // Alias (peut être utile si le serveur partage du code avec le client, sinon facultatif)
+    }
+  },
+  "include": ["server/**/*.ts"],              // Inclure tous les fichiers .ts dans le dossier server
+  "exclude": ["node_modules", "dist", "src"]  // Exclure ces dossiers de la compilation
+}
