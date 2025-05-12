@@ -75,12 +75,6 @@ dateFormatter.getMonthAbbreviation(monthIndex)
 dateFormatter.formatEventDate(isoDate)
 ```
 
-## Styles et design
-
-Le design utilise des feuilles de style personnalisées avec une approche mobile-first. Les principaux fichiers de style sont :
-
-- `assets/styles/main.css` : Styles de base
-- `assets/styles/animations.css` : Animations
 
 ## Variables d'environnement
 
