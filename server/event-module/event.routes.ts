@@ -44,7 +44,40 @@ router.get('/events/:id', async (req: Request, res: Response) => {
 // POST /api/v2/admin/events - Créer un nouvel événement
 router.post('/admin/events', async (req: Request, res: Response) => {
   // TODO: Ajouter la validation du body (req.body)
+  console.log('Données reçues pour la création d\'événement:', JSON.stringify(req.body, null, 2));
   const eventData: CreateEventDto = req.body;
+  
+  // Vérifier que tous les champs requis sont présents
+  if (!eventData.titre) {
+    console.error('Erreur: Le champ titre est manquant');
+    return res.status(400).json({ message: 'Le champ titre est requis' });
+  }
+  
+  if (!eventData.description) {
+    console.error('Erreur: Le champ description est manquant');
+    return res.status(400).json({ message: 'Le champ description est requis' });
+  }
+  
+  if (!eventData.horaire) {
+    console.error('Erreur: Le champ horaire est manquant');
+    return res.status(400).json({ message: 'Le champ horaire est requis' });
+  }
+  
+  if (!eventData.lieu) {
+    console.error('Erreur: Le champ lieu est manquant');
+    return res.status(400).json({ message: 'Le champ lieu est requis' });
+  }
+  
+  if (!eventData.date || !eventData.date.jour || !eventData.date.mois || !eventData.date.annee) {
+    console.error('Erreur: Les champs de date sont incomplets', eventData.date);
+    return res.status(400).json({ message: 'Les champs de date sont requis' });
+  }
+  
+  if (!eventData.details || !eventData.details.destination) {
+    console.error('Erreur: Les détails de l\'événement sont incomplets', eventData.details);
+    return res.status(400).json({ message: 'Les détails de l\'événement sont requis' });
+  }
+  
   try {
     const newEvent = await eventService.createEvent(eventData);
     res.status(201).json(newEvent); // 201 Created
@@ -101,6 +134,22 @@ router.get('/admin/events', async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error fetching all admin events:', error);
         res.status(500).json({ message: 'Failed to retrieve admin events' });
+    }
+});
+
+// GET /api/v2/admin/events/:id - Récupérer un événement spécifique par ID (pour l'interface admin)
+router.get('/admin/events/:id', async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try {
+        const event = await eventService.findEventById(id);
+        if (event) {
+            res.status(200).json(event);
+        } else {
+            res.status(404).json({ message: `Event with id ${id} not found` });
+        }
+    } catch (error) {
+        console.error(`Error fetching admin event ${id}:`, error);
+        res.status(500).json({ message: 'Failed to retrieve event' });
     }
 });
 
