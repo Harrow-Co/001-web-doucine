@@ -163,7 +163,7 @@
       </div>
     </div>
 
-    <!-- Contact Section -->
+    <!-- Contact Section
     <div class="contact-section section animate-section">
       <div class="contact-container">
         <h2 class="section-title animate-fade-in">Contactez-nous</h2>
@@ -180,7 +180,7 @@
         
         <button class="btn btn-primary contact-btn animate-pulse">Nous contacter</button>
       </div>
-    </div>
+    </div> -->
   </section>
 </template>
 
@@ -254,7 +254,7 @@ export default {
   margin-bottom: 40px;
   background-color: white;
   border-radius: 20px;
-  max-width: 1200px;
+  max-width: 80%;
   margin-left: auto;
   margin-right: auto;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);

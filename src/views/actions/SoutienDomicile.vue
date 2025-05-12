@@ -58,17 +58,14 @@
       </div>
     </section>
     
-    <TheFooter />
   </div>
 </template>
 
 <script>
-import TheFooter from "@/components/TheFooter.vue";
 
 export default {
   name: "SoutienDomicile",
   components: {
-    TheFooter
   },
   mounted() {
     // Initialize Intersection Observer to trigger animations

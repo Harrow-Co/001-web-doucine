@@ -94,17 +94,14 @@
       </div>
     </section>
     
-    <TheFooter />
   </div>
 </template>
 
 <script>
-import TheFooter from "@/components/TheFooter.vue";
 
 export default {
   name: "PreventionSante",
   components: {
-    TheFooter
   },
   mounted() {
     // Initialize Intersection Observer to trigger animations
