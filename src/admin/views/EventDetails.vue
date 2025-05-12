@@ -27,13 +27,16 @@
     
     <div v-else-if="event" class="event-card">
       <div class="event-header">
-        <h2>{{ event.title }}</h2>
+        <h2>{{ event.titre }}</h2>
         <div class="event-meta">
           <p class="event-date">
             <i class="fas fa-calendar-alt"></i> {{ formatDate(event.date) }}
           </p>
           <p class="event-location">
-            <i class="fas fa-map-marker-alt"></i> {{ event.location }}
+            <i class="fas fa-map-marker-alt"></i> {{ event.lieu }}
+          </p>
+          <p class="event-time">
+            <i class="fas fa-clock"></i> {{ event.horaire }}
           </p>
         </div>
       </div>
@@ -42,6 +45,47 @@
         <h3>Description</h3>
         <p v-if="event.description" class="event-description">{{ event.description }}</p>
         <p v-else class="no-content">Aucune description fournie</p>
+        
+        <div v-if="event.details" class="event-details">
+          <h3>Détails</h3>
+          
+          <div class="detail-section">
+            <h4>Destination</h4>
+            <p>{{ event.details.destination }}</p>
+          </div>
+          
+          <div class="detail-section">
+            <h4>Activités</h4>
+            <ul>
+              <li v-for="(activity, index) in event.details.activities" :key="'activity-'+index">{{ activity }}</li>
+            </ul>
+          </div>
+          
+          <div class="detail-section">
+            <h4>Tarifs</h4>
+            <ul>
+              <li v-for="(price, index) in event.details.pricing" :key="'price-'+index">{{ price }}</li>
+            </ul>
+          </div>
+          
+          <div class="detail-section">
+            <h4>Inscription</h4>
+            <p>Date limite: {{ event.details.registration }}</p>
+          </div>
+          
+          <div class="detail-section">
+            <h4>Contact</h4>
+            <p>Téléphone: {{ event.details.contact }}</p>
+            <p>Email: {{ event.details.email }}</p>
+          </div>
+          
+          <div class="detail-section">
+            <h4>Informations pratiques</h4>
+            <ul>
+              <li v-for="(info, index) in event.details.practicalInfo" :key="'info-'+index">{{ info }}</li>
+            </ul>
+          </div>
+        </div>
       </div>
       
       <div class="event-footer">
@@ -57,7 +101,7 @@
     <div v-if="showDeleteModal" class="modal-backdrop">
       <div class="modal-content">
         <h3>Confirmer la suppression</h3>
-        <p>Êtes-vous sûr de vouloir supprimer l'événement "{{ event?.title }}" ?</p>
+        <p>Êtes-vous sûr de vouloir supprimer l'événement "{{ event?.titre }}" ?</p>
         <p class="warning">Cette action est irréversible.</p>
         <div class="modal-actions">
           <button @click="cancelDelete" class="btn btn-secondary">Annuler</button>
@@ -102,30 +146,33 @@ export default {
       }
     },
     
-    formatDate(dateString) {
-      const options = { 
-        weekday: 'long',
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      };
+    formatDate(date) {
+      // Vérifier si date est un objet avec la structure attendue
+      if (!date || !date.jour || !date.mois || !date.annee) {
+        console.error('Format de date invalide:', date);
+        return 'Date invalide';
+      }
       
-      return new Date(dateString).toLocaleDateString('fr-FR', options);
+      // Formater la date selon le format désiré
+      return `${date.jour} ${date.mois} ${date.annee}`;
     },
     
     formatTimestamp(dateString) {
-      const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      };
-      
-      return new Date(dateString).toLocaleDateString('fr-FR', options);
+      try {
+        const options = { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        };
+        
+        return new Date(dateString).toLocaleDateString('fr-FR', options);
+      } catch (error) {
+        console.error('Erreur lors du formatage du timestamp:', error);
+        return dateString || 'Date inconnue';
+      }
     },
     
     goBack() {
@@ -249,6 +296,32 @@ h1 {
 .no-content {
   color: #999;
   font-style: italic;
+}
+
+.event-details {
+  margin-top: 30px;
+}
+
+.detail-section {
+  margin-bottom: 20px;
+}
+
+.detail-section h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #555;
+  font-size: 18px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+
+.detail-section ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.detail-section li {
+  margin-bottom: 5px;
 }
 
 .event-footer {

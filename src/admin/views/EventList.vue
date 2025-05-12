@@ -34,9 +34,9 @@
         </thead>
         <tbody>
           <tr v-for="event in events" :key="event.id">
-            <td>{{ event.title }}</td>
+            <td>{{ event.titre }}</td>
             <td>{{ formatDate(event.date) }}</td>
-            <td>{{ event.location }}</td>
+            <td>{{ event.lieu }}</td>
             <td class="actions">
               <button @click="viewEvent(event.id)" class="btn btn-sm btn-info" title="Voir les détails">
                 <i class="fas fa-eye"></i>
@@ -57,7 +57,7 @@
     <div v-if="showDeleteModal" class="modal-backdrop">
       <div class="modal-content">
         <h3>Confirmer la suppression</h3>
-        <p>Êtes-vous sûr de vouloir supprimer l'événement "{{ eventToDelete?.title }}" ?</p>
+        <p>Êtes-vous sûr de vouloir supprimer l'événement "{{ eventToDelete?.titre }}" ?</p>
         <p class="warning">Cette action est irréversible.</p>
         <div class="modal-actions">
           <button @click="cancelDelete" class="btn btn-secondary">Annuler</button>
@@ -100,16 +100,15 @@ export default {
       }
     },
     
-    formatDate(dateString) {
-      const options = { 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      };
+    formatDate(date) {
+      // Vérifier si date est un objet avec la structure attendue
+      if (!date || !date.jour || !date.mois || !date.annee) {
+        console.error('Format de date invalide:', date);
+        return 'Date invalide';
+      }
       
-      return new Date(dateString).toLocaleDateString('fr-FR', options);
+      // Formater la date selon le format désiré
+      return `${date.jour} ${date.mois} ${date.annee}`;
     },
     
     navigateToCreate() {

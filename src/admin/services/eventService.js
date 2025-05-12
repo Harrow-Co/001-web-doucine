@@ -42,6 +42,33 @@ const eventService = {
    */
   async createEvent(eventData) {
     try {
+      console.log('Données envoyées au serveur:', JSON.stringify(eventData, null, 2));
+      
+      // Vérifier que tous les champs requis sont présents
+      if (!eventData.titre) {
+        console.error('Erreur: Le champ titre est manquant dans les données envoyées');
+      }
+      
+      if (!eventData.description) {
+        console.error('Erreur: Le champ description est manquant dans les données envoyées');
+      }
+      
+      if (!eventData.horaire) {
+        console.error('Erreur: Le champ horaire est manquant dans les données envoyées');
+      }
+      
+      if (!eventData.lieu) {
+        console.error('Erreur: Le champ lieu est manquant dans les données envoyées');
+      }
+      
+      if (!eventData.date || !eventData.date.jour || !eventData.date.mois || !eventData.date.annee) {
+        console.error('Erreur: Les champs de date sont incomplets', eventData.date);
+      }
+      
+      if (!eventData.details || !eventData.details.destination) {
+        console.error('Erreur: Les détails de l\'\u00e9vénement sont incomplets', eventData.details);
+      }
+      
       const response = await axios.post(`${API_URL}/admin/events`, eventData);
       return response.data;
     } catch (error) {

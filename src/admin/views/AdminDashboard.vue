@@ -16,9 +16,7 @@
       <router-view />
     </main>
     
-    <footer class="admin-footer">
-      <p>&copy; {{ new Date().getFullYear() }} DOUCINE - Panel d'administration</p>
-    </footer>
+
   </div>
 </template>
 
@@ -26,6 +24,7 @@
 export default {
   name: 'AdminDashboard'
 };
+
 </script>
 
 <style scoped>
@@ -78,13 +77,8 @@ export default {
   padding: 20px;
 }
 
-.admin-footer {
-  background-color: #333;
-  color: white;
-  text-align: center;
-  padding: 15px;
-  font-size: 14px;
-}
+
+
 
 @media (max-width: 600px) {
   .admin-header {
