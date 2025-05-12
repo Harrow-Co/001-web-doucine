@@ -1,96 +1,75 @@
-# Frontend Vue.js - DOUCINE
+# DOUCINE - Site Web
 
-Cette partie du projet contient le frontend Vue.js pour le site DOUCINE.
+Ce projet est un site web pour l'association DOUCINE, avec un backend Node.js/Express/SQLite et un frontend Vue.js.
 
-## Structure du projet
+## Démarrage rapide
 
+### Prérequis
+
+- Node.js (v14+)
+- npm ou yarn
+
+### Installation
+
+```bash
+# Installer les dépendances
+npm install
 ```
-src/
-├── assets/         # Ressources statiques (images, styles, etc.)
-├── components/     # Composants Vue réutilisables
-├── router/         # Configuration des routes
-├── services/       # Services pour les appels API
-├── store/          # Gestion de l'état avec Vuex (si utilisé)
-├── utils/          # Utilitaires (formatage des dates, etc.)
-├── views/          # Pages principales
-├── App.vue         # Composant racine
-└── main.js         # Point d'entrée
+
+### Démarrage du serveur d'événements
+
+```bash
+# Démarrer le serveur d'événements (IMPORTANT)
+npm run dev:server
 ```
 
-## Points d'accès principaux
+Le serveur d'événements sera accessible à l'adresse : http://localhost:3001
+
+### Démarrage du frontend
+
+```bash
+# Dans un autre terminal, démarrer le frontend
+npm run serve
+```
+
+Le site sera accessible à l'adresse : http://localhost:8080
+
+## Routes principales
+
+### Routes publiques
 
 - **Home** (`/`) : Page d'accueil
 - **Événements** (`/evenement`) : Liste des événements
 - **À propos** (`/apropos`) : Page à propos
 
-## Composants clés
+### Routes admin
 
-### Composants de page
+- **Admin Dashboard** (`/admin`) : Tableau de bord administrateur
+- **Liste des événements** (`/admin/events`) : Gestion des événements
+- **Créer un événement** (`/admin/events/new`) : Création d'un nouvel événement
+- **Détails d'un événement** (`/admin/events/:id`) : Détails d'un événement spécifique
+- **Modifier un événement** (`/admin/events/:id/edit`) : Modification d'un événement existant
 
-- **Home.vue** : Page d'accueil
-- **Evenement.vue** : Page de listing des événements
-- **Apropos.vue** : Page à propos
+## API REST
 
-### Composants réutilisables
+### Endpoints publics
 
-- **Navbar.vue** : Barre de navigation
-- **TheFooter.vue** : Pied de page
-- **CookieConsent.vue** : Gestion du consentement aux cookies
+- `GET /api/v2/events` : Récupérer tous les événements
+- `GET /api/v2/events/:id` : Récupérer un événement spécifique par ID
 
-## Données et API
+### Endpoints admin
 
-Les données affichées dans l'application sont récupérées via des appels API.
+- `GET /api/v2/admin/events` : Récupérer tous les événements (pour l'interface admin)
+- `GET /api/v2/admin/events/:id` : Récupérer un événement spécifique par ID
+- `POST /api/v2/admin/events` : Créer un nouvel événement
+- `PUT /api/v2/admin/events/:id` : Mettre à jour un événement existant
+- `DELETE /api/v2/admin/events/:id` : Supprimer un événement
 
-Le service API principal se trouve dans `services/api.js`, qui utilise Axios pour les requêtes HTTP.
+## Documentation
 
-### Événements
+Pour plus de détails sur le module de gestion des événements, consultez la documentation complète dans `docs/EVENT_MODULE.md`.
 
-Le service `eventService` expose plusieurs méthodes pour récupérer les événements :
-
-```javascript
-// Récupérer tous les événements
-eventService.getEvents()
-
-// Récupérer un événement par son ID
-eventService.getEventById(id)
-
-// Récupérer les événements à venir
-eventService.getUpcomingEvents()
-
-// Récupérer les événements passés
-eventService.getPastEvents()
-```
-
-Les données récupérées depuis l'API peuvent être transformées pour correspondre à la structure attendue par les composants Vue.
-
-### Formatage des dates
-
-Un utilitaire de formatage de date (`utils/dateFormatter.js`) est disponible :
-
-```javascript
-// Obtenir l'abréviation d'un mois
-dateFormatter.getMonthAbbreviation(monthIndex)
-
-// Formater une date pour les événements
-dateFormatter.formatEventDate(isoDate)
-```
-
-
-## Variables d'environnement
-
-Les variables d'environnement spécifiques au frontend peuvent être définies dans des fichiers `.env` (par exemple, `.env.development`, `.env.production`) à la racine du projet frontend (`src/` ou la racine du projet global selon votre configuration).
-
-## Compilation et déploiement
-
-### Développement
-
-Pour lancer le serveur de développement :
-
-```bash
-npm run serve
-```
-
-### Production
+## Production
 
 Pour compiler le projet pour la production :
 
@@ -99,3 +78,8 @@ npm run build
 ```
 
 Le résultat de la compilation se trouve dans le dossier `dist/`. 
+
+Pour démarrer le serveur en production :
+
+```bash
+npm run start:server
