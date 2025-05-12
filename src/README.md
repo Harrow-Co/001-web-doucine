@@ -1,101 +1,142 @@
-# Frontend Vue.js - DOUCINE
+# DOUCINE - Site Web avec CMS
 
-Cette partie du projet contient le frontend Vue.js pour le site DOUCINE.
+Ce projet est un site web pour l'association DOUCINE avec un CMS intégré pour gérer le contenu dynamique, en particulier les événements.
 
-## Structure du projet
+## Architecture
 
-```
-src/
-├── assets/         # Ressources statiques (images, styles, etc.)
-├── components/     # Composants Vue réutilisables
-├── router/         # Configuration des routes
-├── services/       # Services pour les appels API
-├── store/          # Gestion de l'état avec Vuex (si utilisé)
-├── utils/          # Utilitaires (formatage des dates, etc.)
-├── views/          # Pages principales
-├── App.vue         # Composant racine
-└── main.js         # Point d'entrée
-```
+Le projet se compose de deux parties principales :
 
-## Points d'accès principaux
+1. **Frontend** : Une application Vue.js qui constitue l'interface utilisateur du site
+2. **Backend** : Un CMS Strapi qui gère le contenu et expose une API REST
 
-- **Home** (`/`) : Page d'accueil
-- **Événements** (`/evenement`) : Liste des événements
-- **À propos** (`/apropos`) : Page à propos
+## Installation
 
-## Composants clés
+### Prérequis
 
-### Composants de page
+- Node.js (v14+)
+- NPM ou Yarn
 
-- **Home.vue** : Page d'accueil
-- **Evenement.vue** : Page de listing des événements
-- **Apropos.vue** : Page à propos
+### Installation du backend (Strapi)
 
-### Composants réutilisables
-
-- **Navbar.vue** : Barre de navigation
-- **TheFooter.vue** : Pied de page
-- **CookieConsent.vue** : Gestion du consentement aux cookies
-
-## Données et API
-
-Les données affichées dans l'application sont récupérées via des appels API.
-
-Le service API principal se trouve dans `services/api.js`, qui utilise Axios pour les requêtes HTTP.
-
-### Événements
-
-Le service `eventService` expose plusieurs méthodes pour récupérer les événements :
-
-```javascript
-// Récupérer tous les événements
-eventService.getEvents()
-
-// Récupérer un événement par son ID
-eventService.getEventById(id)
-
-// Récupérer les événements à venir
-eventService.getUpcomingEvents()
-
-// Récupérer les événements passés
-eventService.getPastEvents()
+1. Naviguez vers le dossier du serveur :
+```bash
+cd server
 ```
 
-Les données récupérées depuis l'API peuvent être transformées pour correspondre à la structure attendue par les composants Vue.
-
-### Formatage des dates
-
-Un utilitaire de formatage de date (`utils/dateFormatter.js`) est disponible :
-
-```javascript
-// Obtenir l'abréviation d'un mois
-dateFormatter.getMonthAbbreviation(monthIndex)
-
-// Formater une date pour les événements
-dateFormatter.formatEventDate(isoDate)
+2. Installez les dépendances :
+```bash
+npm install
 ```
 
+3. Démarrez le serveur Strapi en mode développement :
+```bash
+npm run develop
+```
 
-## Variables d'environnement
+4. Créez un compte administrateur lors du premier démarrage
 
-Les variables d'environnement spécifiques au frontend peuvent être définies dans des fichiers `.env` (par exemple, `.env.development`, `.env.production`) à la racine du projet frontend (`src/` ou la racine du projet global selon votre configuration).
+5. Accédez au panneau d'administration à l'adresse :
+```
+http://localhost:1337/admin
+```
 
-## Compilation et déploiement
+### Installation du frontend (Vue.js)
 
-### Développement
+1. À la racine du projet, installez les dépendances :
+```bash
+npm install
+```
 
-Pour lancer le serveur de développement :
+2. Configurez les variables d'environnement :
+- Créez un fichier `.env` à partir de `.env.example`
+- Ajustez l'URL de l'API selon votre configuration
 
+3. Démarrez le serveur de développement :
 ```bash
 npm run serve
 ```
 
-### Production
+4. Accédez au site à l'adresse :
+```
+http://localhost:8080
+```
 
-Pour compiler le projet pour la production :
+## Utilisation
 
+### Gestion du contenu (pour les administrateurs)
+
+Le CMS Strapi permet de gérer :
+- Les événements (ajout, modification, suppression)
+- Les médias (images)
+
+Consultez le guide administrateur dans `GUIDE_CLIENT.md` pour des instructions détaillées.
+
+### Structure des événements
+
+Chaque événement comprend :
+- Informations de base (titre, description, date, lieu)
+- Détails complémentaires (activités, tarifs, informations pratiques)
+- Média associé (image)
+
+## Déploiement en production
+
+### Frontend
+
+1. Construisez l'application pour la production :
 ```bash
 npm run build
 ```
 
-Le résultat de la compilation se trouve dans le dossier `dist/`. 
+2. Déployez le contenu du dossier `dist` sur votre serveur web
+
+### Backend (Strapi)
+
+1. Dans le dossier `server`, configurez les variables d'environnement pour la production
+
+2. Construisez l'application admin :
+```bash
+npm run build
+```
+
+3. Démarrez en mode production :
+```bash
+npm run start
+```
+
+## Maintenance
+
+### Sauvegarde
+
+Pour sauvegarder la base de données du CMS :
+```bash
+cd server
+cp .tmp/data.db ./backups/data-$(date +%Y%m%d).db
+```
+
+### Mises à jour
+
+1. Mettez à jour les dépendances régulièrement :
+```bash
+npm update
+```
+
+2. Vérifiez les mises à jour de sécurité :
+```bash
+npm audit fix
+```
+
+## Documentation technique
+
+- Documentation frontend : voir `src/README.md`
+- Documentation backend : voir `server/README.md`
+- Guide utilisateur : voir `GUIDE_CLIENT.md`
+- Structure de la base de données : voir `server/EVENT_DB_SCHEMA.md`
+
+## Support
+
+Pour toute question technique concernant cette installation, contactez :
+- [Votre email/contact]
+
+## Licence
+
+Ce projet est configuré spécifiquement pour DOUCINE.
