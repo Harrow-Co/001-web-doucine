@@ -1,6 +1,6 @@
-# DOUCINE - Frontend Vue.js
+# Frontend Vue.js - DOUCINE
 
-Cette partie du projet contient le frontend Vue.js pour le site DOUCINE, qui consomme l'API REST fournie par le backend Strapi.
+Cette partie du projet contient le frontend Vue.js pour le site DOUCINE.
 
 ## Structure du projet
 
@@ -10,6 +10,7 @@ src/
 ├── components/     # Composants Vue réutilisables
 ├── router/         # Configuration des routes
 ├── services/       # Services pour les appels API
+├── store/          # Gestion de l'état avec Vuex (si utilisé)
 ├── utils/          # Utilitaires (formatage des dates, etc.)
 ├── views/          # Pages principales
 ├── App.vue         # Composant racine
@@ -36,9 +37,11 @@ src/
 - **TheFooter.vue** : Pied de page
 - **CookieConsent.vue** : Gestion du consentement aux cookies
 
-## Intégration avec Strapi
+## Données et API
 
-L'intégration avec le backend Strapi se fait via le service API situé dans `services/api.js`. Ce service utilise Axios pour effectuer des requêtes HTTP vers l'API Strapi.
+Les données affichées dans l'application sont récupérées via des appels API.
+
+Le service API principal se trouve dans `services/api.js`, qui utilise Axios pour les requêtes HTTP.
 
 ### Événements
 
@@ -58,20 +61,11 @@ eventService.getUpcomingEvents()
 eventService.getPastEvents()
 ```
 
-### Format des données
+Les données récupérées depuis l'API peuvent être transformées pour correspondre à la structure attendue par les composants Vue.
 
-Les données récupérées depuis l'API Strapi sont transformées pour correspondre à la structure attendue par les composants Vue. Cette transformation est effectuée par la méthode `formatEvents()` dans le composant `Evenement.vue`.
+### Formatage des dates
 
-## Styles et design
-
-Le design utilise des feuilles de style personnalisées avec une approche mobile-first. Les principaux fichiers de style sont :
-
-- `assets/styles/main.css` : Styles de base
-- `assets/styles/animations.css` : Animations
-
-## Gestion des dates
-
-Le formatage des dates est géré par l'utilitaire `dateFormatter.js` qui fournit des fonctions pour formater les dates en français :
+Un utilitaire de formatage de date (`utils/dateFormatter.js`) est disponible :
 
 ```javascript
 // Obtenir l'abréviation d'un mois
@@ -81,11 +75,16 @@ dateFormatter.getMonthAbbreviation(monthIndex)
 dateFormatter.formatEventDate(isoDate)
 ```
 
+## Styles et design
+
+Le design utilise des feuilles de style personnalisées avec une approche mobile-first. Les principaux fichiers de style sont :
+
+- `assets/styles/main.css` : Styles de base
+- `assets/styles/animations.css` : Animations
+
 ## Variables d'environnement
 
-Les variables d'environnement sont définies dans le fichier `.env` à la racine du projet :
-
-- `VUE_APP_API_URL` : URL de l'API Strapi (par défaut : `http://localhost:1337`)
+Les variables d'environnement spécifiques au frontend peuvent être définies dans des fichiers `.env` (par exemple, `.env.development`, `.env.production`) à la racine du projet frontend (`src/` ou la racine du projet global selon votre configuration).
 
 ## Compilation et déploiement
 
