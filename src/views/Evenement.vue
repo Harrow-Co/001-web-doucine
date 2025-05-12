@@ -24,8 +24,21 @@
           Découvrez nos événements à venir et rejoignez notre communauté pour des moments de partage et de convivialité.
         </p>
       </div>
+      
+      <!-- Indicateur de chargement -->
+      <div v-if="loading" class="loading-container animate-fade-in">
+        <div class="loading-spinner"></div>
+        <p>Chargement des événements...</p>
+      </div>
+      
+      <!-- Message d'erreur -->
+      <div v-else-if="error" class="error-container animate-fade-in">
+        <i class="fas fa-exclamation-circle error-icon"></i>
+        <p>{{ error }}</p>
+        <button @click="loadEvents" class="btn btn-primary">Réessayer</button>
+      </div>
 
-      <div class="events-grid">
+      <div v-else class="events-grid">
         <!-- Liste des événements -->
         <div v-for="(event, index) in events" :key="event.id" 
              class="event-card animate-card"
@@ -168,18 +181,38 @@
 
 <script>
 import * as dateFormatter from "@/utils/dateFormatter";
-import { events } from "@/data/eventData";
+import eventService from "@/services/eventService";
 
 export default {
   name: 'PageEvenement',
   data() {
     return {
+      events: [],
       showModal: false,
       selectedEvent: null,
-      events: events
-    }
+      loading: true,
+      error: null
+    };
   },
+  
+  async created() {
+    this.loadEvents();
+  },
+  
   methods: {
+    async loadEvents() {
+      try {
+        this.loading = true;
+        this.error = null;
+        this.events = await eventService.getAllEvents();
+      } catch (error) {
+        console.error('Erreur lors du chargement des événements:', error);
+        this.error = 'Impossible de charger les événements. Veuillez réessayer plus tard.';
+      } finally {
+        this.loading = false;
+      }
+    },
+    
     navigateTo(elementId) {
       const element = document.querySelector(elementId);
       if (element) {
@@ -387,16 +420,17 @@ export default {
 
 .events-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 40px;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
 }
 
 .event-card {
-  background: white;
-  border-radius: 20px;
+  background-color: white;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
   cursor: pointer;
 }
 
@@ -1081,5 +1115,53 @@ export default {
   100% {
     transform: scale(1);
   }
+}
+
+/* Styles pour l'indicateur de chargement */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 0;
+  width: 100%;
+}
+
+.loading-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(235, 26, 58, 0.2);
+  border-top: 5px solid #EB1A3A;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Styles pour le message d'erreur */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 0;
+  width: 100%;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 50px;
+  color: #EB1A3A;
+  margin-bottom: 20px;
+}
+
+.error-container p {
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #333;
 }
 </style> 

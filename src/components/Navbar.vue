@@ -501,5 +501,7 @@ export default {
   height: 2px;
   background: linear-gradient(90deg, #EB1A3A 0%, #FBB018 100%);
 }
+
+
 </style>
 

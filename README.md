@@ -1,142 +1,85 @@
-# DOUCINE - Site Web avec CMS
+# DOUCINE - Site Web
 
-Ce projet est un site web pour l'association DOUCINE avec un CMS intégré pour gérer le contenu dynamique, en particulier les événements.
+Ce projet est un site web pour l'association DOUCINE, avec un backend Node.js/Express/SQLite et un frontend Vue.js.
 
-## Architecture
-
-Le projet se compose de deux parties principales :
-
-1. **Frontend** : Une application Vue.js qui constitue l'interface utilisateur du site
-2. **Backend** : Un CMS Strapi qui gère le contenu et expose une API REST
-
-## Installation
+## Démarrage rapide
 
 ### Prérequis
 
 - Node.js (v14+)
-- NPM ou Yarn
+- npm ou yarn
 
-### Installation du backend (Strapi)
+### Installation
 
-1. Naviguez vers le dossier du serveur :
 ```bash
-cd server
-```
-
-2. Installez les dépendances :
-```bash
+# Installer les dépendances
 npm install
 ```
 
-3. Démarrez le serveur Strapi en mode développement :
+### Démarrage du serveur d'événements
+
 ```bash
-npm run develop
+# Démarrer le serveur d'événements (IMPORTANT)
+npm run dev:server
 ```
 
-4. Créez un compte administrateur lors du premier démarrage
+Le serveur d'événements sera accessible à l'adresse : http://localhost:3001
 
-5. Accédez au panneau d'administration à l'adresse :
-```
-http://localhost:1337/admin
-```
+### Démarrage du frontend
 
-### Installation du frontend (Vue.js)
-
-1. À la racine du projet, installez les dépendances :
 ```bash
-npm install
-```
-
-2. Configurez les variables d'environnement :
-- Créez un fichier `.env` à partir de `.env.example`
-- Ajustez l'URL de l'API selon votre configuration
-
-3. Démarrez le serveur de développement :
-```bash
+# Dans un autre terminal, démarrer le frontend
 npm run serve
 ```
 
-4. Accédez au site à l'adresse :
-```
-http://localhost:8080
-```
+Le site sera accessible à l'adresse : http://localhost:8080
 
-## Utilisation
+## Routes principales
 
-### Gestion du contenu (pour les administrateurs)
+### Routes publiques
 
-Le CMS Strapi permet de gérer :
-- Les événements (ajout, modification, suppression)
-- Les médias (images)
+- **Home** (`/`) : Page d'accueil
+- **Événements** (`/evenement`) : Liste des événements
+- **À propos** (`/apropos`) : Page à propos
 
-Consultez le guide administrateur dans `GUIDE_CLIENT.md` pour des instructions détaillées.
+### Routes admin
 
-### Structure des événements
+- **Admin Dashboard** (`/admin`) : Tableau de bord administrateur
+- **Liste des événements** (`/admin/events`) : Gestion des événements
+- **Créer un événement** (`/admin/events/new`) : Création d'un nouvel événement
+- **Détails d'un événement** (`/admin/events/:id`) : Détails d'un événement spécifique
+- **Modifier un événement** (`/admin/events/:id/edit`) : Modification d'un événement existant
 
-Chaque événement comprend :
-- Informations de base (titre, description, date, lieu)
-- Détails complémentaires (activités, tarifs, informations pratiques)
-- Média associé (image)
+## API REST
 
-## Déploiement en production
+### Endpoints publics
 
-### Frontend
+- `GET /api/v2/events` : Récupérer tous les événements
+- `GET /api/v2/events/:id` : Récupérer un événement spécifique par ID
 
-1. Construisez l'application pour la production :
+### Endpoints admin
+
+- `GET /api/v2/admin/events` : Récupérer tous les événements (pour l'interface admin)
+- `GET /api/v2/admin/events/:id` : Récupérer un événement spécifique par ID
+- `POST /api/v2/admin/events` : Créer un nouvel événement
+- `PUT /api/v2/admin/events/:id` : Mettre à jour un événement existant
+- `DELETE /api/v2/admin/events/:id` : Supprimer un événement
+
+## Documentation
+
+Pour plus de détails sur le module de gestion des événements, consultez la documentation complète dans `docs/EVENT_MODULE.md`.
+
+## Production
+
+Pour compiler le projet pour la production :
+
 ```bash
 npm run build
 ```
 
-2. Déployez le contenu du dossier `dist` sur votre serveur web
+Le résultat de la compilation se trouve dans le dossier `dist/`. 
 
-### Backend (Strapi)
+Pour démarrer le serveur en production :
 
-1. Dans le dossier `server`, configurez les variables d'environnement pour la production
-
-2. Construisez l'application admin :
 ```bash
-npm run build
-```
-
-3. Démarrez en mode production :
-```bash
-npm run start
-```
-
-## Maintenance
-
-### Sauvegarde
-
-Pour sauvegarder la base de données du CMS :
-```bash
-cd server
-cp .tmp/data.db ./backups/data-$(date +%Y%m%d).db
-```
-
-### Mises à jour
-
-1. Mettez à jour les dépendances régulièrement :
-```bash
-npm update
-```
-
-2. Vérifiez les mises à jour de sécurité :
-```bash
-npm audit fix
-```
-
-## Documentation technique
-
-- Documentation frontend : voir `src/README.md`
-- Documentation backend : voir `server/README.md`
-- Guide utilisateur : voir `GUIDE_CLIENT.md`
-- Structure de la base de données : voir `server/EVENT_DB_SCHEMA.md`
-
-## Support
-
-Pour toute question technique concernant cette installation, contactez :
-- [Votre email/contact]
-
-## Licence
-
-Ce projet est configuré spécifiquement pour DOUCINE.
+npm run start:server

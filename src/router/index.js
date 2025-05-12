@@ -7,8 +7,12 @@ import PolitiqueConfidentialite from "../views/PolitiqueConfidentialite.vue";
 import NotFound from "../views/NotFound.vue";
 import ContactPage from '../views/Contact.vue'
 
+// Importer les routes d'administration
+import adminRoutes from '../admin/router';
+
 Vue.use(VueRouter);
 
+// Combiner les routes principales et les routes d'administration
 const routes = [
   {
     path: "/",
@@ -76,6 +80,10 @@ const routes = [
     name: 'ContactPage',
     component: ContactPage
   },
+  
+  // Ajouter les routes d'administration
+  ...adminRoutes,
+  
   // Route 404 pour toutes les URL non définies
   {
     path: "*",
