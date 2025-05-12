@@ -2,7 +2,7 @@
 // Service pour récupérer les événements depuis l'API
 
 // URL de l'API d'événements (utiliser la variable d'environnement ou une valeur par défaut)
-const API_URL = process.env.VUE_APP_EVENT_API_URL || 'http://localhost:3001/api/v2';
+const API_URL = process.env.VUE_APP_EVENT_API_URL || 'http://localhost:3000/api/v2';
 
 const eventService = {
   /**
