@@ -85,18 +85,13 @@
       </div>
     </section>
     
-    <TheFooter />
-  </div>
+    </div>
 </template>
 
 <script>
-import TheFooter from "@/components/TheFooter.vue";
 
 export default {
-  name: "AteliersBienEtre",
-  components: {
-    TheFooter
-  },
+
   mounted() {
     // Initialize Intersection Observer to trigger animations
     const sections = document.querySelectorAll('.animate-section');
