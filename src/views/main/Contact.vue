@@ -205,7 +205,7 @@ export default {
       
       try {
         const response = await axios.post(
-          `${process.env.VUE_APP_API_URL}/api/contact-messages`, 
+          `${import.meta.env.VITE_API_URL}/api/contact-messages`, 
           { data: this.formData }
         );
         

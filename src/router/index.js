@@ -92,7 +92,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
     // Pour l'accessibilité : remonter en haut de la page lors d'un changement de route
