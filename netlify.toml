@@ -1,7 +1,7 @@
 [build]
   command = "npm install && npm run build"
   publish = "dist"
-  environment = { NODE_VERSION = "16" }
+  environment = { NODE_VERSION = "18" }
 
 # Redirection pour le routage Vue.js
 [[redirects]]

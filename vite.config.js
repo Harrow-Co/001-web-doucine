@@ -17,5 +17,9 @@ export default defineConfig({
         additionalData: `@import "@/assets/styles/variables.scss";` 
       }
     }
+  },
+  define: {
+    // Polyfill pour crypto.getRandomValues
+    '__VITE_CRYPTO_RANDOM_VALUES__': 'true'
   }
 });
