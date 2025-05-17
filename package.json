@@ -23,8 +23,8 @@
     "sqlite3": "^5.1.7",
     "typescript": "^4.0.0",
     "uuid": "^11.1.0",
-    "vue": "^2.6.14",
-    "vue-router": "^3.6.5"
+    "vue": "^3.4.27",
+    "vue-router": "^4.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

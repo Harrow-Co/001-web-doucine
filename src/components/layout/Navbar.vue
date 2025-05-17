@@ -199,7 +199,7 @@ export default {
     // Gestionnaire d'événement pour l'accessibilité clavier
     document.addEventListener('keydown', this.handleKeyDown);
   },
-  beforeDestroy() {
+  beforeUnmount() {
     // Nettoyage des écouteurs d'événements
     window.removeEventListener('resize', this.checkMobile);
     document.removeEventListener('click', () => {});

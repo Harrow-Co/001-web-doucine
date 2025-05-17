@@ -94,18 +94,15 @@
       </div>
     </div>
     
-    <TheFooter />
+
   </div>
 </template>
 
 <script>
-import TheFooter from "@/components/layout/TheFooter.vue";
+
 
 export default {
   name: "MentionsLegales",
-  components: {
-    TheFooter
-  },
   computed: {
     currentDate() {
       const date = new Date();

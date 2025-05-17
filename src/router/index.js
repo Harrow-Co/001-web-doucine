@@ -1,5 +1,4 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import Evenement from "../views/main/Evenement.vue";
 import Apropos from "../views/main/Apropos.vue";
 import AboutUs from "../views/main/AboutUs.vue";
@@ -10,7 +9,7 @@ import ContactPage from '../views/main/Contact.vue'
 // Importer les routes d'administration
 import adminRoutes from '../admin/router';
 
-Vue.use(VueRouter);
+
 
 // Combiner les routes principales et les routes d'administration
 const routes = [
@@ -86,14 +85,14 @@ const routes = [
   
   // Route 404 pour toutes les URL non définies
   {
-    path: "*",
+    path: "/:pathMatch(.*)*",
     name: "NotFound",
     component: NotFound
   }
 ];
 
-const router = new VueRouter({
-  mode: "history",
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
   routes,
   scrollBehavior(to, from, savedPosition) {
     // Pour l'accessibilité : remonter en haut de la page lors d'un changement de route
