@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import TeamMemberCard from './TeamMemberCard.vue'
+import TeamMemberCard from '../cards/TeamMemberCard.vue'
 
 export default {
   name: 'TeamSection',

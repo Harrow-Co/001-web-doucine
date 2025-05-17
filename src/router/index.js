@@ -1,11 +1,11 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Evenement from "../views/Evenement.vue";
-import Apropos from "../views/Apropos.vue";
-import AboutUs from "../views/AboutUs.vue";
-import PolitiqueConfidentialite from "../views/PolitiqueConfidentialite.vue";
-import NotFound from "../views/NotFound.vue";
-import ContactPage from '../views/Contact.vue'
+import Evenement from "../views/main/Evenement.vue";
+import Apropos from "../views/main/Apropos.vue";
+import AboutUs from "../views/main/AboutUs.vue";
+import PolitiqueConfidentialite from "../views/legal/PolitiqueConfidentialite.vue";
+import NotFound from "../views/errors/NotFound.vue";
+import ContactPage from '../views/main/Contact.vue'
 
 // Importer les routes d'administration
 import adminRoutes from '../admin/router';
@@ -17,7 +17,7 @@ const routes = [
   {
     path: "/",
     name: "home",
-    component: () => import("../views/Home.vue"),
+    component: () => import("../views/main/Home.vue"),
   },
   {
     path: "/evenement",
@@ -42,12 +42,12 @@ const routes = [
   {
     path: "/mentions-legales",
     name: "MentionsLegales",
-    component: () => import("../views/MentionsLegales.vue"),
+    component: () => import("../views/legal/MentionsLegales.vue"),
   },
   {
     path: "/conditions-utilisation",
     name: "ConditionsUtilisation",
-    component: () => import("../views/ConditionsUtilisation.vue"),
+    component: () => import("../views/legal/ConditionsUtilisation.vue"),
   },
   // Routes pour les actions
   {

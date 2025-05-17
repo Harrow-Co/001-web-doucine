@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import HowItWorksSection from "@/components/HowItWorksSection.vue";
+import HowItWorksSection from "@/components/sections/HowItWorksSection.vue";
 
 export default {
   name: "AboutUs",
