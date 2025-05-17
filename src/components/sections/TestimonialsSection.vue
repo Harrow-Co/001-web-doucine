@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import TestimonialCard from "./TestimonialCard.vue";
+import TestimonialCard from "../cards/TestimonialCard.vue";
 
 export default {
   name: "TestimonialsSection",

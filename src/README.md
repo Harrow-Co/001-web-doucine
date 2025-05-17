@@ -140,3 +140,69 @@ Pour toute question technique concernant cette installation, contactez :
 ## Licence
 
 Ce projet est configuré spécifiquement pour DOUCINE.
+
+# Structure des composants
+
+Le dossier `components` est organisé de la manière suivante :
+
+## Layout
+Composants pour la structure principale du site :
+- `Navbar.vue` : Barre de navigation
+- `TheHeader.vue` : En-tête de page
+- `TheFooter.vue` : Pied de page
+
+## Sections
+Sections principales des pages :
+- `AboutContent.vue` : Contenu de la page À propos
+- `BenefitsSection.vue` : Section des avantages
+- `CommunityCTA.vue` : Call-to-action communautaire
+- `Features.vue` : Fonctionnalités
+- `HowItWorks.vue` : Comment ça marche (complet)
+- `HowItWorksSection.vue` : Section explicative du fonctionnement
+- `MissionSection.vue` : Section mission
+- `TeamSection.vue` : Section équipe
+- `TestimonialsSection.vue` : Section témoignages
+- `TheHero.vue` : Section héros (bannière principale)
+
+## Cards
+Composants de type carte :
+- `TeamMemberCard.vue` : Carte de membre d'équipe
+- `TestimonialCard.vue` : Carte de témoignage
+
+## Forms
+Formulaires :
+- `ContactForm.vue` : Formulaire de contact
+
+## Common
+Composants communs et utilitaires :
+- Dossier `cookies` : Composants liés à la gestion des cookies
+
+# Structure des vues (Views)
+
+Le dossier `views` est organisé de la manière suivante :
+
+## Main
+Pages principales du site :
+- `Home.vue` : Page d'accueil
+- `Evenement.vue` : Page des événements
+- `Contact.vue` : Page de contact
+- `Apropos.vue` : Page À propos (français)
+- `AboutUs.vue` : Page À propos (anglais)
+
+## Actions
+Pages des différentes actions et services de l'association :
+- `ActivitesSociales.vue` : Activités sociales
+- `AteliersBienEtre.vue` : Ateliers bien-être
+- `PreventionSante.vue` : Prévention santé
+- `SoutienAdministratif.vue` : Soutien administratif
+- `SoutienDomicile.vue` : Soutien à domicile
+
+## Legal
+Pages d'informations légales :
+- `ConditionsUtilisation.vue` : Conditions d'utilisation
+- `MentionsLegales.vue` : Mentions légales
+- `PolitiqueConfidentialite.vue` : Politique de confidentialité
+
+## Errors
+Pages d'erreur :
+- `NotFound.vue` : Page 404 (Page non trouvée)

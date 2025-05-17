@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import HowItWorks from "@/components/HowItWorks.vue";
+import HowItWorks from "@/components/sections/HowItWorks.vue";
 
 export default {
   name: "AproposPage",

@@ -29,35 +29,35 @@
         <div class="footer__social">
           <a href="#" class="footer__social-link" aria-label="Facebook">
             <img
-              src="../assets/images/facebook.svg"
+              src="@/assets/images/facebook.svg"
               alt="Facebook"
               class="footer__social-icon"
             />
           </a>
           <!-- <a href="#" class="footer__social-link">
             <img
-              src="../assets/images/twitter.svg"
+              src="@/assets/images/twitter.svg"
               alt="Twitter"
               class="footer__social-icon"
             />
           </a>
           <a href="#" class="footer__social-link">
             <img
-              src="../assets/images/instagram.svg"
+              src="@/assets/images/instagram.svg"
               alt="Instagram"
               class="footer__social-icon"
             />
           </a>
           <a href="#" class="footer__social-link">
             <img
-              src="../assets/images/linkedin.svg"
+              src="@/assets/images/linkedin.svg"
               alt="LinkedIn"
               class="footer__social-icon"
             />
           </a>
           <a href="#" class="footer__social-link">
             <img
-              src="../assets/images/youtube.svg"
+              src="@/assets/images/youtube.svg"
               alt="YouTube"
               class="footer__social-icon"
             />

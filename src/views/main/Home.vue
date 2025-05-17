@@ -10,12 +10,12 @@
 </template>
 
 <script>
-import TheHero from "@/components/TheHero.vue";
-import Features from "@/components/Features.vue";
-import BenefitsSection from "@/components/BenefitsSection.vue";
-import CommunityCTA from "@/components/CommunityCTA.vue";
-import TestimonialsSection from "@/components/TestimonialsSection.vue";
-import TeamSection from "@/components/TeamSection.vue";
+import TheHero from "@/components/sections/TheHero.vue";
+import Features from "@/components/sections/Features.vue";
+import BenefitsSection from "@/components/sections/BenefitsSection.vue";
+import CommunityCTA from "@/components/sections/CommunityCTA.vue";
+import TestimonialsSection from "@/components/sections/TestimonialsSection.vue";
+import TeamSection from "@/components/sections/TeamSection.vue";
 
 export default {
   name: "HomePage",
