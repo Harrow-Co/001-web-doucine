@@ -3,6 +3,7 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import eventRoutes from './event-module/event.routes'; // Importer nos routes d'événements
+import healthRoutes from './routes/health.routes'; // Importer les routes de health check
 
 // Charger les variables d'environnement depuis le fichier .env
 dotenv.config();
@@ -29,6 +30,9 @@ app.get('/', (req: Request, res: Response) => {
 
 // Monter les routes pour les événements sous le préfixe /api/v2
 app.use('/api/v2', eventRoutes);
+
+// Monter les routes de santé (health check)
+app.use('/api/v2', healthRoutes);
 
 // --- Démarrage du Serveur ---
 app.listen(port, () => {

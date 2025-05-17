@@ -3,8 +3,19 @@ import path from 'path';
 import fs from 'fs';
 
 // Choisir l'emplacement du fichier de base de données SQLite
-// Pour la simplicité, nous le mettons à la racine du projet
-const dbPath = path.resolve(process.cwd(), 'events.db');
+let dbPath: string;
+
+if (process.env.NODE_ENV === 'production') {
+  // Pour Railway, utiliser un chemin persistant dans le volume monté
+  // Railway fournit un répertoire persistant à /data
+  dbPath = process.env.RAILWAY_VOLUME_MOUNT_PATH 
+    ? path.join(process.env.RAILWAY_VOLUME_MOUNT_PATH, 'events.db')
+    : path.join('/data', 'events.db');
+  console.log(`Using production database path: ${dbPath}`);
+} else {
+  // Pour le développement local, utiliser un fichier à la racine du projet
+  dbPath = path.resolve(process.cwd(), 'events.db');
+}
 
 // Vérifier si la base de données existe déjà
 const dbExists = fs.existsSync(dbPath);
