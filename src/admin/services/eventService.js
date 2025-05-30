@@ -13,7 +13,9 @@ const eventService = {
    */
   async getAllEvents() {
     try {
+      console.log(`Fetching events from: ${API_URL}/admin/events`);
       const response = await axios.get(`${API_URL}/admin/events`);
+      console.log('Events received:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching events:', error);

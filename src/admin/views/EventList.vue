@@ -101,14 +101,39 @@ export default {
     },
     
     formatDate(date) {
-      // Vérifier si date est un objet avec la structure attendue
-      if (!date || !date.jour || !date.mois || !date.annee) {
-        console.error('Format de date invalide:', date);
-        return 'Date invalide';
+      // Log pour débogage
+      console.log('Date reçue:', date);
+      
+      // Vérifier si date est un objet avec la structure attendue (format de notre nouvelle API)
+      if (date && date.jour && date.mois && date.annee) {
+        return `${date.jour} ${date.mois} ${date.annee}`;
       }
       
-      // Formater la date selon le format désiré
-      return `${date.jour} ${date.mois} ${date.annee}`;
+      // Si date est une chaîne ISO (format Strapi ou autre)
+      if (date && typeof date === 'string') {
+        try {
+          const dateObj = new Date(date);
+          if (!isNaN(dateObj.getTime())) {
+            const jour = dateObj.getDate().toString().padStart(2, '0');
+            const mois = ['JAN', 'FEV', 'MAR', 'AVR', 'MAI', 'JUN', 'JUL', 'AOU', 'SEP', 'OCT', 'NOV', 'DEC'][dateObj.getMonth()];
+            const annee = dateObj.getFullYear();
+            return `${jour} ${mois} ${annee}`;
+          }
+        } catch (e) {
+          console.error('Erreur lors du parsing de la date:', e);
+        }
+      }
+      
+      // Si c'est un objet avec une structure différente
+      if (date && typeof date === 'object') {
+        console.error('Structure de date non reconnue:', date);
+        // Tentative d'extraction des informations de date
+        const dateStr = JSON.stringify(date);
+        return `Date (format non standard): ${dateStr.substring(0, 30)}${dateStr.length > 30 ? '...' : ''}`;
+      }
+      
+      console.error('Format de date invalide:', date);
+      return 'Date invalide';
     },
     
     navigateToCreate() {
