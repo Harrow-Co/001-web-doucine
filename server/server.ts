@@ -11,9 +11,19 @@ const app: Express = express();
 const port = process.env.EVENT_SERVER_PORT || 3000; // Port par défaut 3000 si non défini
 
 // --- Middlewares ---
-// Activer CORS pour toutes les origines (à ajuster pour la production)
-// TODO: Configurer CORS plus strictement pour la production (ex: autoriser seulement l'URL du frontend)
-app.use(cors());
+// Configuration CORS pour la production
+const corsOptions = {
+  origin: [
+    'https://association-doucine.fr',
+    'http://localhost:3000',
+    'http://localhost:8080'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 
 // Parser les corps de requête entrants en JSON
 app.use(express.json());
