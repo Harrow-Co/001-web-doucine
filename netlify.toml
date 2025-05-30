@@ -3,6 +3,14 @@
   publish = "dist"
   environment = { NODE_VERSION = "18" }
 
+# Proxy pour l'API
+[[redirects]]
+  from = "/api/*"
+  to = "http://51.159.180.252/api/:splat"
+  status = 200
+  force = true
+  headers = {Access-Control-Allow-Origin = "*"}
+
 # Redirection pour le routage Vue.js
 [[redirects]]
   from = "/*"

@@ -2,8 +2,9 @@
 import axios from 'axios';
 
 // Utiliser la variable d'environnement pour l'URL de l'API d'événements
-// Notez que nous utilisons le port 3000 pour notre nouvelle API d'événements
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v2';
+// En production, nous utilisons le proxy Netlify pour éviter les problèmes de CORS
+const isProduction = import.meta.env.PROD;
+const API_URL = isProduction ? '/api/v2' : (import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v2');
 
 const eventService = {
   /**
