@@ -1,5 +1,5 @@
 [build]
-  command = "npm install && npx vite build"
+  command = "echo 'Skipping build, using pre-built files'"
   publish = "dist"
   environment = { NODE_VERSION = "18" }
 
@@ -15,12 +15,7 @@
     Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
     Access-Control-Allow-Headers = "Origin, X-Requested-With, Content-Type, Accept, Authorization"
 
-# Proxy pour l'API Strapi existante (v1)
-[[redirects]]
-  from = "/api/*"
-  to = "https://api.association-doucine.fr/api/:splat"
-  status = 200
-  force = true
+
 
 # Redirection pour le routage Vue.js
 [[redirects]]
