@@ -80,8 +80,7 @@ app.use('/api/v2', authRoutes);
 // Routes publiques des événements
 app.use('/api/v2', eventRoutes);
 
-// Sécuriser les routes admin des événements avec l'authentification
-app.use('/api/v2/admin', authenticate, requireEditor);
+// Les routes admin sont maintenant sécurisées directement dans leurs fichiers de routes respectifs
 
 // --- Démarrage du Serveur ---
 app.listen(port, () => {

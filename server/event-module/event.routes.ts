@@ -41,8 +41,12 @@ router.get('/events/:id', async (req: Request, res: Response) => {
 // --- Routes Admin (Nécessiteront une authentification plus tard) ---
 // Nous allons préfixer ces routes par '/admin' pour les distinguer
 
+// Importer les middlewares d'authentification
+import { authenticate } from '../auth-module/auth.middleware';
+import { requireEditor } from '../auth-module/role.middleware';
+
 // POST /api/v2/admin/events - Créer un nouvel événement
-router.post('/admin/events', async (req: Request, res: Response) => {
+router.post('/admin/events', authenticate, requireEditor, async (req: Request, res: Response) => {
   // TODO: Ajouter la validation du body (req.body)
   console.log('Données reçues pour la création d\'événement:', JSON.stringify(req.body, null, 2));
   const eventData: CreateEventDto = req.body;
@@ -89,7 +93,7 @@ router.post('/admin/events', async (req: Request, res: Response) => {
 });
 
 // PUT /api/v2/admin/events/:id - Mettre à jour un événement existant
-router.put('/admin/events/:id', async (req: Request, res: Response) => {
+router.put('/admin/events/:id', authenticate, requireEditor, async (req: Request, res: Response) => {
   const { id } = req.params;
   // TODO: Ajouter la validation du body (req.body)
   const eventData: UpdateEventDto = req.body;
@@ -108,7 +112,7 @@ router.put('/admin/events/:id', async (req: Request, res: Response) => {
 });
 
 // DELETE /api/v2/admin/events/:id - Supprimer un événement
-router.delete('/admin/events/:id', async (req: Request, res: Response) => {
+router.delete('/admin/events/:id', authenticate, requireEditor, async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
     const deleted = await eventService.deleteEvent(id);
@@ -127,7 +131,7 @@ router.delete('/admin/events/:id', async (req: Request, res: Response) => {
 // GET /api/v2/admin/events - Récupérer tous les événements (pour l'interface admin)
 // Peut être différent de la route publique (plus de détails, pagination, etc.)
 // Pour l'instant, faisons simple et utilisons la même logique que la route publique.
-router.get('/admin/events', async (req: Request, res: Response) => {
+router.get('/admin/events', authenticate, requireEditor, async (req: Request, res: Response) => {
     try {
         const events = await eventService.findAllEvents();
         res.status(200).json(events);
@@ -138,7 +142,7 @@ router.get('/admin/events', async (req: Request, res: Response) => {
 });
 
 // GET /api/v2/admin/events/:id - Récupérer un événement spécifique par ID (pour l'interface admin)
-router.get('/admin/events/:id', async (req: Request, res: Response) => {
+router.get('/admin/events/:id', authenticate, requireEditor, async (req: Request, res: Response) => {
     const { id } = req.params;
     try {
         const event = await eventService.findEventById(id);
