@@ -10,6 +10,24 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'), // Setup '@' alias to point to '/src'
     },
   },
+  server: {
+    // Configuration du proxy pour les requêtes API en développement
+    proxy: {
+      // Proxy pour la nouvelle API v2
+      '/api/v2': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path
+      },
+      // Proxy pour l'API Strapi existante
+      '/api': {
+        target: 'http://51.159.180.252',
+        changeOrigin: true,
+        secure: false
+      }
+    },
+  },
   css: {
     preprocessorOptions: {
       scss: {

@@ -1,10 +1,27 @@
 // src/admin/services/eventService.js
 import axios from 'axios';
 
-// Utiliser la variable d'environnement pour l'URL de l'API d'événements
-// En production, nous utilisons le proxy Netlify pour éviter les problèmes de CORS
-const isProduction = import.meta.env.PROD;
-const API_URL = isProduction ? '/api/v2' : (import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v2');
+// Configuration de l'URL de l'API selon l'environnement
+let API_URL;
+
+// Déterminer l'environnement d'exécution et configurer l'URL de l'API en conséquence
+if (import.meta.env.DEV) {
+  // En développement local, utiliser le proxy Vite configuré dans vite.config.js
+  // Cela évite les problèmes CORS car les requêtes passent par le même origine
+  API_URL = '/api/v2';
+  console.log('Mode développement (avec proxy Vite): API_URL =', API_URL);
+} 
+// En production avec Netlify, utiliser le proxy configuré dans netlify.toml
+else if (import.meta.env.PROD && window.location.hostname !== 'localhost') {
+  // Utiliser le chemin relatif pour que le proxy Netlify fonctionne
+  API_URL = '/api/v2';
+  console.log('Mode production (Netlify): API_URL =', API_URL);
+} 
+// En production locale (npm run preview), utiliser l'URL complète depuis .env.production
+else {
+  API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v2';
+  console.log('Mode production (local): API_URL =', API_URL);
+}
 
 const eventService = {
   /**
@@ -19,6 +36,20 @@ const eventService = {
       return response.data;
     } catch (error) {
       console.error('Error fetching events:', error);
+      // Ajouter des informations supplémentaires pour le débogage
+      if (error.response) {
+        // La requête a été faite et le serveur a répondu avec un code d'état
+        // qui n'est pas dans la plage 2xx
+        console.error('Response data:', error.response.data);
+        console.error('Response status:', error.response.status);
+        console.error('Response headers:', error.response.headers);
+      } else if (error.request) {
+        // La requête a été faite mais aucune réponse n'a été reçue
+        console.error('No response received. Request details:', error.request);
+      } else {
+        // Une erreur s'est produite lors de la configuration de la requête
+        console.error('Error setting up request:', error.message);
+      }
       throw error;
     }
   },

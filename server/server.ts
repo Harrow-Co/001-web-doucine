@@ -11,19 +11,53 @@ const app: Express = express();
 const port = process.env.EVENT_SERVER_PORT || 3000; // Port par défaut 3000 si non défini
 
 // --- Middlewares ---
-// Configuration CORS pour la production
+// Configuration CORS améliorée pour tous les environnements
+// Utiliser une fonction pour origin au lieu d'une liste pour plus de flexibilité
 const corsOptions = {
-  origin: [
-    'https://association-doucine.fr',
-    'http://localhost:3000',
-    'http://localhost:8080'
-  ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  origin: function (origin, callback) {
+    // Autoriser les requêtes sans origin (comme les appels API mobiles ou Postman)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    // Liste des domaines autorisés
+    const allowedDomains = [
+      // Production
+      'https://association-doucine.fr',
+      'https://www.association-doucine.fr',
+      // Netlify preview URLs (vérifié dans la condition ci-dessous)
+      // Développement local - tous les ports
+      'http://localhost:',
+      'http://127.0.0.1:'
+    ];
+    
+    // Vérifier si l'origine est autorisée
+    const isAllowed = 
+      // Vérifier les domaines exacts ou les préfixes
+      allowedDomains.some(domain => origin.startsWith(domain)) ||
+      // Vérifier les domaines Netlify
+      origin.match(/\.netlify\.app$/);
+    
+    if (isAllowed) {
+      callback(null, true);
+    } else {
+      console.log(`CORS blocked request from origin: ${origin}`);
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  credentials: true,
+  maxAge: 86400 // Cache preflight requests for 24 hours
 };
 
 app.use(cors(corsOptions));
+
+// Log des requêtes pour le débogage
+app.use((req: Request, res: Response, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.url} - Origin: ${req.headers.origin || 'N/A'}`);
+  next();
+});
 
 // Parser les corps de requête entrants en JSON
 app.use(express.json());
