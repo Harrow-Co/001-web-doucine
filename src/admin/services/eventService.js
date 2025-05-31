@@ -12,10 +12,10 @@ if (import.meta.env.DEV) {
   API_URL = '/api/v2';
   console.log('Mode développement (avec proxy Vite): API_URL =', API_URL);
 } 
-// En production avec Netlify, utiliser le proxy configuré dans netlify.toml
+// En production avec Netlify, utiliser directement l'URL complète de l'API
 else if (import.meta.env.PROD && window.location.hostname !== 'localhost') {
-  // Utiliser le chemin relatif pour que le proxy Netlify fonctionne
-  API_URL = '/api/v2';
+  // Utiliser l'URL complète de l'API pour éviter les problèmes de redirection
+  API_URL = 'https://api.association-doucine.fr/api/v2';
   console.log('Mode production (Netlify): API_URL =', API_URL);
 } 
 // En production locale (npm run preview), utiliser l'URL complète depuis .env.production
