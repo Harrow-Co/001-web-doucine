@@ -28,12 +28,56 @@ const eventService = {
    * Récupère tous les événements
    * @returns {Promise<Array>} Liste des événements
    */
+  // Fonction pour normaliser les données d'événements et garantir un format cohérent
+  _normalizeEventData(events) {
+    if (!Array.isArray(events)) {
+      console.error('Les données reçues ne sont pas un tableau:', events);
+      return [];
+    }
+    
+    return events.map(event => {
+      // Créer une copie de l'événement pour éviter de modifier l'original
+      const normalizedEvent = { ...event };
+      
+      // Normaliser la date si elle existe
+      if (normalizedEvent.date) {
+        // Si la date est une chaîne JSON, essayer de la parser
+        if (typeof normalizedEvent.date === 'string' && normalizedEvent.date.startsWith('{')) {
+          try {
+            normalizedEvent.date = JSON.parse(normalizedEvent.date);
+            console.log('Date convertie de JSON string à objet:', normalizedEvent.date);
+          } catch (e) {
+            console.error('Erreur lors du parsing de la date JSON:', e);
+          }
+        }
+        
+        // Si la date est un objet mais sans les propriétés attendues, essayer de la récupérer
+        if (typeof normalizedEvent.date === 'object' && 
+            !(normalizedEvent.date.jour && normalizedEvent.date.mois && normalizedEvent.date.annee)) {
+          
+          // Vérifier si la date est dans une propriété imbriquée
+          if (normalizedEvent.date.date && typeof normalizedEvent.date.date === 'object') {
+            normalizedEvent.date = normalizedEvent.date.date;
+            console.log('Date récupérée depuis une propriété imbriquée:', normalizedEvent.date);
+          }
+        }
+      }
+      
+      return normalizedEvent;
+    });
+  },
+  
   async getAllEvents() {
     try {
       console.log(`Fetching events from: ${API_URL}/admin/events`);
       const response = await axios.get(`${API_URL}/admin/events`);
-      console.log('Events received:', response.data);
-      return response.data;
+      console.log('Events received (raw):', response.data);
+      
+      // Normaliser les données avant de les retourner
+      const normalizedEvents = this._normalizeEventData(response.data);
+      console.log('Events normalized:', normalizedEvents);
+      
+      return normalizedEvents;
     } catch (error) {
       console.error('Error fetching events:', error);
       // Ajouter des informations supplémentaires pour le débogage
