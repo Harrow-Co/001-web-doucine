@@ -9,6 +9,9 @@
           <i class="fas fa-calendar-alt"></i> Événements
         </router-link>
         <!-- Autres liens de navigation peuvent être ajoutés ici -->
+        <a href="#" @click.prevent="logout" class="nav-link logout-link">
+          <i class="fas fa-sign-out-alt"></i> Déconnexion
+        </a>
       </nav>
     </header>
     
@@ -21,10 +24,17 @@
 </template>
 
 <script>
-export default {
-  name: 'AdminDashboard'
-};
+import authService from '../services/authService';
 
+export default {
+  name: 'AdminDashboard',
+  methods: {
+    logout() {
+      authService.logout();
+      this.$router.push({ name: 'admin-login' });
+    }
+  }
+};
 </script>
 
 <style scoped>
@@ -70,6 +80,15 @@ export default {
 
 .nav-link:hover, .router-link-active {
   background-color: #555;
+}
+
+.logout-link {
+  margin-left: auto;
+  background-color: #444;
+}
+
+.logout-link:hover {
+  background-color: #d32f2f;
 }
 
 .admin-content {

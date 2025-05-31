@@ -1,8 +1,13 @@
 // src/services/eventService.js
 // Service pour récupérer les événements depuis l'API
 
-// URL de l'API d'événements (utiliser la variable d'environnement ou une valeur par défaut)
-const API_URL = import.meta.env.VITE_EVENT_API_URL || 'http://localhost:3000/api/v2';
+// URL de l'API d'événements selon l'environnement
+const isProduction = import.meta.env.PROD && window.location.hostname !== 'localhost';
+const API_URL = isProduction 
+  ? 'https://api.association-doucine.fr/api/v2' 
+  : (import.meta.env.VITE_EVENT_API_URL || 'http://localhost:3000/api/v2');
+
+console.log('Mode:', isProduction ? 'production' : 'développement', '- API_URL =', API_URL);
 
 const eventService = {
   /**

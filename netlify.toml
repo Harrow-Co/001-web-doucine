@@ -1,21 +1,31 @@
 [build]
-  command = "npm install && npm run build"
+  command = "echo 'Skipping build, using pre-built files'"
   publish = "dist"
   environment = { NODE_VERSION = "18" }
 
-# Proxy pour la nouvelle API v2 (Node.js/TypeScript)
+# Proxy pour les routes admin de l'API v2 (priorité plus élevée)
+[[redirects]]
+  from = "/api/v2/admin/*"
+  to = "https://api.association-doucine.fr/api/v2/admin/:splat"
+  status = 200
+  force = true
+  [redirects.headers]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+
+# Proxy pour les autres routes de l'API v2
 [[redirects]]
   from = "/api/v2/*"
-  to = "http://51.159.180.252/api/v2/:splat"
+  to = "https://api.association-doucine.fr/api/v2/:splat"
   status = 200
   force = true
+  [redirects.headers]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Origin, X-Requested-With, Content-Type, Accept, Authorization"
 
-# Proxy pour l'API Strapi existante (v1)
-[[redirects]]
-  from = "/api/*"
-  to = "http://51.159.180.252/api/:splat"
-  status = 200
-  force = true
+
 
 # Redirection pour le routage Vue.js
 [[redirects]]

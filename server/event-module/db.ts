@@ -4,7 +4,9 @@ import fs from 'fs';
 
 // Choisir l'emplacement du fichier de base de données SQLite
 // Pour la simplicité, nous le mettons à la racine du projet
-const dbPath = path.resolve(process.cwd(), 'events.db');
+// Remonter d'un niveau si nous sommes dans le dossier server
+const rootDir = process.cwd().endsWith('/server') ? path.resolve(process.cwd(), '..') : process.cwd();
+const dbPath = path.resolve(rootDir, 'events.db');
 
 // Vérifier si la base de données existe déjà
 const dbExists = fs.existsSync(dbPath);
