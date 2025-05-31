@@ -3,14 +3,24 @@
   publish = "dist"
   environment = { NODE_VERSION = "18" }
 
-# Proxy pour la nouvelle API v2 (Node.js/TypeScript)
+# Proxy pour les routes admin de l'API v2 (priorité plus élevée)
+[[redirects]]
+  from = "/api/v2/admin/*"
+  to = "https://api.association-doucine.fr/api/v2/admin/:splat"
+  status = 200
+  force = true
+  [redirects.headers]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+
+# Proxy pour les autres routes de l'API v2
 [[redirects]]
   from = "/api/v2/*"
   to = "https://api.association-doucine.fr/api/v2/:splat"
   status = 200
   force = true
   [redirects.headers]
-    # Permettre les cookies d'authentification
     Access-Control-Allow-Origin = "*"
     Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
     Access-Control-Allow-Headers = "Origin, X-Requested-With, Content-Type, Accept, Authorization"
