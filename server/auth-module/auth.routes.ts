@@ -1,4 +1,3 @@
-// server/auth-module/auth.routes.ts
 import { Router, Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { CreateUserDto, UpdateUserDto, LoginDto, AuthenticatedRequest } from './user.model';

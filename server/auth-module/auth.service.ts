@@ -1,4 +1,3 @@
-// server/auth-module/auth.service.ts
 import authDb from './auth.db';
 import { User, CreateUserDto, UpdateUserDto, LoginDto } from './user.model';
 import { v4 as uuidv4 } from 'uuid';

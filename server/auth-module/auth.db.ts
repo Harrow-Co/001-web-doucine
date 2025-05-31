@@ -1,4 +1,3 @@
-// server/auth-module/auth.db.ts
 import sqlite3 from 'sqlite3';
 import path from 'path';
 import fs from 'fs';
