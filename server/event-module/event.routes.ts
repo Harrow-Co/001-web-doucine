@@ -42,8 +42,7 @@ router.get('/events/:id', async (req: Request, res: Response) => {
 // Nous allons préfixer ces routes par '/admin' pour les distinguer
 
 // Importer les middlewares d'authentification
-import { authenticate } from '../auth-module/auth.middleware';
-import { requireEditor } from '../auth-module/role.middleware';
+import { authenticate, requireEditor } from '../auth-module/auth.middleware';
 
 // POST /api/v2/admin/events - Créer un nouvel événement
 router.post('/admin/events', authenticate, requireEditor, async (req: Request, res: Response) => {
