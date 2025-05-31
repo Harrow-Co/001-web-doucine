@@ -1,5 +1,6 @@
 // src/admin/services/eventService.js
 import axios from 'axios';
+import authService from './authService';
 
 // Configuration de l'URL de l'API selon l'environnement
 let API_URL;
@@ -70,7 +71,9 @@ const eventService = {
   async getAllEvents() {
     try {
       console.log(`Fetching events from: ${API_URL}/admin/events`);
-      const response = await axios.get(`${API_URL}/admin/events`);
+      const response = await axios.get(`${API_URL}/admin/events`, {
+        headers: authService.getAuthHeaders()
+      });
       console.log('Events received (raw):', response.data);
       
       // Normaliser les données avant de les retourner
@@ -105,7 +108,9 @@ const eventService = {
    */
   async getEventById(id) {
     try {
-      const response = await axios.get(`${API_URL}/admin/events/${id}`);
+      const response = await axios.get(`${API_URL}/admin/events/${id}`, {
+        headers: authService.getAuthHeaders()
+      });
       return response.data;
     } catch (error) {
       console.error(`Error fetching event ${id}:`, error);
@@ -121,6 +126,11 @@ const eventService = {
   async createEvent(eventData) {
     try {
       console.log('Données envoyées au serveur:', JSON.stringify(eventData, null, 2));
+      
+      // Vérifier si l'utilisateur est authentifié
+      if (!authService.isAuthenticated()) {
+        throw new Error('Vous devez être connecté pour créer un événement');
+      }
       
       // Vérifier que tous les champs requis sont présents
       if (!eventData.titre) {
@@ -147,7 +157,9 @@ const eventService = {
         console.error('Erreur: Les détails de l\'\u00e9vénement sont incomplets', eventData.details);
       }
       
-      const response = await axios.post(`${API_URL}/admin/events`, eventData);
+      const response = await axios.post(`${API_URL}/admin/events`, eventData, {
+        headers: authService.getAuthHeaders()
+      });
       return response.data;
     } catch (error) {
       console.error('Error creating event:', error);
@@ -163,7 +175,14 @@ const eventService = {
    */
   async updateEvent(id, eventData) {
     try {
-      const response = await axios.put(`${API_URL}/admin/events/${id}`, eventData);
+      // Vérifier si l'utilisateur est authentifié
+      if (!authService.isAuthenticated()) {
+        throw new Error('Vous devez être connecté pour modifier un événement');
+      }
+      
+      const response = await axios.put(`${API_URL}/admin/events/${id}`, eventData, {
+        headers: authService.getAuthHeaders()
+      });
       return response.data;
     } catch (error) {
       console.error(`Error updating event ${id}:`, error);
@@ -178,7 +197,14 @@ const eventService = {
    */
   async deleteEvent(id) {
     try {
-      await axios.delete(`${API_URL}/admin/events/${id}`);
+      // Vérifier si l'utilisateur est authentifié
+      if (!authService.isAuthenticated()) {
+        throw new Error('Vous devez être connecté pour supprimer un événement');
+      }
+      
+      await axios.delete(`${API_URL}/admin/events/${id}`, {
+        headers: authService.getAuthHeaders()
+      });
       return true;
     } catch (error) {
       console.error(`Error deleting event ${id}:`, error);

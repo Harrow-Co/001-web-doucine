@@ -6,14 +6,19 @@
 # Proxy pour la nouvelle API v2 (Node.js/TypeScript)
 [[redirects]]
   from = "/api/v2/*"
-  to = "http://51.159.180.252/api/v2/:splat"
+  to = "https://api.association-doucine.fr/api/v2/:splat"
   status = 200
   force = true
+  [redirects.headers]
+    # Permettre les cookies d'authentification
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Origin, X-Requested-With, Content-Type, Accept, Authorization"
 
 # Proxy pour l'API Strapi existante (v1)
 [[redirects]]
   from = "/api/*"
-  to = "http://51.159.180.252/api/:splat"
+  to = "https://api.association-doucine.fr/api/:splat"
   status = 200
   force = true
 

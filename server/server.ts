@@ -3,6 +3,8 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import eventRoutes from './event-module/event.routes'; // Importer nos routes d'événements
+import authRoutes from './auth-module/auth.routes'; // Importer nos routes d'authentification
+import { authenticate, requireEditor } from './auth-module/auth.middleware'; // Importer nos middlewares d'authentification
 
 // Charger les variables d'environnement depuis le fichier .env
 dotenv.config();
@@ -14,7 +16,7 @@ const port = process.env.EVENT_SERVER_PORT || 3000; // Port par défaut 3000 si 
 // Configuration CORS améliorée pour tous les environnements
 // Utiliser une fonction pour origin au lieu d'une liste pour plus de flexibilité
 const corsOptions = {
-  origin: function (origin, callback) {
+  origin: function (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) {
     // Autoriser les requêtes sans origin (comme les appels API mobiles ou Postman)
     if (!origin) {
       return callback(null, true);
@@ -25,6 +27,7 @@ const corsOptions = {
       // Production
       'https://association-doucine.fr',
       'https://www.association-doucine.fr',
+      'https://api.association-doucine.fr',
       // Netlify preview URLs (vérifié dans la condition ci-dessous)
       // Développement local - tous les ports
       'http://localhost:',
@@ -71,8 +74,14 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Event Management Server is running!');
 });
 
-// Monter les routes pour les événements sous le préfixe /api/v2
+// Monter les routes pour les événements et l'authentification sous le préfixe /api/v2
+app.use('/api/v2', authRoutes);
+
+// Routes publiques des événements
 app.use('/api/v2', eventRoutes);
+
+// Sécuriser les routes admin des événements avec l'authentification
+app.use('/api/v2/admin', authenticate, requireEditor);
 
 // --- Démarrage du Serveur ---
 app.listen(port, () => {
