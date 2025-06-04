@@ -3,10 +3,21 @@ import path from 'path';
 import fs from 'fs';
 
 // Choisir l'emplacement du fichier de base de données SQLite pour l'authentification
-// Pour la simplicité, nous le mettons à la racine du projet
-// Remonter d'un niveau si nous sommes dans le dossier server
-const rootDir = process.cwd().endsWith('/server') ? path.resolve(process.cwd(), '..') : process.cwd();
-const dbPath = path.resolve(rootDir, 'auth.db');
+// Pour Docker, nous utilisons le dossier data qui sera monté comme volume
+const dataDir = path.resolve(process.cwd(), 'data');
+
+// Créer le dossier data s'il n'existe pas
+if (!fs.existsSync(dataDir)) {
+  try {
+    fs.mkdirSync(dataDir, { recursive: true });
+    console.log(`Created data directory at ${dataDir}`);
+  } catch (err) {
+    console.error(`Failed to create data directory: ${err}`);
+  }
+}
+
+const dbPath = path.resolve(dataDir, 'auth.db');
+console.log(`Auth database path: ${dbPath}`);
 
 // Vérifier si la base de données existe déjà
 const dbExists = fs.existsSync(dbPath);

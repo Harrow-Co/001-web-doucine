@@ -74,6 +74,11 @@ app.get('/', (req: Request, res: Response) => {
   res.send('Event Management Server is running!');
 });
 
+// Endpoint de santé pour le healthcheck Docker
+app.get('/api/v2/health', (req: Request, res: Response) => {
+  res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Monter les routes pour les événements et l'authentification sous le préfixe /api/v2
 app.use('/api/v2', authRoutes);
 

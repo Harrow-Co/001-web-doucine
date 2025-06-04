@@ -109,7 +109,7 @@ router.delete('/auth/users/:id', authenticate, requireAdmin, async (req: Request
 // GET /api/v2/auth/me - Récupérer les informations de l'utilisateur connecté
 router.get('/auth/me', authenticate, async (req: Request, res: Response) => {
   try {
-    const userId = (req as AuthenticatedRequest).user?.id;
+    const userId = (req as AuthenticatedRequest).user?.userId;
     
     if (!userId) {
       return res.status(401).json({ message: 'Authentication required' });

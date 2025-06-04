@@ -33,7 +33,7 @@ export interface LoginResponseDto {
 // Interface pour les requêtes authentifiées
 export interface AuthenticatedRequest extends Request {
   user?: {
-    id: string;
+    userId: string;
     username: string;
     role: string;
   };
