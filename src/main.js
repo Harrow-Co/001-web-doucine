@@ -1,3 +1,6 @@
+// Désactiver les logs en production (doit être importé en premier)
+import './utils/disableLogsInProduction';
+
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
