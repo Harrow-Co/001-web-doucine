@@ -1,3 +1,12 @@
+@import "./tailwind.css";
+
+/* Plugins */
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+/* Class based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Reset and base styles */
 * {
   margin: 0;
@@ -25,7 +34,7 @@ h6 {
 }
 
 /* Buttons */
-.btn {
+.btn-legacy {
   display: inline-block;
   padding: 14px 28px;
   border: none;
@@ -37,23 +46,23 @@ h6 {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.btn-primary {
+.btn-legacy-primary {
   background-color: #EB1A3A;
   color: #fff;
 }
 
-.btn-primary:hover {
+.btn-legacy-primary:hover {
   background-color: #D41735;
   transform: translateY(-2px);
   box-shadow: 0 6px 8px rgba(235, 26, 58, 0.25);
 }
 
-.btn-secondary {
+.btn-legacy-secondary {
   background-color: rgba(93, 200, 230, 0.15);
   color: #2A3040;
 }
 
-.btn-secondary:hover {
+.btn-legacy-secondary:hover {
   background-color: rgba(93, 200, 230, 0.25);
   transform: translateY(-2px);
 }

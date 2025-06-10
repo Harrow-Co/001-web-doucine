@@ -34,7 +34,13 @@ const adminRoutes = [
     children: [
       {
         path: '',
-        redirect: { name: 'admin-events' }
+        redirect: { name: 'admin-dashboard' }
+      },
+      {
+        path: 'dashboard',
+        name: 'admin-dashboard',
+        component: () => import('./views/Dashboard.vue'),
+        meta: { title: 'Tableau de bord Admin' }
       },
       {
         path: 'events',

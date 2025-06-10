@@ -1,3 +1,9 @@
+/**
+ * Script pour désactiver les logs en production
+ * À importer au début de l'application (main.js)
+ */
+
+// Détection de l'environnement de production
 const isProduction = (() => {
   // 1. Vérifier si nous sommes en mode production via Vite
   if (typeof import.meta !== 'undefined' && import.meta.env) {
@@ -34,35 +40,49 @@ const isProduction = (() => {
   return false;
 })();
 
-// En production, désactive tous les logs
-if (isProduction) {
-  // Sauvegarde des fonctions originales (uniquement pour console.error)
-  const originalError = console.error;
+// Fonction pour déterminer si un message d'erreur est lié à l'authentification
+function isAuthError(args) {
+  if (!args || args.length === 0) return false;
   
-  // Remplace toutes les fonctions de log par des fonctions vides
+  // Vérifier les messages d'erreur courants liés à l'authentification
+  const errorStr = String(args[0]);
+  return errorStr.includes('401') || 
+         errorStr.includes('Unauthorized') || 
+         errorStr.includes('Login error') || 
+         errorStr.includes('auth') || 
+         errorStr.includes('Auth') || 
+         errorStr.includes('token') || 
+         errorStr.includes('Token') || 
+         errorStr.includes('JWT');
+}
+
+// En production, désactive les logs non critiques
+if (isProduction) {
+  // Sauvegarder les fonctions originales
+  const originalConsole = {
+    log: console.log,
+    info: console.info,
+    debug: console.debug,
+    warn: console.warn,
+    error: console.error
+  };
+  
+  // Remplacer les fonctions de log non critiques
   console.log = function() {};
   console.info = function() {};
   console.debug = function() {};
   console.warn = function() {};
-  console.trace = function() {};
-  console.table = function() {};
-  console.count = function() {};
-  console.countReset = function() {};
-  console.group = function() {};
-  console.groupCollapsed = function() {};
-  console.groupEnd = function() {};
-  console.time = function() {};
-  console.timeLog = function() {};
-  console.timeEnd = function() {};
-  console.timeStamp = function() {};
-  console.profile = function() {};
-  console.profileEnd = function() {};
-  console.assert = function() {};
-  console.clear = function() {};
   
-  // Garde la fonction d'erreur mais avec moins d'informations
-  console.error = function() {
-    originalError('Une erreur est survenue. Consultez les logs du serveur pour plus de détails.');
+  // Conserver console.error mais filtrer les messages sensibles
+  console.error = function(...args) {
+    // Toujours permettre les erreurs d'authentification et HTTP
+    // car elles sont essentielles au fonctionnement de l'application
+    if (args.length > 0 && (args[0] instanceof Error || isAuthError(args))) {
+      // Utiliser la fonction originale pour les erreurs importantes
+      return originalConsole.error.apply(console, args);
+    }
+    
+    // Pour les autres types d'erreurs, ne pas les afficher en production
+    // mais ne pas bloquer le flux normal de l'application
   };
- 
 }

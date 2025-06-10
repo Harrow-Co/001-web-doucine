@@ -84,7 +84,6 @@ export default {
   }
 };
 </script>
-
 <style scoped>
 .login-container {
   display: flex;
@@ -187,3 +186,4 @@ export default {
   border: 1px solid #f5c6cb;
 }
 </style>
+

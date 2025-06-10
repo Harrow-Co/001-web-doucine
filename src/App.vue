@@ -1,8 +1,16 @@
 <template>
   <div id="app">
-    <Navbar />
-    <router-view />
-    <Footer />
+    <!-- Afficher Navbar et Footer seulement si ce n'est pas une route admin -->
+    <template v-if="!isAdminRoute">
+      <Navbar />
+      <router-view />
+      <Footer />
+    </template>
+    
+    <!-- Pour les routes admin, afficher uniquement le contenu sans Navbar ni Footer -->
+    <template v-else>
+      <router-view />
+    </template>
   </div>
 </template>
 
@@ -15,6 +23,13 @@ export default {
   components: {
     Navbar,
     Footer
+  },
+  computed: {
+    // Détecter si la route actuelle est une route d'administration
+    isAdminRoute() {
+      // Vérifier si le chemin de la route commence par '/admin'
+      return this.$route.path.startsWith('/admin');
+    }
   },
   mounted() {
     // Détecter la navigation au clavier pour l'accessibilité

@@ -1,39 +1,39 @@
 <template>
-  <section class="features section">
-    <div class="features-header">
-      <!-- <span class="features-tag">Connexion</span> -->
-      <h2 class="features-title">
+  <section class="bg-white py-28 px-4 md:px-16 flex flex-col items-center">
+    <div class="max-w-3xl text-center">
+      <h2 class="text-4xl font-bold text-gray-800 relative inline-block pb-5 mb-4">
         Découvrez nos initiatives pour tous les âges
+        <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-20 h-1 bg-gradient-to-r from-danger to-secondary rounded"></span>
       </h2>
-      <p class="features-description">
+      <p class="text-lg text-gray-600 leading-relaxed">
         Nous croyons fermement que les liens sociaux enrichissent la vie.
         Rejoignez-nous pour créer un environnement où chaque génération peut
         s'épanouir ensemble.
       </p>
     </div>
 
-    <div class="features-grid">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-20">
       <div
         v-for="(feature, index) in features"
         :key="index"
-        class="feature-card"
+        class="bg-gray-50 p-10 rounded-xl shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-lg text-center"
       >
-        <div class="feature-icon-wrapper" :class="`feature-icon-wrapper-${index + 1}`">
-          <img :src="feature.icon" :alt="feature.title" class="feature-icon" />
+        <div :class="`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${getIconBgClass(index)}`">
+          <img :src="feature.icon" :alt="feature.title" class="w-10 h-10 object-contain invert brightness-200" />
         </div>
-        <h3 class="feature-title">{{ feature.title }}</h3>
-        <p class="feature-description">{{ feature.description }}</p>
+        <h3 class="text-2xl font-bold text-gray-800 mb-4">{{ feature.title }}</h3>
+        <p class="text-gray-600">{{ feature.description }}</p>
       </div>
     </div>
 
-    <div class="features-actions">
+    <div class="flex items-center gap-6 mt-20">
       <button class="btn btn-primary">Rejoindre</button>
-      <div class="link-button">
+      <div class="flex items-center gap-2 text-primary font-semibold cursor-pointer transition-transform duration-300 hover:translate-x-1">
         <span>En savoir plus</span>
         <img
           src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/9cc59fc65142f42773e3131d8a5a5a8d452f8191d61b72aca044880ddbb310ec"
           alt="Arrow"
-          class="link-icon"
+          class="w-6 h-6 object-contain"
         />
       </div>
     </div>
@@ -67,171 +67,15 @@ export default {
       ],
     };
   },
+  methods: {
+    getIconBgClass(index) {
+      const classes = [
+        'bg-danger',
+        'bg-secondary',
+        'bg-primary',
+      ];
+      return classes[index % classes.length];
+    }
+  }
 };
 </script>
-
-<style scoped>
-.features {
-  background-color: #fff;
-  padding: 112px 64px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.features-header {
-  max-width: 768px;
-  text-align: center;
-}
-
-.features-tag {
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.features-title {
-  font-size: 42px;
-  line-height: 1.3;
-  margin-top: 16px;
-  color: #2A3040;
-  position: relative;
-  display: inline-block;
-  padding-bottom: 20px;
-}
-
-.features-title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80px;
-  height: 3px;
-  background: linear-gradient(90deg, #EB1A3A 0%, #FBB018 100%);
-  border-radius: 2px;
-}
-
-.features-description {
-  font-size: 18px;
-  line-height: 1.7;
-  margin-top: 24px;
-  color: #4D5259;
-}
-
-.features-grid {
-  display: flex;
-  gap: 32px;
-  margin-top: 80px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.feature-card {
-  flex: 1;
-  min-width: 280px;
-  max-width: 350px;
-  text-align: center;
-  padding: 40px 24px;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-  background-color: #FAFAFA;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
-}
-
-.feature-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.1);
-}
-
-.feature-icon-wrapper {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 24px;
-}
-
-.feature-icon-wrapper-1 {
-  background: #EB1A3A;
-}
-
-.feature-icon-wrapper-2 {
-  background: #FBB018;
-}
-
-.feature-icon-wrapper-3 {
-  background: #5DC8E6;
-}
-
-.feature-icon {
-  width: 40px;
-  aspect-ratio: 1;
-  object-fit: contain;
-  filter: invert(1) brightness(2);
-}
-
-.feature-title {
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1.3;
-  margin-top: 16px;
-  color: #2A3040;
-}
-
-.feature-description {
-  font-size: 16px;
-  line-height: 1.6;
-  margin-top: 16px;
-  color: #4D5259;
-}
-
-.features-actions {
-  display: flex;
-  gap: 24px;
-  margin-top: 80px;
-  align-items: center;
-}
-
-.link-button {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  color: #5DC8E6;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.link-button:hover {
-  transform: translateX(4px);
-}
-
-.link-icon {
-  width: 24px;
-  aspect-ratio: 1;
-  object-fit: contain;
-  filter: invert(69%) sepia(61%) saturate(490%) hue-rotate(164deg) brightness(94%) contrast(87%);
-}
-
-@media (max-width: 991px) {
-  .features {
-    padding: 100px 20px;
-  }
-
-  .features-title {
-    font-size: 36px;
-    line-height: 1.3;
-  }
-
-  .features-grid {
-    margin-top: 40px;
-    gap: 24px;
-  }
-  
-  .feature-card {
-    padding: 30px 20px;
-  }
-}
-</style>

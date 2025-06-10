@@ -40,6 +40,16 @@ const eventService = {
       // Créer une copie de l'événement pour éviter de modifier l'original
       const normalizedEvent = { ...event };
       
+      // Si les données viennent de SQLite et sont dans date_json
+      if (normalizedEvent.date_json && typeof normalizedEvent.date_json === 'string') {
+        try {
+          normalizedEvent.date = JSON.parse(normalizedEvent.date_json);
+          console.log('Date récupérée depuis date_json:', normalizedEvent.date);
+        } catch (e) {
+          console.error('Erreur lors du parsing de date_json:', e);
+        }
+      }
+      
       // Normaliser la date si elle existe
       if (normalizedEvent.date) {
         // Si la date est une chaîne JSON, essayer de la parser
@@ -62,6 +72,50 @@ const eventService = {
             console.log('Date récupérée depuis une propriété imbriquée:', normalizedEvent.date);
           }
         }
+        
+        // Normaliser les noms de mois pour s'assurer qu'ils sont en minuscules
+        if (normalizedEvent.date.mois) {
+          // Créer une copie du mois d'origine pour le logging
+          const originalMonth = normalizedEvent.date.mois;
+          
+          // Convertir le mois en minuscules pour la standardisation
+          normalizedEvent.date.mois = normalizedEvent.date.mois.toLowerCase();
+          
+          // S'assurer que le mois est correctement formaté
+          const moisValides = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 
+                              'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+                              
+          // Table de correspondance pour les abréviations de mois (en minuscules)
+          const abreviationsMois = {
+            'jan': 'janvier', 
+            'fev': 'février', 'feb': 'février',
+            'mar': 'mars',
+            'avr': 'avril', 'apr': 'avril',
+            'mai': 'mai', 'may': 'mai',
+            'jun': 'juin', 'juin': 'juin',
+            'jul': 'juillet', 'jui': 'juillet', 'juil': 'juillet',
+            'aou': 'août', 'aug': 'août', 'aout': 'août',
+            'sep': 'septembre', 'sept': 'septembre',
+            'oct': 'octobre',
+            'nov': 'novembre',
+            'dec': 'décembre', 'déc': 'décembre'
+          };
+          
+          if (!moisValides.includes(normalizedEvent.date.mois)) {
+            // Tenter de corriger les mois mal orthographiés ou abrégés
+            if (abreviationsMois[normalizedEvent.date.mois]) {
+              console.log(`Correction du mois "${originalMonth}" en "${abreviationsMois[normalizedEvent.date.mois]}" pour l'événement "${normalizedEvent.titre}"`);
+              normalizedEvent.date.mois = abreviationsMois[normalizedEvent.date.mois];
+            } else {
+              console.error(`Mois non reconnu: "${originalMonth}" pour l'événement "${normalizedEvent.titre}"`);
+            }
+          }
+        }
+        
+        // S'assurer que le jour est une chaîne
+        if (normalizedEvent.date.jour) {
+          normalizedEvent.date.jour = normalizedEvent.date.jour.toString().padStart(2, '0');
+        }
       }
       
       return normalizedEvent;
@@ -79,6 +133,15 @@ const eventService = {
       // Normaliser les données avant de les retourner
       const normalizedEvents = this._normalizeEventData(response.data);
       console.log('Events normalized:', normalizedEvents);
+      
+      // Loguer chaque date d'événement pour débogage
+      normalizedEvents.forEach(event => {
+        if (event.date) {
+          console.log(`Événement "${event.titre}" - Date: ${event.date.jour} ${event.date.mois} ${event.date.annee}`);
+        } else {
+          console.error(`Événement "${event.titre}" - Pas de date valide`);
+        }
+      });
       
       return normalizedEvents;
     } catch (error) {

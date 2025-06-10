@@ -1,111 +1,65 @@
 <template>
-  <div class="admin-event-details">
-    <div class="page-header">
-      <h1>Détails de l'événement</h1>
-      <div class="actions">
-        <button @click="goBack" class="btn btn-secondary">
+  <div class="admin-container">
+    <div class="flex justify-between items-center mb-6 flex-wrap">
+      <h1 class="text-2xl font-bold text-gray-800 m-0">Détails de l'événement</h1>
+      <div class="flex gap-3">
+        <router-link :to="{ name: 'admin-events' }" class="btn btn-secondary">
           <i class="fas fa-arrow-left"></i> Retour
-        </button>
-        <button @click="editEvent" class="btn btn-warning">
+        </router-link>
+        <router-link :to="{ name: 'admin-event-edit', params: { id: $route.params.id } }" class="btn btn-warning">
           <i class="fas fa-edit"></i> Modifier
-        </button>
+        </router-link>
         <button @click="confirmDelete" class="btn btn-danger">
           <i class="fas fa-trash"></i> Supprimer
         </button>
       </div>
     </div>
     
-    <div v-if="loading" class="loading">
-      <p>Chargement des détails...</p>
+    <div v-if="loading" class="card flex flex-col items-center justify-center p-10 text-center mb-6">
+      <div class="text-5xl text-primary mb-4">
+        <i class="fas fa-spinner animate-spin"></i>
+      </div>
+      <p class="text-gray-600">Chargement des détails...</p>
     </div>
     
-    <div v-else-if="error" class="error">
-      <p>{{ error }}</p>
-      <button @click="fetchEvent" class="btn btn-secondary">Réessayer</button>
-      <button @click="goBack" class="btn btn-primary">Retour à la liste</button>
+    <div v-else-if="error" class="card flex flex-col items-center justify-center p-10 text-center mb-6">
+      <div class="text-5xl text-red-500 mb-4">
+        <i class="fas fa-exclamation-circle"></i>
+      </div>
+      <p class="text-gray-600 mb-6">{{ error }}</p>
+      <div class="flex gap-3">
+        <button @click="fetchEvent" class="btn btn-secondary">
+          Réessayer
+        </button>
+        <router-link :to="{ name: 'admin-events' }" class="btn btn-primary">
+          Retour à la liste
+        </router-link>
+      </div>
     </div>
     
-    <div v-else-if="event" class="event-card">
-      <div class="event-header">
-        <h2>{{ event.titre }}</h2>
-        <div class="event-meta">
-          <p class="event-date">
-            <i class="fas fa-calendar-alt"></i> {{ formatDate(event.date) }}
-          </p>
-          <p class="event-location">
-            <i class="fas fa-map-marker-alt"></i> {{ event.lieu }}
-          </p>
-          <p class="event-time">
-            <i class="fas fa-clock"></i> {{ event.horaire }}
-          </p>
-        </div>
-      </div>
-      
-      <div class="event-body">
-        <h3>Description</h3>
-        <p v-if="event.description" class="event-description">{{ event.description }}</p>
-        <p v-else class="no-content">Aucune description fournie</p>
-        
-        <div v-if="event.details" class="event-details">
-          <h3>Détails</h3>
-          
-          <div class="detail-section">
-            <h4>Destination</h4>
-            <p>{{ event.details.destination }}</p>
-          </div>
-          
-          <div class="detail-section">
-            <h4>Activités</h4>
-            <ul>
-              <li v-for="(activity, index) in event.details.activities" :key="'activity-'+index">{{ activity }}</li>
-            </ul>
-          </div>
-          
-          <div class="detail-section">
-            <h4>Tarifs</h4>
-            <ul>
-              <li v-for="(price, index) in event.details.pricing" :key="'price-'+index">{{ price }}</li>
-            </ul>
-          </div>
-          
-          <div class="detail-section">
-            <h4>Inscription</h4>
-            <p>Date limite: {{ event.details.registration }}</p>
-          </div>
-          
-          <div class="detail-section">
-            <h4>Contact</h4>
-            <p>Téléphone: {{ event.details.contact }}</p>
-            <p>Email: {{ event.details.email }}</p>
-          </div>
-          
-          <div class="detail-section">
-            <h4>Informations pratiques</h4>
-            <ul>
-              <li v-for="(info, index) in event.details.practicalInfo" :key="'info-'+index">{{ info }}</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      
-      <div class="event-footer">
-        <div class="event-timestamps">
-          <p>Créé le: {{ formatTimestamp(event.createdAt) }}</p>
-          <p>Dernière modification: {{ formatTimestamp(event.updatedAt) }}</p>
-        </div>
-        <p class="event-id">ID: {{ event.id }}</p>
-      </div>
+    <div v-else-if="event">
+      <EventDetailCard
+        :event="event"
+        @image-error="imageError = true"
+      />
     </div>
     
     <!-- Modal de confirmation de suppression -->
-    <div v-if="showDeleteModal" class="modal-backdrop">
-      <div class="modal-content">
-        <h3>Confirmer la suppression</h3>
-        <p>Êtes-vous sûr de vouloir supprimer l'événement "{{ event?.titre }}" ?</p>
-        <p class="warning">Cette action est irréversible.</p>
-        <div class="modal-actions">
-          <button @click="cancelDelete" class="btn btn-secondary">Annuler</button>
-          <button @click="deleteEvent" class="btn btn-danger">Supprimer</button>
+    <div v-if="showDeleteModal" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 backdrop-blur-sm">
+      <div class="card w-[450px] max-w-[90%] shadow-xl p-6">
+        <h3 class="text-xl font-semibold text-gray-800 m-0 mb-4">Confirmer la suppression</h3>
+        <p class="text-gray-600 mb-4">Êtes-vous sûr de vouloir supprimer l'événement "{{ event?.titre }}" ?</p>
+        <div class="flex items-center bg-red-50 p-4 rounded-md text-red-500 mb-6">
+          <i class="fas fa-exclamation-triangle mr-2"></i>
+          <span>Cette action est irréversible.</span>
+        </div>
+        <div class="flex justify-end gap-3">
+          <button @click="cancelDelete" class="btn btn-secondary">
+            Annuler
+          </button>
+          <button @click="deleteEvent" class="btn btn-danger">
+            Supprimer
+          </button>
         </div>
       </div>
     </div>
@@ -114,15 +68,20 @@
 
 <script>
 import eventService from '../services/eventService';
+import EventDetailCard from '../components/events/EventDetailCard.vue';
 
 export default {
   name: 'EventDetails',
+  components: {
+    EventDetailCard
+  },
   data() {
     return {
       event: null,
       loading: true,
       error: null,
-      showDeleteModal: false
+      showDeleteModal: false,
+      imageError: false
     };
   },
   created() {
@@ -144,43 +103,6 @@ export default {
       } finally {
         this.loading = false;
       }
-    },
-    
-    formatDate(date) {
-      // Vérifier si date est un objet avec la structure attendue
-      if (!date || !date.jour || !date.mois || !date.annee) {
-        console.error('Format de date invalide:', date);
-        return 'Date invalide';
-      }
-      
-      // Formater la date selon le format désiré
-      return `${date.jour} ${date.mois} ${date.annee}`;
-    },
-    
-    formatTimestamp(dateString) {
-      try {
-        const options = { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit'
-        };
-        
-        return new Date(dateString).toLocaleDateString('fr-FR', options);
-      } catch (error) {
-        console.error('Erreur lors du formatage du timestamp:', error);
-        return dateString || 'Date inconnue';
-      }
-    },
-    
-    goBack() {
-      this.$router.push({ name: 'admin-events' });
-    },
-    
-    editEvent() {
-      this.$router.push({ name: 'admin-event-edit', params: { id: this.event.id } });
     },
     
     confirmDelete() {
@@ -209,246 +131,3 @@ export default {
 };
 </script>
 
-<style scoped>
-.admin-event-details {
-  padding: 20px;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-h1 {
-  margin: 0;
-  color: #333;
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
-}
-
-.loading, .error {
-  text-align: center;
-  padding: 30px;
-  background-color: #f9f9f9;
-  border-radius: 4px;
-  margin: 20px 0;
-}
-
-.error {
-  background-color: #ffebee;
-  color: #c62828;
-}
-
-.event-card {
-  background-color: #fff;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
-
-.event-header {
-  padding: 20px;
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #eee;
-}
-
-.event-header h2 {
-  margin: 0 0 15px 0;
-  color: #333;
-}
-
-.event-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  font-size: 16px;
-  color: #666;
-}
-
-.event-meta i {
-  margin-right: 5px;
-}
-
-.event-body {
-  padding: 20px;
-}
-
-.event-body h3 {
-  margin-top: 0;
-  color: #333;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 10px;
-}
-
-.event-description {
-  white-space: pre-line;
-  line-height: 1.6;
-}
-
-.no-content {
-  color: #999;
-  font-style: italic;
-}
-
-.event-details {
-  margin-top: 30px;
-}
-
-.detail-section {
-  margin-bottom: 20px;
-}
-
-.detail-section h4 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  color: #555;
-  font-size: 18px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 5px;
-}
-
-.detail-section ul {
-  margin: 0;
-  padding-left: 20px;
-}
-
-.detail-section li {
-  margin-bottom: 5px;
-}
-
-.event-footer {
-  padding: 15px 20px;
-  background-color: #f9f9f9;
-  border-top: 1px solid #eee;
-  font-size: 14px;
-  color: #777;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.event-timestamps p {
-  margin: 5px 0;
-}
-
-.event-id {
-  font-family: monospace;
-  margin: 5px 0;
-}
-
-.btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
-  display: inline-flex;
-  align-items: center;
-}
-
-.btn i {
-  margin-right: 5px;
-}
-
-.btn-primary {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #45a049;
-}
-
-.btn-secondary {
-  background-color: #f1f1f1;
-  color: #333;
-}
-
-.btn-secondary:hover {
-  background-color: #ddd;
-}
-
-.btn-danger {
-  background-color: #f44336;
-  color: white;
-}
-
-.btn-danger:hover {
-  background-color: #d32f2f;
-}
-
-.btn-warning {
-  background-color: #ff9800;
-  color: white;
-}
-
-.btn-warning:hover {
-  background-color: #f57c00;
-}
-
-/* Modal styles */
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 4px;
-  width: 400px;
-  max-width: 90%;
-}
-
-.modal-content h3 {
-  margin-top: 0;
-}
-
-.modal-content .warning {
-  color: #f44336;
-  font-weight: bold;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
-}
-
-.modal-actions button {
-  margin-left: 10px;
-}
-
-@media (max-width: 600px) {
-  .page-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .actions {
-    margin-top: 15px;
-  }
-  
-  .event-meta {
-    flex-direction: column;
-    gap: 10px;
-  }
-}
-</style>

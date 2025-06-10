@@ -1,7 +1,24 @@
-// src/admin/services/authService.js
 import axios from 'axios';
 
-const API_URL = import.meta.env.VITE_API_URL;
+// Configuration de l'URL de l'API selon l'environnement
+let API_URL;
+
+
+if (import.meta.env.DEV) {
+  // En développement local, proxy Vite configuré dans vite.config.js
+  API_URL = '/api/v2';
+  console.log('Mode développement (avec proxy Vite): API_URL =', API_URL);
+} 
+// En production avec un domaine externe,directement l'URL complète de l'API
+else if (import.meta.env.PROD && window.location.hostname !== 'localhost') {
+  API_URL = 'https://api.association-doucine.fr/api/v2';
+  console.log('Mode production (externe): API_URL =', API_URL);
+} 
+// En production locale (npm run preview), l'URL complète depuis .env.production
+else {
+  API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v2';
+  console.log('Mode production (local): API_URL =', API_URL);
+}
 
 class AuthService {
   // Stocker le token dans le localStorage

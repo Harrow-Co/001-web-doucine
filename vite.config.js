@@ -1,10 +1,16 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path'; // Node.js path module for resolving aliases
+import {
+  fileURLToPath,
+  URL
+} from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [
+    vue(),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'), // Setup '@' alias to point to '/src'
