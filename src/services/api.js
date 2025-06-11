@@ -39,8 +39,6 @@ export const eventService = {
 // Service pour les fonctionnalités de contact
 export const contactService = {
   submitContactForm(formData) {
-    console.log("Contact form submitted:", formData);
-    
     // Simulation d'envoi de formulaire réussi
     return Promise.resolve({
       data: {

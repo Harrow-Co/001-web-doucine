@@ -10,14 +10,12 @@ const dataDir = path.resolve(process.cwd(), 'data');
 if (!fs.existsSync(dataDir)) {
   try {
     fs.mkdirSync(dataDir, { recursive: true });
-    console.log(`Created data directory at ${dataDir}`);
   } catch (err) {
     console.error(`Failed to create data directory: ${err}`);
   }
 }
 
 const dbPath = path.resolve(dataDir, 'events.db');
-console.log(`Events database path: ${dbPath}`);
 
 // Vérifier si la base de données existe déjà
 const dbExists = fs.existsSync(dbPath);
@@ -27,8 +25,6 @@ const db = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening database', err.message);
   } else {
-    console.log(`Connected to the SQLite database at ${dbPath}`);
-    
     // Si la base de données existe déjà et que nous avons modifié le schéma, nous devons la recréer
     if (!dbExists) {
       // Création de la table des événements avec le nouveau schéma
@@ -48,8 +44,6 @@ const db = new sqlite3.Database(dbPath, (err) => {
       `, (initErr) => {
         if (initErr) {
           console.error('Error creating events table', initErr.message);
-        } else {
-          console.log('Events table initialized successfully with new schema.');
         }
       });
     } else {
@@ -69,7 +63,7 @@ const db = new sqlite3.Database(dbPath, (err) => {
           
           // Si la colonne 'titre' n'existe pas, c'est l'ancien schéma
           if (!row) {
-            console.log('Migrating events table to new schema...');
+            // Migration vers le nouveau schéma
             
             // Créer une table temporaire avec le nouveau schéma
             db.run(`
@@ -100,13 +94,9 @@ const db = new sqlite3.Database(dbPath, (err) => {
               `, (err) => {
                 if (err) {
                   console.error('Error finalizing migration', err.message);
-                } else {
-                  console.log('Events table migrated to new schema successfully.');
                 }
               });
             });
-          } else {
-            console.log('Events table already has the new schema.');
           }
         });
       });

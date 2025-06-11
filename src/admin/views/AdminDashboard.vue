@@ -8,7 +8,7 @@
             <div class="flex items-center justify-between px-6 py-3">
               <!-- Logo with gradient background -->
               <div class="flex items-center">
-                <div class="bg-gradient-to-r from-primary to-primary-600 p-2 rounded-xl shadow-md">
+                <div class="p-2 rounded-xl shadow-md">
                   <img src="@/assets/logo_doucine.png" alt="Logo Doucine" class="h-10" />
                 </div>
               </div>

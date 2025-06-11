@@ -3,26 +3,51 @@ import axios from 'axios';
 import authService from './authService';
 
 // Configuration de l'URL de l'API selon l'environnement
-let API_URL;
+const API_URL = import.meta.env.VITE_API_URL || '/api/v2';
 
-// Déterminer l'environnement d'exécution et configurer l'URL de l'API en conséquence
-if (import.meta.env.DEV) {
-  // En développement local, utiliser le proxy Vite configuré dans vite.config.js
-  // Cela évite les problèmes CORS car les requêtes passent par le même origine
-  API_URL = '/api/v2';
-  console.log('Mode développement (avec proxy Vite): API_URL =', API_URL);
-} 
-// En production avec Netlify, utiliser directement l'URL complète de l'API
-else if (import.meta.env.PROD && window.location.hostname !== 'localhost') {
-  // Utiliser l'URL complète de l'API pour éviter les problèmes de redirection
-  API_URL = 'https://api.association-doucine.fr/api/v2';
-  console.log('Mode production (Netlify): API_URL =', API_URL);
-} 
-// En production locale (npm run preview), utiliser l'URL complète depuis .env.production
-else {
-  API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v2';
-  console.log('Mode production (local): API_URL =', API_URL);
-}
+// Créer une instance axios sécurisée qui sera utilisée pour toutes les requêtes
+// Cette instance sera importée par authService.js pour configurer les intercepteurs
+const secureAxios = axios.create();
+export { secureAxios };
+
+// Système de cache pour les événements
+const eventCache = {
+  allEvents: null,         // Cache pour tous les événements
+  eventDetails: {},        // Cache pour les détails des événements individuels
+  lastFetchTimestamp: 0,   // Timestamp de la dernière récupération
+  cacheDuration: 300000,   // Durée de validité du cache en ms (5 minutes par défaut)
+  
+  // Vérifier si le cache est toujours valide
+  isValid() {
+    return Date.now() - this.lastFetchTimestamp < this.cacheDuration && authService.isAuthenticated();
+  },
+  
+  // Invalider le cache
+  invalidate() {
+    this.allEvents = null;
+    this.eventDetails = {};
+    this.lastFetchTimestamp = 0;
+    console.log('Cache des événements invalidé');
+  },
+  
+  // Mettre à jour le timestamp
+  updateTimestamp() {
+    this.lastFetchTimestamp = Date.now();
+  },
+  
+  // Configurer la durée du cache
+  setCacheDuration(seconds) {
+    this.cacheDuration = seconds * 1000;
+    console.log(`Durée du cache des événements définie à ${seconds} secondes`);
+  }
+};
+
+// Écouter les événements d'authentification pour invalider le cache
+window.addEventListener('auth:login', () => eventCache.invalidate());
+window.addEventListener('auth:logout', () => eventCache.invalidate());
+
+// Exporter le cache pour qu'il puisse être utilisé par d'autres services
+export { eventCache };
 
 const eventService = {
   /**
@@ -122,43 +147,48 @@ const eventService = {
     });
   },
   
-  async getAllEvents() {
+  async getAllEvents(forceRefresh = false) {
     try {
-      console.log(`Fetching events from: ${API_URL}/admin/events`);
-      const response = await axios.get(`${API_URL}/admin/events`, {
-        headers: authService.getAuthHeaders()
-      });
-      console.log('Events received (raw):', response.data);
+      // Vérifier si les données sont en cache et valides
+      if (!forceRefresh && eventCache.allEvents && eventCache.isValid()) {
+        console.log('Utilisation du cache pour les événements');
+        return eventCache.allEvents;
+      }
       
-      // Normaliser les données avant de les retourner
+      // Utiliser l'instance axios sécurisée avec gestion automatique des tokens
+      const response = await secureAxios.get(`${API_URL}/admin/events`);
+      
+      // Normaliser les données pour garantir un format cohérent
       const normalizedEvents = this._normalizeEventData(response.data);
-      console.log('Events normalized:', normalizedEvents);
       
-      // Loguer chaque date d'événement pour débogage
+      // Ajouter des propriétés calculées
       normalizedEvents.forEach(event => {
-        if (event.date) {
-          console.log(`Événement "${event.titre}" - Date: ${event.date.jour} ${event.date.mois} ${event.date.annee}`);
-        } else {
-          console.error(`Événement "${event.titre}" - Pas de date valide`);
-        }
+        // Ajouter la date formatée pour l'affichage
+        event.formattedDate = `${event.date.jour} ${event.date.mois} ${event.date.annee}`;
       });
+      
+      // Mettre en cache les événements
+      eventCache.allEvents = normalizedEvents;
+      eventCache.updateTimestamp();
       
       return normalizedEvents;
     } catch (error) {
-      console.error('Error fetching events:', error);
-      // Ajouter des informations supplémentaires pour le débogage
-      if (error.response) {
-        // La requête a été faite et le serveur a répondu avec un code d'état
-        // qui n'est pas dans la plage 2xx
-        console.error('Response data:', error.response.data);
-        console.error('Response status:', error.response.status);
-        console.error('Response headers:', error.response.headers);
-      } else if (error.request) {
-        // La requête a été faite mais aucune réponse n'a été reçue
-        console.error('No response received. Request details:', error.request);
-      } else {
-        // Une erreur s'est produite lors de la configuration de la requête
-        console.error('Error setting up request:', error.message);
+      // En mode développement uniquement, afficher les détails de l'erreur
+      if (import.meta.env.DEV) {
+        console.error('Erreur lors de la récupération des événements:', error);
+        
+        // Gestion détaillée des erreurs pour faciliter le débogage
+        if (error.response) {
+          // La requête a été faite et le serveur a répondu avec un code d'erreur
+          console.error('Statut de la réponse d\'erreur:', error.response.status);
+          console.error('Données de la réponse d\'erreur:', error.response.data);
+        } else if (error.request) {
+          // La requête a été faite mais aucune réponse n'a été reçue
+          console.error('Aucune réponse reçue');
+        } else {
+          // Une erreur s'est produite lors de la configuration de la requête
+          console.error('Erreur lors de la configuration de la requête:', error.message);
+        }
       }
       throw error;
     }
@@ -169,14 +199,25 @@ const eventService = {
    * @param {string} id ID de l'événement
    * @returns {Promise<Object>} Détails de l'événement
    */
-  async getEventById(id) {
+  async getEventById(id, forceRefresh = false) {
     try {
-      const response = await axios.get(`${API_URL}/admin/events/${id}`, {
-        headers: authService.getAuthHeaders()
-      });
+      // Vérifier si les données sont en cache et valides
+      if (!forceRefresh && eventCache.eventDetails[id] && eventCache.isValid()) {
+        return eventCache.eventDetails[id];
+      }
+      // Utiliser l'instance axios sécurisée avec gestion automatique des tokens
+      const response = await secureAxios.get(`${API_URL}/admin/events/${id}`);
+      
+      // Mettre en cache les détails de l'événement
+      eventCache.eventDetails[id] = response.data;
+      eventCache.updateTimestamp();
+      
       return response.data;
     } catch (error) {
-      console.error(`Error fetching event ${id}:`, error);
+      // En mode développement uniquement, afficher les détails de l'erreur
+      if (import.meta.env.DEV) {
+        console.error(`Erreur lors de la récupération de l'événement ${id}:`, error);
+      }
       throw error;
     }
   },
@@ -188,44 +229,42 @@ const eventService = {
    */
   async createEvent(eventData) {
     try {
-      console.log('Données envoyées au serveur:', JSON.stringify(eventData, null, 2));
-      
       // Vérifier si l'utilisateur est authentifié
       if (!authService.isAuthenticated()) {
         throw new Error('Vous devez être connecté pour créer un événement');
       }
       
       // Vérifier que tous les champs requis sont présents
-      if (!eventData.titre) {
-        console.error('Erreur: Le champ titre est manquant dans les données envoyées');
-      }
+      const missingFields = [];
       
-      if (!eventData.description) {
-        console.error('Erreur: Le champ description est manquant dans les données envoyées');
-      }
-      
-      if (!eventData.horaire) {
-        console.error('Erreur: Le champ horaire est manquant dans les données envoyées');
-      }
-      
-      if (!eventData.lieu) {
-        console.error('Erreur: Le champ lieu est manquant dans les données envoyées');
-      }
-      
+      if (!eventData.titre) missingFields.push('titre');
+      if (!eventData.description) missingFields.push('description');
+      if (!eventData.horaire) missingFields.push('horaire');
+      if (!eventData.lieu) missingFields.push('lieu');
       if (!eventData.date || !eventData.date.jour || !eventData.date.mois || !eventData.date.annee) {
-        console.error('Erreur: Les champs de date sont incomplets', eventData.date);
+        missingFields.push('date');
       }
-      
       if (!eventData.details || !eventData.details.destination) {
-        console.error('Erreur: Les détails de l\'\u00e9vénement sont incomplets', eventData.details);
+        missingFields.push('details.destination');
       }
       
-      const response = await axios.post(`${API_URL}/admin/events`, eventData, {
-        headers: authService.getAuthHeaders()
-      });
+      // Si des champs sont manquants, lancer une erreur
+      if (missingFields.length > 0) {
+        throw new Error(`Champs requis manquants: ${missingFields.join(', ')}`);
+      }
+      
+      // Utiliser l'instance axios sécurisée avec gestion automatique des tokens
+      const response = await secureAxios.post(`${API_URL}/admin/events`, eventData);
+      
+      // Invalider le cache car un nouvel événement a été créé
+      eventCache.invalidate();
+      
       return response.data;
     } catch (error) {
-      console.error('Error creating event:', error);
+      // En mode développement uniquement, afficher les détails de l'erreur
+      if (import.meta.env.DEV) {
+        console.error('Erreur lors de la création de l\'événement:', error);
+      }
       throw error;
     }
   },
@@ -243,12 +282,18 @@ const eventService = {
         throw new Error('Vous devez être connecté pour modifier un événement');
       }
       
-      const response = await axios.put(`${API_URL}/admin/events/${id}`, eventData, {
-        headers: authService.getAuthHeaders()
-      });
+      // Utiliser l'instance axios sécurisée avec gestion automatique des tokens
+      const response = await secureAxios.put(`${API_URL}/admin/events/${id}`, eventData);
+      
+      // Invalider le cache car un événement a été modifié
+      eventCache.invalidate();
+      
       return response.data;
     } catch (error) {
-      console.error(`Error updating event ${id}:`, error);
+      // En mode développement uniquement, afficher les détails de l'erreur
+      if (import.meta.env.DEV) {
+        console.error(`Erreur lors de la mise à jour de l'événement ${id}:`, error);
+      }
       throw error;
     }
   },
@@ -265,14 +310,25 @@ const eventService = {
         throw new Error('Vous devez être connecté pour supprimer un événement');
       }
       
-      await axios.delete(`${API_URL}/admin/events/${id}`, {
-        headers: authService.getAuthHeaders()
-      });
+      // Utiliser l'instance axios sécurisée avec gestion automatique des tokens
+      await secureAxios.delete(`${API_URL}/admin/events/${id}`);
+      
+      // Invalider le cache car un événement a été supprimé
+      eventCache.invalidate();
+      
       return true;
     } catch (error) {
-      console.error(`Error deleting event ${id}:`, error);
+      // En mode développement uniquement, afficher les détails de l'erreur
+      if (import.meta.env.DEV) {
+        console.error(`Erreur lors de la suppression de l'événement ${id}:`, error);
+      }
       throw error;
     }
+  },
+  
+  // Méthode pour configurer la durée du cache (en secondes)
+  setCacheDuration(seconds) {
+    eventCache.setCacheDuration(seconds);
   }
 };
 

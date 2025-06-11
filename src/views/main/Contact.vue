@@ -140,6 +140,9 @@
 <script>
 import axios from 'axios';
 
+// Configuration de l'URL de l'API selon l'environnement
+const API_URL = import.meta.env.VITE_API_URL || '/api/v2';
+
 export default {
   name: 'ContactView',
   data() {
@@ -205,7 +208,7 @@ export default {
       
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/contact-messages`, 
+          `${API_URL}/contact-messages`, 
           { data: this.formData }
         );
         
