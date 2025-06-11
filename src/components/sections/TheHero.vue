@@ -9,7 +9,7 @@
         src="@/assets/logo_doucine.png"
         alt="Logo de l'association Doucine"
       />
-      <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mt-10 bg-gradient-to-r from-danger to-secondary bg-clip-text text-transparent tracking-tight">
+      <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mt-10 bg-gradient-to-r from-danger to-secondary bg-clip-text text-transparent tracking-tight hero-title">
         Vivre ensemble pour bien vieillir
       </h1>
       <p class="text-lg leading-relaxed mt-6 text-gray-700">
@@ -18,8 +18,8 @@
         notre communauté.
       </p>
       <div class="flex justify-center gap-4 mt-10">
-        <button class="btn btn-primary" aria-label="Participer à nos activités">Participer</button>
-        <button class="btn btn-secondary" aria-label="En savoir plus sur Doucine">En savoir plus</button>
+        <router-link to="/evenement" class="btn btn-primary" aria-label="Participer à nos activités">Participer</router-link>
+        <router-link to="/apropos" class="btn btn-secondary" aria-label="En savoir plus sur Doucine">En savoir plus</router-link>
       </div>
     </div>
     
@@ -88,7 +88,7 @@ export default {
   font-weight: 800;
   line-height: 1.2;
   margin-top: 40px;
-  background: linear-gradient(90deg, #db0428 0%, #d98400 100%);
+  background: linear-gradient(90deg, #EB1A3A 0%, #FBB018 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

@@ -27,8 +27,10 @@
     </div>
 
     <div class="flex items-center gap-6 mt-20">
-      <button class="btn btn-primary">Rejoindre</button>
-      <div class="flex items-center gap-2 text-primary font-semibold cursor-pointer transition-transform duration-300 hover:translate-x-1">
+      <button class="btn btn-primary" @click="openRegistrationModal" style="background-color:#EB1A3A;">Rejoindre</button> 
+
+      <div class="link-button" @click="navigateTo('/apropos')">
+        <div class="flex items-center gap-2 text-primary font-semibold cursor-pointer transition-transform duration-300 hover:translate-x-1">
         <span>En savoir plus</span>
         <img
           src="https://cdn.builder.io/api/v1/image/assets/d278b390c44445929c02ffebdbd8933f/9cc59fc65142f42773e3131d8a5a5a8d452f8191d61b72aca044880ddbb310ec"
@@ -37,12 +39,21 @@
         />
       </div>
     </div>
+    </div>
   </section>
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+
 export default {
   name: "TheFeatures",
+  setup() {
+    const router = useRouter();
+    return {
+      navigateTo: (path) => router.push(path)
+    };
+  },
   data() {
     return {
       features: [
@@ -75,6 +86,9 @@ export default {
         'bg-primary',
       ];
       return classes[index % classes.length];
+    },
+    openRegistrationModal() {
+      this.$emit('open-registration-modal');
     }
   }
 };

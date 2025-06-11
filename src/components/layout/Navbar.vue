@@ -18,7 +18,8 @@
           <router-link to="/" class="nav-link" @click="closeMenu">Accueil</router-link>
           <router-link to="/evenement" class="nav-link" @click="closeMenu">Événements</router-link>
           <router-link to="/apropos" class="nav-link" @click="closeMenu">À Propos</router-link>
-          <div class="nav-dropdown" 
+          
+          <!-- <div class="nav-dropdown" 
                @mouseover="handleDropdownHover" 
                @mouseleave="handleDropdownLeave" 
                @click="toggleDropdown"
@@ -53,13 +54,14 @@
                 Soutien administratif
               </router-link>
             </div>
-          </div>
-          <li class="nav-item">
+            
+          </div> -->
+          <div class="nav-item">
             <router-link to="/contact" class="nav-link">Contact</router-link>
-          </li>
+          </div>
         </div>
         <div class="nav-actions">
-          <button class="btn btn-secondary" @click="showContactModal">Rejoindre</button>
+          <!-- <button class="btn btn-secondary" @click="showContactModal">Rejoindre</button> -->
           <button class="btn btn-primary" @click="showRegistrationModal">S'inscrire</button>
         </div>
       </div>
@@ -101,8 +103,8 @@ export default {
       // Ferme le menu
       this.closeMenu();
       
-      // Pour l'instant, rediriger vers la page des événements
-      this.$router.push('/evenement');
+      // Émettre un événement pour ouvrir le modal d'adhésion
+      this.$emit('open-registration-modal');
     },
     toggleDropdown(event) {
       // Sur mobile, on toggle le dropdown au clic
@@ -370,6 +372,7 @@ export default {
   border-radius: 8px;
   padding: 10px 20px;
   font-weight: 600;
+  background-color: #EB1A3A;
   transition: all 0.3s ease;
 }
 

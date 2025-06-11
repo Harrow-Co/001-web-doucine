@@ -1,8 +1,8 @@
 <template>
   <section class="testimonials section">
     <div class="testimonials__header">
-      <span class="testimonials__tag">Expériences</span>
-      <h2 class="testimonials__title">Témoignages clients</h2>
+      <!-- <span class="testimonials__tag">Expériences</span> -->
+      <h2 class="testimonials__title">Témoignages</h2>
       <p class="testimonials__subtitle">
         Une expérience enrichissante et mémorable pour tous.
       </p>

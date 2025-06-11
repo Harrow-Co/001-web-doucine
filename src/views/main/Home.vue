@@ -1,9 +1,9 @@
 <template>
   <div class="home">
     <TheHero />
-    <Features class="animate-section" />
+    <Features class="animate-section" @open-registration-modal="$emit('open-registration-modal')" />
     <benefits-section class="animate-section" />
-    <community-c-t-a class="animate-section" />
+    <!-- <community-c-t-a class="animate-section" /> -->
     <TestimonialsSection class="animate-section" />
     <TeamSection class="animate-section" />
   </div>
@@ -13,7 +13,7 @@
 import TheHero from "@/components/sections/TheHero.vue";
 import Features from "@/components/sections/Features.vue";
 import BenefitsSection from "@/components/sections/BenefitsSection.vue";
-import CommunityCTA from "@/components/sections/CommunityCTA.vue";
+// import CommunityCTA from "@/components/sections/CommunityCTA.vue";
 import TestimonialsSection from "@/components/sections/TestimonialsSection.vue";
 import TeamSection from "@/components/sections/TeamSection.vue";
 
@@ -23,10 +23,11 @@ export default {
     TheHero,
     Features,
     BenefitsSection,
-    CommunityCTA, 
+    // CommunityCTA, 
     TestimonialsSection,
     TeamSection,
   },
+  emits: ['open-registration-modal'],
   mounted() {
     // Initialize Intersection Observer to trigger animations
     const sections = document.querySelectorAll('.animate-section');

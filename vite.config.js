@@ -21,9 +21,9 @@ export default defineConfig({
     proxy: {
       // Proxy pour l'API v2
       '/api/v2': {
-        target: 'http://localhost:3000',
+        target: 'https://api.association-doucine.fr',
         changeOrigin: true,
-        secure: false,
+        secure: true,
         rewrite: (path) => path
       }
     },

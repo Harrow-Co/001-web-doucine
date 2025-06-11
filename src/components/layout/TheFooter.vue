@@ -86,10 +86,10 @@
             <li><router-link to="/contact" class="footer__nav-link">Contact</router-link></li>
           </ul>
           <ul class="footer__nav-list">
-            <li><router-link to="/faq" class="footer__nav-link">FAQ</router-link></li>
+            <!-- <li><router-link to="/faq" class="footer__nav-link">FAQ</router-link></li> -->
             <!-- <li><a href="/blog" class="footer__nav-link">Blog</a></li>
             <li><a href="/devis" class="footer__nav-link">Demander un devis</a></li> -->
-            <li><router-link to="/recrutement" class="footer__nav-link">Recrutement</router-link></li>
+            <!-- <li><router-link to="/recrutement" class="footer__nav-link">Recrutement</router-link></li> -->
             <li><router-link to="/mentions-legales" class="footer__nav-link">Mentions légales</router-link></li>
             <li><router-link to="/politique-confidentialite" class="footer__nav-link">Politique de confidentialité</router-link></li>
           </ul>
