@@ -4,7 +4,10 @@ node_modules
 
 # Fichiers Docker et bases de données
 /data/*.db
-/data
+
+# Garder la structure du répertoire uploads mais pas les fichiers
+/data/uploads/*
+!data/uploads/.gitkeep
 
 # local env files
 .env

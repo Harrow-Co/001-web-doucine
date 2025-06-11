@@ -208,7 +208,7 @@
                 <div class="w-full md:w-48 h-48 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
                   <img 
                     v-if="form.image" 
-                    :src="form.image" 
+                    :src="getImageUrl(form.image)" 
                     alt="Aperçu de l'événement" 
                     class="w-full h-full object-cover"
                     @error="imageError = true"
@@ -303,6 +303,7 @@ import eventService from '../services/eventService';
 import FormField from '../components/forms/FormField.vue';
 import ArrayInputField from '../components/forms/ArrayInputField.vue';
 import ImageUploadField from '../components/forms/ImageUploadField.vue';
+import { getImageUrl } from '../../utils/imageUtils';
 
 export default {
   name: 'EventForm',
@@ -365,6 +366,8 @@ export default {
     }
   },
   methods: {
+    getImageUrl,
+    
     nextTab() {
       const nextIndex = this.currentTabIndex + 1;
       if (nextIndex < this.tabs.length) {

@@ -1,9 +1,10 @@
 // src/admin/services/eventService.js
 import axios from 'axios';
 import authService from './authService';
+import { apiConfig } from '../../utils/imageUtils';
 
-// Configuration de l'URL de l'API selon l'environnement
-const API_URL = import.meta.env.VITE_API_URL || '/api/v2';
+// Utiliser l'URL de l'API depuis l'utilitaire
+const API_URL = apiConfig.getApiUrl();
 
 // Créer une instance axios sécurisée qui sera utilisée pour toutes les requêtes
 // Cette instance sera importée par authService.js pour configurer les intercepteurs
@@ -50,6 +51,43 @@ window.addEventListener('auth:logout', () => eventCache.invalidate());
 export { eventCache };
 
 const eventService = {
+  /**
+   * Upload une image pour un événement
+   * @param {File} imageFile Fichier image à uploader
+   * @returns {Promise<Object>} Chemin de l'image uploadée
+   */
+  async uploadEventImage(imageFile) {
+    try {
+      // Vérifier si l'utilisateur est authentifié
+      if (!authService.isAuthenticated()) {
+        throw new Error('Vous devez être connecté pour uploader une image');
+      }
+      
+      // Vérifier que le fichier est bien une image
+      if (!imageFile || !imageFile.type.startsWith('image/')) {
+        throw new Error('Le fichier doit être une image valide');
+      }
+      
+      // Créer un FormData pour l'upload
+      const formData = new FormData();
+      formData.append('image', imageFile);
+      
+      // Utiliser l'instance axios sécurisée avec gestion automatique des tokens
+      const response = await secureAxios.post(`${API_URL}/admin/events/upload`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      return response.data;
+    } catch (error) {
+      // En mode développement uniquement, afficher les détails de l'erreur
+      if (import.meta.env.DEV) {
+        console.error('Erreur lors de l\'upload de l\'image:', error);
+      }
+      throw error;
+    }
+  },
   /**
    * Récupère tous les événements
    * @returns {Promise<Array>} Liste des événements

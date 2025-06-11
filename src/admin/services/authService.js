@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { secureAxios } from './eventService';
+import { apiConfig } from '../../utils/imageUtils';
 
-// Configuration de l'URL de l'API selon l'environnement
-const API_URL = import.meta.env.VITE_API_URL || '/api/v2';
+// Utiliser l'URL de l'API depuis l'utilitaire
+const API_URL = apiConfig.getApiUrl();
 
 // Configurer les intercepteurs pour l'instance secureAxios
 

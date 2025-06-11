@@ -16,7 +16,7 @@
     </div>
     
     <div v-if="event.image" class="w-full h-80 overflow-hidden">
-      <img :src="event.image" alt="Image de l'événement" class="w-full h-full object-cover" @error="$emit('image-error')">
+      <img :src="getImageUrl(event.image)" alt="Image de l'événement" class="w-full h-full object-cover" @error="$emit('image-error')">
     </div>
     
     <div class="p-8">
@@ -95,6 +95,8 @@
 </template>
 
 <script>
+import { getImageUrl } from '../../../utils/imageUtils';
+
 export default {
   name: 'EventDetailCard',
   props: {
@@ -131,7 +133,9 @@ export default {
         console.error('Erreur lors du formatage du timestamp:', error);
         return dateString || 'Date inconnue';
       }
-    }
+    },
+    
+    getImageUrl
   }
 };
 </script>

@@ -8,7 +8,7 @@
       <!-- Image de l'événement si disponible -->
       <div v-if="event.image" class="w-full h-40 bg-gray-100 overflow-hidden">
         <img 
-          :src="event.image" 
+          :src="getImageUrl(event.image)" 
           :alt="event.titre" 
           class="w-full h-full object-cover"
           @error="$emit('image-error', $event, event.id)"
@@ -68,6 +68,8 @@
 </template>
 
 <script>
+import { getImageUrl } from '../../../../utils/imageUtils';
+
 export default {
   name: 'EventGrid',
   props: {
@@ -85,7 +87,9 @@ export default {
     formatMonth(date) {
       if (!date || !date.mois) return '';
       return date.mois;
-    }
+    },
+    
+    getImageUrl
   }
 };
 </script>

@@ -1,8 +1,9 @@
 // src/services/eventService.js
 // Service pour récupérer les événements depuis l'API
+import { apiConfig } from '../utils/imageUtils';
 
-// Configuration de l'URL de l'API selon l'environnement
-const API_URL = import.meta.env.VITE_API_URL || '/api/v2';
+// Utiliser l'URL de l'API depuis l'utilitaire
+const API_URL = apiConfig.getApiUrl();
 
 const eventService = {
   /**
