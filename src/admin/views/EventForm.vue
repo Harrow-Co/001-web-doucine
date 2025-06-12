@@ -1,313 +1,326 @@
 <template>
-  <div class="admin-event-form">
-    <h1>{{ isEditing ? 'Modifier l\'événement' : 'Créer un nouvel événement' }}</h1>
-    
-    <div v-if="loading" class="loading">
-      <p>Chargement des données...</p>
-    </div>
-    
-    <div v-else-if="error" class="error">
-      <p>{{ error }}</p>
-      <button @click="goBack" class="btn btn-secondary">Retour</button>
-    </div>
-    
-    <form v-else @submit.prevent="saveEvent" class="event-form">
-      <!-- Informations de base -->  
-      <h3>Informations de base</h3>
-      <div class="form-group">
-        <label for="titre">Titre *</label>
-        <input 
-          id="titre" 
-          v-model="form.titre" 
-          type="text" 
-          required 
-          class="form-control"
-          :class="{ 'is-invalid': validationErrors.titre }"
-        >
-        <div v-if="validationErrors.titre" class="invalid-feedback">
-          {{ validationErrors.titre }}
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="description">Description *</label>
-        <textarea 
-          id="description" 
-          v-model="form.description" 
-          rows="3" 
-          required
-          class="form-control"
-          :class="{ 'is-invalid': validationErrors.description }"
-        ></textarea>
-        <div v-if="validationErrors.description" class="invalid-feedback">
-          {{ validationErrors.description }}
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="horaire">Horaire *</label>
-        <input 
-          id="horaire" 
-          v-model="form.horaire" 
-          type="text" 
-          required 
-          placeholder="Ex: 7h00 - 16h00"
-          class="form-control"
-          :class="{ 'is-invalid': validationErrors.horaire }"
-        >
-        <div v-if="validationErrors.horaire" class="invalid-feedback">
-          {{ validationErrors.horaire }}
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="lieu">Lieu *</label>
-        <input 
-          id="lieu" 
-          v-model="form.lieu" 
-          type="text" 
-          required 
-          placeholder="Ex: Départ de Family Plaza, destination Sinnamary"
-          class="form-control"
-          :class="{ 'is-invalid': validationErrors.lieu }"
-        >
-        <div v-if="validationErrors.lieu" class="invalid-feedback">
-          {{ validationErrors.lieu }}
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="image">Image (URL, optionnelle)</label>
-        <input 
-          id="image" 
-          v-model="form.image" 
-          type="text" 
-          placeholder="Ex: https://example.com/image.jpg"
-          class="form-control"
-        >
-        <small class="form-text text-muted">Entrez l'URL d'une image pour illustrer l'événement.</small>
-      </div>
-      
-      <!-- Date de l'événement -->
-      <h3>Date de l'événement</h3>
-      <div class="form-row">
-        <div class="form-group col-md-4">
-          <label for="date-jour">Jour *</label>
-          <input 
-            id="date-jour" 
-            v-model="form.date.jour" 
-            type="text" 
-            required 
-            placeholder="Ex: 29"
-            class="form-control"
-            :class="{ 'is-invalid': validationErrors.dateJour }"
-          >
-          <div v-if="validationErrors.dateJour" class="invalid-feedback">
-            {{ validationErrors.dateJour }}
-          </div>
-        </div>
-        
-        <div class="form-group col-md-4">
-          <label for="date-mois">Mois (abrégé) *</label>
-          <select 
-            id="date-mois" 
-            v-model="form.date.mois" 
-            required 
-            class="form-control"
-            :class="{ 'is-invalid': validationErrors.dateMois }"
-          >
-            <option value="">Sélectionner...</option>
-            <option value="JAN">JAN</option>
-            <option value="FEV">FEV</option>
-            <option value="MAR">MAR</option>
-            <option value="AVR">AVR</option>
-            <option value="MAI">MAI</option>
-            <option value="JUN">JUN</option>
-            <option value="JUL">JUL</option>
-            <option value="AOU">AOU</option>
-            <option value="SEP">SEP</option>
-            <option value="OCT">OCT</option>
-            <option value="NOV">NOV</option>
-            <option value="DEC">DEC</option>
-          </select>
-          <div v-if="validationErrors.dateMois" class="invalid-feedback">
-            {{ validationErrors.dateMois }}
-          </div>
-        </div>
-        
-        <div class="form-group col-md-4">
-          <label for="date-annee">Année *</label>
-          <input 
-            id="date-annee" 
-            v-model="form.date.annee" 
-            type="text" 
-            required 
-            placeholder="Ex: 2025"
-            class="form-control"
-            :class="{ 'is-invalid': validationErrors.dateAnnee }"
-          >
-          <div v-if="validationErrors.dateAnnee" class="invalid-feedback">
-            {{ validationErrors.dateAnnee }}
-          </div>
-        </div>
-      </div>
-      
-      <!-- Détails de l'événement -->
-      <h3>Détails de l'événement</h3>
-      <div class="form-group">
-        <label for="destination">Destination *</label>
-        <input 
-          id="destination" 
-          v-model="form.details.destination" 
-          type="text" 
-          required 
-          placeholder="Ex: Îlot des Caïmans à Sinnamary"
-          class="form-control"
-          :class="{ 'is-invalid': validationErrors.destination }"
-        >
-        <div v-if="validationErrors.destination" class="invalid-feedback">
-          {{ validationErrors.destination }}
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label>Activités *</label>
-        <div class="array-inputs">
-          <div v-for="(activity, index) in form.details.activities" :key="'activity-'+index" class="array-input-row">
-            <input 
-              :id="'activity-'+index" 
-              v-model="form.details.activities[index]" 
-              type="text" 
-              class="form-control"
-              placeholder="Ex: Visite des caïmans"
-            >
-            <button type="button" class="btn btn-danger btn-sm" @click="removeActivity(index)">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-          <button type="button" class="btn btn-secondary btn-sm" @click="addActivity">
-            <i class="fas fa-plus"></i> Ajouter une activité
-          </button>
-        </div>
-        <div v-if="validationErrors.activities" class="invalid-feedback d-block">
-          {{ validationErrors.activities }}
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label>Tarifs *</label>
-        <div class="array-inputs">
-          <div v-for="(price, index) in form.details.pricing" :key="'price-'+index" class="array-input-row">
-            <input 
-              :id="'price-'+index" 
-              v-model="form.details.pricing[index]" 
-              type="text" 
-              class="form-control"
-              placeholder="Ex: 50€ par adulte"
-            >
-            <button type="button" class="btn btn-danger btn-sm" @click="removePricing(index)">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-          <button type="button" class="btn btn-secondary btn-sm" @click="addPricing">
-            <i class="fas fa-plus"></i> Ajouter un tarif
-          </button>
-        </div>
-        <div v-if="validationErrors.pricing" class="invalid-feedback d-block">
-          {{ validationErrors.pricing }}
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="registration">Date limite d'inscription *</label>
-        <input 
-          id="registration" 
-          v-model="form.details.registration" 
-          type="text" 
-          required 
-          placeholder="Ex: 19/03/2025"
-          class="form-control"
-          :class="{ 'is-invalid': validationErrors.registration }"
-        >
-        <div v-if="validationErrors.registration" class="invalid-feedback">
-          {{ validationErrors.registration }}
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="contact">Téléphone de contact *</label>
-        <input 
-          id="contact" 
-          v-model="form.details.contact" 
-          type="text" 
-          required 
-          placeholder="Ex: 0690 26 30 33"
-          class="form-control"
-          :class="{ 'is-invalid': validationErrors.contact }"
-        >
-        <div v-if="validationErrors.contact" class="invalid-feedback">
-          {{ validationErrors.contact }}
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label for="email">Email de contact *</label>
-        <input 
-          id="email" 
-          v-model="form.details.email" 
-          type="email" 
-          required 
-          placeholder="Ex: doucine97351@gmail.com"
-          class="form-control"
-          :class="{ 'is-invalid': validationErrors.email }"
-        >
-        <div v-if="validationErrors.email" class="invalid-feedback">
-          {{ validationErrors.email }}
-        </div>
-      </div>
-      
-      <div class="form-group">
-        <label>Informations pratiques *</label>
-        <div class="array-inputs">
-          <div v-for="(info, index) in form.details.practicalInfo" :key="'info-'+index" class="array-input-row">
-            <input 
-              :id="'info-'+index" 
-              v-model="form.details.practicalInfo[index]" 
-              type="text" 
-              class="form-control"
-              placeholder="Ex: Départ en bus à 7h"
-            >
-            <button type="button" class="btn btn-danger btn-sm" @click="removePracticalInfo(index)">
-              <i class="fas fa-times"></i>
-            </button>
-          </div>
-          <button type="button" class="btn btn-secondary btn-sm" @click="addPracticalInfo">
-            <i class="fas fa-plus"></i> Ajouter une information
-          </button>
-        </div>
-        <div v-if="validationErrors.practicalInfo" class="invalid-feedback d-block">
-          {{ validationErrors.practicalInfo }}
-        </div>
-      </div>
-      
-      <div class="form-actions">
-        <button type="button" @click="goBack" class="btn btn-secondary">Annuler</button>
-        <button type="submit" class="btn btn-primary" :disabled="saving">
-          <span v-if="saving">Enregistrement...</span>
-          <span v-else>{{ isEditing ? 'Mettre à jour' : 'Créer' }}</span>
+  <div class="admin-event-form max-w-4xl mx-auto">
+    <div class="card mb-6">
+      <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold text-gray-800 m-0">{{ isEditing ? 'Modifier l\'événement' : 'Créer un événement' }}</h1>
+        <button @click="goBack" class="btn btn-icon" title="Retour">
+          <i class="fas fa-arrow-left"></i>
         </button>
       </div>
-    </form>
+      
+      <div v-if="loading" class="py-12 flex flex-col items-center justify-center">
+        <div class="w-16 h-16 text-primary text-3xl flex items-center justify-center">
+          <i class="fas fa-spinner fa-spin"></i>
+        </div>
+        <p class="mt-4 text-gray-600">Chargement des données...</p>
+      </div>
+      
+      <div v-else-if="error" class="py-12 flex flex-col items-center justify-center">
+        <div class="w-16 h-16 text-danger text-3xl flex items-center justify-center">
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <p class="mt-4 text-danger">{{ error }}</p>
+        <button @click="goBack" class="btn btn-primary mt-6">Retour</button>
+      </div>
+      
+      <div v-else>
+        <!-- Onglets -->
+        <div class="border-b border-gray-200 mb-6">
+          <ul class="flex flex-wrap -mb-px">
+            <li v-for="(tab, index) in tabs" :key="index" class="mr-2">
+              <button 
+                @click="activeTab = tab.id" 
+                class="inline-block p-4 text-gray-600 hover:text-primary transition-colors border-b-2 font-medium text-sm"
+                :class="[
+                  activeTab === tab.id 
+                    ? 'border-primary text-primary' 
+                    : 'border-transparent hover:border-gray-300'
+                ]"
+              >
+                <i :class="['mr-2', tab.icon]"></i>
+                {{ tab.label }}
+              </button>
+            </li>
+          </ul>
+        </div>
+        
+        <form @submit.prevent="saveEvent">
+          <!-- Section Informations de base -->
+          <div v-show="activeTab === 'basic'" class="px-1">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <FormField
+                id="titre"
+                label="Titre de l'événement"
+                v-model="form.titre"
+                placeholder="Ex: Sortie Kayak à Sinnamary"
+                :required="true"
+                :error="validationErrors.titre"
+              />
+              
+              <div class="grid grid-cols-3 gap-4">
+                <FormField
+                  id="dateJour"
+                  label="Jour"
+                  v-model="form.date.jour"
+                  placeholder="JJ"
+                  :required="true"
+                  :error="validationErrors.dateJour"
+                />
+                
+                <FormField
+                  id="dateMois"
+                  label="Mois"
+                  v-model="form.date.mois"
+                  placeholder="MMM"
+                  :required="true"
+                  :error="validationErrors.dateMois"
+                />
+                
+                <FormField
+                  id="dateAnnee"
+                  label="Année"
+                  v-model="form.date.annee"
+                  placeholder="AAAA"
+                  :required="true"
+                  :error="validationErrors.dateAnnee"
+                />
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <FormField
+                id="horaire"
+                label="Horaire"
+                v-model="form.horaire"
+                placeholder="Ex: 7h00 - 16h00"
+                :required="true"
+                :error="validationErrors.horaire"
+              />
+              
+              <FormField
+                id="lieu"
+                label="Lieu"
+                v-model="form.lieu"
+                placeholder="Ex: Départ de Family Plaza"
+                :required="true"
+                :error="validationErrors.lieu"
+              />
+            </div>
+            
+            <FormField
+              id="description"
+              label="Description"
+              v-model="form.description"
+              type="textarea"
+              :rows="4"
+              placeholder="Décrivez l'événement en quelques phrases..."
+              :required="true"
+              :error="validationErrors.description"
+            />
+            
+            <ImageUploadField
+              id="image"
+              label="Image de l'événement"
+              v-model="form.image"
+              class="mt-6"
+            />
+          </div>
+          
+          <!-- Section Détails de l'événement -->
+          <div v-show="activeTab === 'details'" class="px-1">
+            <FormField
+              id="destination"
+              label="Destination"
+              v-model="form.details.destination"
+              placeholder="Ex: Îlot des Caïmans à Sinnamary"
+              :required="true"
+              :error="validationErrors.destination"
+              class="mb-6"
+            />
+            
+            <ArrayInputField
+              id="activities"
+              label="Activités proposées"
+              v-model="form.details.activities"
+              placeholder="Ex: Visite des caïmans"
+              addButtonText="Ajouter une activité"
+              :error="validationErrors.activities"
+              class="mb-6"
+            />
+            
+            <ArrayInputField
+              id="pricing"
+              label="Tarifs"
+              v-model="form.details.pricing"
+              placeholder="Ex: 50€ par adulte"
+              addButtonText="Ajouter un tarif"
+              :error="validationErrors.pricing"
+              class="mb-6"
+            />
+            
+            <ArrayInputField
+              id="practicalInfo"
+              label="Informations pratiques"
+              v-model="form.details.practicalInfo"
+              placeholder="Ex: Départ en bus à 7h"
+              addButtonText="Ajouter une information"
+              :error="validationErrors.practicalInfo"
+            />
+          </div>
+          
+          <!-- Section Contact -->
+          <div v-show="activeTab === 'contact'" class="px-1">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+              <FormField
+                id="registration"
+                label="Date limite d'inscription"
+                v-model="form.details.registration"
+                placeholder="Ex: 19/03/2025"
+                :required="true"
+                :error="validationErrors.registration"
+              />
+              
+              <FormField
+                id="contact"
+                label="Téléphone"
+                v-model="form.details.contact"
+                placeholder="Ex: 0690 26 30 33"
+                :required="true"
+                :error="validationErrors.contact"
+              />
+            </div>
+            
+            <FormField
+              id="email"
+              label="Email de contact"
+              type="email"
+              v-model="form.details.email"
+              placeholder="Ex: doucine97351@gmail.com"
+              :required="true"
+              :error="validationErrors.email"
+            />
+          </div>
+          
+          <!-- Prévisualisation -->
+          <div v-show="activeTab === 'preview'" class="px-1">
+            <div class="bg-gray-50 rounded-lg p-6">
+              <div class="flex flex-col md:flex-row md:items-start gap-6">
+                <div class="w-full md:w-48 h-48 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden">
+                  <img 
+                    v-if="form.image" 
+                    :src="getImageUrl(form.image)" 
+                    alt="Aperçu de l'événement" 
+                    class="w-full h-full object-cover"
+                    @error="imageError = true"
+                  >
+                  <div v-else class="text-gray-400 flex flex-col items-center">
+                    <i class="fas fa-image text-4xl mb-2"></i>
+                    <span class="text-sm">Aucune image</span>
+                  </div>
+                </div>
+                
+                <div class="flex-1">
+                  <h3 class="text-xl font-bold text-gray-800 mb-2">{{ form.titre || 'Titre de l\'événement' }}</h3>
+                  
+                  <div class="flex flex-wrap gap-4 mb-4">
+                    <div class="flex items-center text-sm text-gray-600">
+                      <i class="far fa-calendar-alt mr-2 text-primary"></i>
+                      <span>{{ formatDate(form.date) || 'Date' }}</span>
+                    </div>
+                    
+                    <div class="flex items-center text-sm text-gray-600">
+                      <i class="far fa-clock mr-2 text-primary"></i>
+                      <span>{{ form.horaire || 'Horaire' }}</span>
+                    </div>
+                    
+                    <div class="flex items-center text-sm text-gray-600">
+                      <i class="fas fa-map-marker-alt mr-2 text-primary"></i>
+                      <span>{{ form.lieu || 'Lieu' }}</span>
+                    </div>
+                  </div>
+                  
+                  <p class="text-gray-600 mb-4">{{ form.description || 'Description de l\'événement...' }}</p>
+                  
+                  <div class="text-sm">
+                    <div class="font-medium text-gray-700">Date limite d'inscription:</div>
+                    <p class="text-gray-600 mb-2">{{ form.details.registration || '-' }}</p>
+                    
+                    <div class="font-medium text-gray-700">Contact:</div>
+                    <p class="text-gray-600">{{ form.details.contact || '-' }} | {{ form.details.email || '-' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Boutons d'action -->
+          <div class="mt-8 flex justify-between">
+            <div>
+              <button 
+                v-if="activeTab !== 'basic'" 
+                type="button" 
+                @click="prevTab" 
+                class="btn btn-secondary"
+              >
+                <i class="fas fa-chevron-left mr-2"></i> Précédent
+              </button>
+            </div>
+            
+            <div class="flex gap-3">
+              <button type="button" @click="goBack" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Annuler
+              </button>
+              
+              <button 
+                v-if="activeTab !== 'preview'" 
+                type="button" 
+                @click="nextTab" 
+                class="btn btn-primary"
+              >
+                Suivant <i class="fas fa-chevron-right ml-2"></i>
+              </button>
+              
+              <button 
+                v-else 
+                type="submit" 
+                class="btn btn-primary" 
+                :disabled="saving"
+              >
+                <i class="fas fa-save mr-2"></i>
+                <span v-if="saving">Enregistrement...</span>
+                <span v-else>{{ isEditing ? 'Mettre à jour' : 'Créer' }}</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import eventService from '../services/eventService';
+import FormField from '../components/forms/FormField.vue';
+import ArrayInputField from '../components/forms/ArrayInputField.vue';
+import ImageUploadField from '../components/forms/ImageUploadField.vue';
+import { getImageUrl } from '../../utils/imageUtils';
 
 export default {
   name: 'EventForm',
+  components: {
+    FormField,
+    ArrayInputField,
+    ImageUploadField
+  },
   data() {
     return {
+      activeTab: 'basic',
+      tabs: [
+        { id: 'basic', label: 'Informations', icon: 'fas fa-info-circle' },
+        { id: 'details', label: 'Détails', icon: 'fas fa-list-alt' },
+        { id: 'contact', label: 'Contact', icon: 'fas fa-phone-alt' },
+        { id: 'preview', label: 'Aperçu', icon: 'fas fa-eye' }
+      ],
       form: {
         titre: '',
         description: '',
@@ -318,7 +331,7 @@ export default {
           mois: '',
           annee: ''
         },
-        image: '', // Optionnel
+        image: '',
         details: {
           destination: '',
           activities: [''],
@@ -333,18 +346,57 @@ export default {
       loading: false,
       saving: false,
       error: null,
-      validationErrors: {}
+      validationErrors: {},
+      imageError: false
     };
   },
   computed: {
     isEditing() {
       return !!this.$route.params.id;
+    },
+    currentTabIndex() {
+      return this.tabs.findIndex(tab => tab.id === this.activeTab);
     }
   },
   created() {
     if (this.isEditing) {
       this.fetchEvent();
     } else {
+      this.initializeForm();
+    }
+  },
+  methods: {
+    getImageUrl,
+    
+    nextTab() {
+      const nextIndex = this.currentTabIndex + 1;
+      if (nextIndex < this.tabs.length) {
+        this.activeTab = this.tabs[nextIndex].id;
+        this.scrollToTop();
+      }
+    },
+    
+    prevTab() {
+      const prevIndex = this.currentTabIndex - 1;
+      if (prevIndex >= 0) {
+        this.activeTab = this.tabs[prevIndex].id;
+        this.scrollToTop();
+      }
+    },
+    
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    },
+    
+    formatDate(date) {
+      if (!date || !date.jour || !date.mois || !date.annee) return '';
+      return `${date.jour} ${date.mois} ${date.annee}`;
+    },
+    
+    initializeForm() {
       try {
         // Pour un nouvel événement, initialiser avec des valeurs par défaut
         const now = new Date();
@@ -363,51 +415,8 @@ export default {
           
           this.form.date.annee = String(now.getFullYear());
         }
-        
-        // Initialiser les tableaux avec des valeurs vides
-        this.form.details.activities = [''];
-        this.form.details.pricing = [''];
-        this.form.details.practicalInfo = [''];
-        
-        // Initialiser les autres champs obligatoires avec des valeurs par défaut
-        if (!this.form.details.destination) this.form.details.destination = '';
-        if (!this.form.details.registration) this.form.details.registration = '';
-        if (!this.form.details.contact) this.form.details.contact = '';
-        if (!this.form.details.email) this.form.details.email = '';
       } catch (error) {
         console.error('Erreur lors de l\'initialisation du formulaire:', error);
-      }
-    }
-  },
-  methods: {
-    // Méthodes pour gérer les tableaux
-    addActivity() {
-      this.form.details.activities.push('');
-    },
-    
-    removeActivity(index) {
-      if (this.form.details.activities.length > 1) {
-        this.form.details.activities.splice(index, 1);
-      }
-    },
-    
-    addPricing() {
-      this.form.details.pricing.push('');
-    },
-    
-    removePricing(index) {
-      if (this.form.details.pricing.length > 1) {
-        this.form.details.pricing.splice(index, 1);
-      }
-    },
-    
-    addPracticalInfo() {
-      this.form.details.practicalInfo.push('');
-    },
-    
-    removePracticalInfo(index) {
-      if (this.form.details.practicalInfo.length > 1) {
-        this.form.details.practicalInfo.splice(index, 1);
       }
     },
     
@@ -478,17 +487,17 @@ export default {
       
       // Validation de la date
       if (!this.form.date.jour) {
-        this.validationErrors.dateJour = 'Le jour est requis';
+        this.validationErrors.dateJour = 'Requis';
         isValid = false;
       }
       
       if (!this.form.date.mois) {
-        this.validationErrors.dateMois = 'Le mois est requis';
+        this.validationErrors.dateMois = 'Requis';
         isValid = false;
       }
       
       if (!this.form.date.annee) {
-        this.validationErrors.dateAnnee = 'L\'année est requise';
+        this.validationErrors.dateAnnee = 'Requis';
         isValid = false;
       }
       
@@ -532,6 +541,22 @@ export default {
       if (this.form.details.practicalInfo.length === 0 || !this.form.details.practicalInfo.some(i => i.trim())) {
         this.validationErrors.practicalInfo = 'Au moins une information pratique est requise';
         isValid = false;
+      }
+      
+      if (!isValid) {
+        // Si validation échoue, redirige vers l'onglet contenant la première erreur
+        if (this.validationErrors.titre || this.validationErrors.description || 
+            this.validationErrors.horaire || this.validationErrors.lieu || 
+            this.validationErrors.dateJour || this.validationErrors.dateMois || 
+            this.validationErrors.dateAnnee) {
+          this.activeTab = 'basic';
+        } else if (this.validationErrors.destination || this.validationErrors.activities || 
+                  this.validationErrors.pricing || this.validationErrors.practicalInfo) {
+          this.activeTab = 'details';
+        } else if (this.validationErrors.registration || this.validationErrors.contact || 
+                  this.validationErrors.email) {
+          this.activeTab = 'contact';
+        }
       }
       
       return isValid;
@@ -621,184 +646,8 @@ export default {
 </script>
 
 <style scoped>
-.admin-event-form {
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-h1 {
-  margin-bottom: 20px;
-  color: #333;
-}
-
-h3 {
-  margin-top: 30px;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
-  color: #333;
-}
-
-.loading, .error {
-  text-align: center;
-  padding: 30px;
-  background-color: #f9f9f9;
-  border-radius: 4px;
-  margin: 20px 0;
-}
-
-.error {
-  background-color: #ffebee;
-  color: #c62828;
-}
-
-.event-form {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-row {
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: -10px;
-  margin-left: -10px;
-}
-
-.form-row > .form-group {
-  padding-right: 10px;
-  padding-left: 10px;
-  flex: 1;
-}
-
-.col-md-4 {
-  flex: 0 0 33.333333%;
-  max-width: 33.333333%;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
-}
-
-.form-control {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.form-control:focus {
-  border-color: #4CAF50;
-  outline: none;
-}
-
-.is-invalid {
-  border-color: #f44336;
-}
-
-.invalid-feedback {
-  color: #f44336;
-  font-size: 14px;
-  margin-top: 5px;
-}
-
-.invalid-feedback.d-block {
-  display: block;
-}
-
-/* Styles pour les entrées de tableau */
-.array-inputs {
-  margin-top: 10px;
-}
-
-.array-input-row {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.array-input-row .form-control {
-  flex: 1;
-  margin-right: 10px;
-}
-
-.array-input-row .btn {
-  padding: 8px;
-  min-width: 40px;
-}
-
-.btn-sm {
-  padding: 5px 10px;
-  font-size: 14px;
-}
-
-.btn-danger {
-  background-color: #f44336;
-  color: white;
-}
-
-.btn-danger:hover {
-  background-color: #d32f2f;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 30px;
-}
-
-.btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.2s;
-}
-
-.btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.btn-primary {
-  background-color: #4CAF50;
-  color: white;
-  margin-left: 10px;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #45a049;
-}
-
-.btn-secondary {
-  background-color: #f1f1f1;
-  color: #333;
-}
-
-.btn-secondary:hover {
-  background-color: #ddd;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-  }
-  
-  .form-row > .form-group,
-  .col-md-4 {
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
+.card {
+  @apply bg-white p-6 rounded-xl shadow-sm;
 }
 </style>
+

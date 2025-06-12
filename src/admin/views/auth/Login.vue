@@ -72,11 +72,24 @@ export default {
       this.error = '';
       
       try {
-        await authService.login(this.username, this.password);
-        this.$router.push({ name: 'admin-events' });
+        // Appel à la méthode de connexion
+        const user = await authService.login(this.username, this.password);
+        
+        // Vérifier que l'utilisateur est bien authentifié avant de rediriger
+        if (authService.isAuthenticated()) {
+          console.log('Authentification réussie, redirection vers le dashboard');
+          this.$router.push({ name: 'admin-events' });
+        } else {
+          console.error('Token non stocké correctement après login');
+          this.error = 'Problème lors de la connexion. Veuillez réessayer.';
+        }
       } catch (error) {
         console.error('Login error:', error);
-        this.error = 'Identifiants invalides. Veuillez réessayer.';
+        if (error.response && error.response.status === 401) {
+          this.error = 'Identifiants invalides. Veuillez réessayer.';
+        } else {
+          this.error = 'Erreur de connexion au serveur. Veuillez réessayer plus tard.';
+        }
       } finally {
         this.loading = false;
       }
@@ -84,7 +97,6 @@ export default {
   }
 };
 </script>
-
 <style scoped>
 .login-container {
   display: flex;
@@ -187,3 +199,4 @@ export default {
   border: 1px solid #f5c6cb;
 }
 </style>
+

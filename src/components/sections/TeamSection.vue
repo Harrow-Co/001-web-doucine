@@ -1,7 +1,7 @@
 <template>
   <div class="team-section section">
     <div class="section-title">
-      <span class="tagline">Équipe</span>
+      <!-- <span class="tagline">Équipe</span> -->
       <div class="content">
         <div class="heading">Notre équipe</div>
         <div class="subtitle">
@@ -20,15 +20,15 @@
       </div>
     </div>
 
-    <div class="recruitment-section">
-      <!-- <div class="content">
+    <!-- <div class="recruitment-section">
+       <div class="content">
         <div class="heading">Nous recrutons !</div>
         <div class="text">Rejoignez notre équipe dynamique et engagée.</div>
       </div>
       <div class="actions">
         <button class="btn btn-primary">Postes ouverts</button>
-      </div> -->
-    </div> 
+      </div> 
+    </div>  -->
   </div>
 </template>
 

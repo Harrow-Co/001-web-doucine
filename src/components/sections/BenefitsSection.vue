@@ -1,59 +1,60 @@
 <template>
-  <section class="benefits-section section">
-    <div class="benefits-container">
-      <div class="benefits-content">
-        <div class="benefits-text-content">
-          <h2 class="benefits-heading">
+  <section class="bg-white py-28 px-4 md:px-16 flex flex-col overflow-hidden items-stretch font-sans text-gray-800 justify-center">
+    <div class="flex w-full items-center gap-20 justify-between flex-wrap">
+      <div class="flex-1 flex-shrink min-w-[240px] self-stretch my-auto">
+        <div class="w-full">
+          <h2 class="text-3xl md:text-4xl font-bold leading-tight text-gray-800 relative pb-5">
             Découvrez les bienfaits des événements DOUCINE pour tous les âges.
+            <span class="absolute bottom-0 left-0 w-20 h-1 bg-gradient-to-r from-secondary to-danger rounded"></span>
           </h2>
-          <p class="benefits-description">
+          <p class="text-lg leading-relaxed mt-6 text-gray-600">
             Participer aux événements DOUCINE favorise le bien-être et crée des
             liens durables. Que vous soyez un senior, une famille ou un
             bénévole, chaque activité est une occasion de partager des moments
             enrichissants.
           </p>
         </div>
-        <div class="benefits-list">
-          <div class="benefits-list-item">
-            <div class="check-icon-wrapper">
+        <div class="mt-10 w-full py-2">
+          <div class="flex w-full items-center gap-4 mb-5">
+            <div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
-            <div class="list-item-text">
+            <div class="self-center text-gray-800 text-base font-medium flex-1">
               Renforcez vos liens intergénérationnels avec DOUCINE.
             </div>
           </div>
-          <div class="benefits-list-item">
-            <div class="check-icon-wrapper">
+          <div class="flex w-full items-center gap-4 mb-5">
+            <div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
-            <div class="list-item-text">
+            <div class="self-center text-gray-800 text-base font-medium flex-1">
               Vivez des expériences mémorables avec votre communauté.
             </div>
           </div>
-          <div class="benefits-list-item">
-            <div class="check-icon-wrapper">
+          <div class="flex w-full items-center gap-4">
+            <div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M13.3334 4L6.00008 11.3333L2.66675 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
-            <div class="list-item-text">
+            <div class="self-center text-gray-800 text-base font-medium flex-1">
               Participez à des activités enrichissantes et amusantes.
             </div>
           </div>
         </div>
       </div>
-      <div class="benefits-image-container">
+      <div class="relative flex-1 flex-shrink min-w-[240px] self-stretch">
         <img
           loading="lazy"
           :srcset="imageSrcSet"
           alt="Événements DOUCINE en action"
-          class="benefits-image"
+          class="aspect-[0.96] object-cover rounded-2xl w-full relative z-10 shadow-xl"
         />
-        <div class="benefits-image-decoration"></div>
+        <div class="absolute w-4/5 h-4/5 bg-gradient-to-br from-secondary to-secondary-300 opacity-40 rounded-2xl -bottom-5 -right-5 z-0"></div>
       </div>
     </div>
   </section>

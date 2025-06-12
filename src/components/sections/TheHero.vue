@@ -1,24 +1,30 @@
 <template>
-  <section class="hero" id="home" role="banner">
-    <div class="hero-content">
+  <section id="home" role="banner" class="bg-gradient-to-br from-white to-gray-100 pt-28 pb-16 px-4 md:px-16 flex flex-col items-stretch rounded-b-[40px] relative overflow-hidden">
+    <!-- Élément décoratif -->
+    <div class="absolute top-0 right-0 w-[30%] h-full bg-gradient-to-br from-primary-50 to-primary-200 opacity-20 rounded-bl-full z-0"></div>
+    
+    <div class="self-center max-w-3xl text-center relative z-10">
       <img
-        class="navbar-logo animate-fade-in"
+        class="w-48 mx-auto object-contain transition-transform duration-300 hover:scale-105"
         src="@/assets/logo_doucine.png"
         alt="Logo de l'association Doucine"
       />
-      <h1 class="hero-title animate-slide-up">Vivre ensemble pour bien vieillir</h1>
-      <p class="hero-description animate-slide-up delay-2">
+      <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mt-10 bg-gradient-to-r from-danger to-secondary bg-clip-text text-transparent tracking-tight hero-title">
+        Vivre ensemble pour bien vieillir
+      </h1>
+      <p class="text-lg leading-relaxed mt-6 text-gray-700">
         Bienvenue chez DOUCINE, où chaque événement crée des liens précieux
         entre les générations. Rejoignez-nous pour célébrer la vie et renforcer
         notre communauté.
       </p>
-      <div class="hero-actions animate-fade-in delay-4">
-        <button class="btn btn-primary" aria-label="Participer à nos activités">Participer</button>
-        <button class="btn btn-secondary" aria-label="En savoir plus sur Doucine">En savoir plus</button>
+      <div class="flex justify-center gap-4 mt-10">
+        <router-link to="/evenement" class="btn btn-primary" aria-label="Participer à nos activités">Participer</router-link>
+        <router-link to="/apropos" class="btn btn-secondary" aria-label="En savoir plus sur Doucine">En savoir plus</router-link>
       </div>
     </div>
+    
     <img
-      class="hero-image animate-zoom delay-3"
+      class="w-[85%] max-w-5xl mx-auto mt-20 rounded-2xl shadow-lg object-cover aspect-video transition-transform duration-300 hover:-translate-y-2 relative z-10"
       src="@/assets/FontHero.png"
       alt="Famille multigénérationnelle partageant un moment convivial ensemble"
     />
@@ -82,7 +88,7 @@ export default {
   font-weight: 800;
   line-height: 1.2;
   margin-top: 40px;
-  background: linear-gradient(90deg, #db0428 0%, #d98400 100%);
+  background: linear-gradient(90deg, #EB1A3A 0%, #FBB018 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

@@ -1,13 +1,9 @@
 // src/services/eventService.js
 // Service pour récupérer les événements depuis l'API
+import { apiConfig } from '../utils/imageUtils';
 
-// URL de l'API d'événements selon l'environnement
-const isProduction = import.meta.env.PROD && window.location.hostname !== 'localhost';
-const API_URL = isProduction 
-  ? 'https://api.association-doucine.fr/api/v2' 
-  : (import.meta.env.VITE_EVENT_API_URL || 'http://localhost:3000/api/v2');
-
-console.log('Mode:', isProduction ? 'production' : 'développement', '- API_URL =', API_URL);
+// Utiliser l'URL de l'API depuis l'utilitaire
+const API_URL = apiConfig.getApiUrl();
 
 const eventService = {
   /**

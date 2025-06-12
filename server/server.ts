@@ -2,6 +2,7 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 import eventRoutes from './event-module/event.routes'; // Importer nos routes d'événements
 import authRoutes from './auth-module/auth.routes'; // Importer nos routes d'authentification
 import { authenticate, requireEditor } from './auth-module/auth.middleware'; // Importer nos middlewares d'authentification
@@ -67,6 +68,9 @@ app.use(express.json());
 
 // Parser les corps de requête URL-encoded (pour les formulaires HTML standard, moins probable pour une API)
 app.use(express.urlencoded({ extended: true }));
+
+// Servir les fichiers statiques depuis le répertoire uploads
+app.use('/uploads', express.static(path.join(process.cwd(), 'data', 'uploads')));
 
 // --- Routes ---
 // Route de base pour vérifier si le serveur est en ligne

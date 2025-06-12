@@ -145,7 +145,7 @@
     </div>
 
     <!-- Team Section -->
-    <div class="team-section section animate-section">
+    <!-- <div class="team-section section animate-section">
       <h2 class="section-title centered animate-fade-in">Notre équipe</h2>
       <p class="team-intro animate-slide-up">
         Nous sommes une équipe engagée et dynamique pour nos aînés,
@@ -160,8 +160,8 @@
             <h3 class="team-caption">Une équipe engagée et dynamique pour nos aînés</h3>
           </div>
         </div>
-      </div>
-    </div>
+      </div> 
+    </div> -->
 
     <!-- Contact Section
     <div class="contact-section section animate-section">
@@ -729,6 +729,36 @@ export default {
   padding: 20px;
   border-radius: 10%;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1200px) {
+  .mission-logo {
+    width: 320px;
+    height: 320px;
+  }
+}
+
+@media (max-width: 991px) {
+  .mission-logo {
+    width: 280px;
+    height: 280px;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mission-logo {
+    width: 240px;
+    height: 240px;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .mission-logo {
+    width: 200px;
+    height: 200px;
+  }
 }
 
 /* Animation Classes */

@@ -1,22 +1,27 @@
 <template>
-  <section class="community-cta section">
-    <div class="community-cta__container">
-      <div class="community-cta__title">
-        Rejoignez notre communauté dynamique
+  <section class="bg-gradient-to-br from-primary-50 to-primary-100 py-28 px-4 md:px-16 flex flex-col overflow-hidden items-stretch font-sans justify-center rounded-2xl relative">
+    <!-- Élément décoratif -->
+    <div class="absolute -top-12 -right-12 w-48 h-48 bg-gradient-to-br from-secondary-300 to-secondary-100 opacity-30 rounded-full z-0"></div>
+    
+    <div class="flex w-full items-start gap-20 justify-between flex-wrap relative z-10">
+      <div class="min-w-[240px] flex-1 flex-shrink relative">
+        <h2 class="text-3xl md:text-4xl font-bold leading-tight text-gray-800 relative">
+          Rejoignez notre communauté dynamique
+          <span class="absolute -bottom-4 left-0 w-20 h-1 bg-danger rounded"></span>
+        </h2>
       </div>
-      <div class="community-cta__content">
-        <p class="community-cta__text">
+      
+      <div class="min-w-[240px] flex flex-col items-start font-normal justify-start flex-1 flex-shrink basis-0">
+        <p class="text-gray-600 text-lg leading-relaxed">
           Ensemble, nous pouvons créer des liens significatifs et enrichir la
           vie des seniors et des familles. Devenez bénévole et faites une
           différence dans votre communauté.
         </p>
-        <div class="community-cta__actions">
-          <button class="btn btn-primary">
+        <div class="self-start flex mt-8 items-center gap-4 text-base justify-start md:flex-row flex-col md:self-start self-stretch">
+          <button class="btn btn-primary md:w-auto w-full">
             Postulez
           </button>
-          <button
-            class="btn btn-secondary"
-          >
+          <button class="btn btn-secondary md:w-auto w-full">
             En savoir plus
           </button>
         </div>

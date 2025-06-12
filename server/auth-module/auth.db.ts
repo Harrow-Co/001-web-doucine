@@ -10,14 +10,12 @@ const dataDir = path.resolve(process.cwd(), 'data');
 if (!fs.existsSync(dataDir)) {
   try {
     fs.mkdirSync(dataDir, { recursive: true });
-    console.log(`Created data directory at ${dataDir}`);
   } catch (err) {
     console.error(`Failed to create data directory: ${err}`);
   }
 }
 
 const dbPath = path.resolve(dataDir, 'auth.db');
-console.log(`Auth database path: ${dbPath}`);
 
 // Vérifier si la base de données existe déjà
 const dbExists = fs.existsSync(dbPath);
@@ -27,8 +25,6 @@ const authDb = new sqlite3.Database(dbPath, (err) => {
   if (err) {
     console.error('Error opening auth database', err.message);
   } else {
-    console.log(`Connected to the Auth SQLite database at ${dbPath}`);
-    
     // Si la base de données n'existe pas, créer la table des utilisateurs
     if (!dbExists) {
       // Création de la table des utilisateurs
@@ -45,8 +41,6 @@ const authDb = new sqlite3.Database(dbPath, (err) => {
       `, (initErr) => {
         if (initErr) {
           console.error('Error creating users table', initErr.message);
-        } else {
-          console.log('Users table initialized successfully.');
         }
       });
     }

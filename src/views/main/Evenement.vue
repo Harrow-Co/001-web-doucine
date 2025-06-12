@@ -2,7 +2,7 @@
   <div class="evenement">
     <!-- Hero Section -->
     <section class="events-hero">
-      <div class="events-hero-content">
+      <!-- <div class="events-hero-content">
         <h1 class="events-hero-title animate-fade-in">Nos Événements</h1>
         <p class="events-hero-description animate-slide-up delay-1">
           Rejoignez-nous pour des moments de partage intergénérationnels et créez des souvenirs inoubliables avec DOUCINE.
@@ -13,13 +13,14 @@
           <button class="btn btn-secondary">Contactez-nous</button>
           </router-link>
         </div>
-      </div>
+      </div> -->
     </section>
 
     <!-- Events Section -->
     <section class="events-section section animate-section" id="evenement">
       <div class="events-header ">
-        <h2 class="events-title animate-fade-in">Nos prochains événements</h2>
+        <!-- <h2 class="events-title animate-fade-in">Nos prochains événements</h2> -->
+         <h1 class="events-hero-title animate-fade-in">Nos Événements</h1>
         <p class="events-description animate-slide-up delay-1">
           Découvrez nos événements à venir et rejoignez notre communauté pour des moments de partage et de convivialité.
         </p>
@@ -45,15 +46,17 @@
              :style="{'--delay': `${0.1 + index * 0.1}s`}"
              @click="openModal(event)">
           <div class="event-image-container">
-            <img :src="event.image" :alt="event.titre" class="event-image" />
+            <img :src="getImageUrl(event.image)" :alt="event.titre" class="event-image" />
             <div class="event-date animate-pulse">
               <span class="day">{{ event.date.jour }}</span>
               <span class="month">{{ event.date.mois }}</span>
             </div>
           </div>
           <div class="event-content">
-            <h3 class="event-title">{{ event.titre }}</h3>
-            <p class="event-description">{{ event.description }}</p>
+            <div class="event-header">
+              <h3 class="event-title">{{ event.titre }}</h3>
+              <p class="event-description">{{ event.description }}</p>
+            </div>
             
             <div class="event-details-container">
               <div class="event-details">
@@ -92,10 +95,10 @@
       <div class="modal-container animate-zoom" @click.stop>
         <button class="modal-close" @click="closeModal">×</button>
         
-        <div class="modal-content" v-if="selectedEvent">
+        <div class="" v-if="selectedEvent">
           <div class="modal-columns">
             <div class="modal-flyer">
-              <img :src="selectedEvent.image" :alt="selectedEvent.titre" class="flyer-image" />
+              <img :src="getImageUrl(selectedEvent.image)" :alt="selectedEvent.titre" class="flyer-image" />
             </div>
             
             <div class="modal-details">
@@ -167,7 +170,7 @@
               </div>
               
               <div class="modal-actions animate-fade-in delay-7">
-                <button class="btn btn-primary modal-btn animate-pulse">S'inscrire maintenant</button>
+                <button class="btn btn-primary modal-btn animate-pulse" style="background-color:#EB1A3A;" @click="openRegistrationModal">S'inscrire maintenant</button>
                 <button class="btn btn-secondary modal-btn" @click="closeModal">Fermer</button>
               </div>
             </div>
@@ -176,22 +179,33 @@
       </div>
     </div>
 
+    <!-- Modal d'inscription -->
+    <RegistrationModal 
+      :show="showRegistrationModal" 
+      @close="showRegistrationModal = false" 
+    />
   </div>
 </template>
 
 <script>
 import * as dateFormatter from "@/utils/dateFormatter";
 import eventService from "@/services/eventService";
+import RegistrationModal from "@/components/modals/RegistrationModal.vue";
+import { getImageUrl } from "@/utils/imageUtils";
 
 export default {
   name: 'PageEvenement',
+  components: {
+    RegistrationModal
+  },
   data() {
     return {
       events: [],
       showModal: false,
       selectedEvent: null,
       loading: true,
-      error: null
+      error: null,
+      showRegistrationModal: false
     };
   },
   
@@ -200,6 +214,8 @@ export default {
   },
   
   methods: {
+    getImageUrl,
+    
     async loadEvents() {
       try {
         this.loading = true;
@@ -230,6 +246,11 @@ export default {
     closeModal() {
       this.showModal = false;
       document.body.style.overflow = ''; // Re-enable scrolling
+    },
+    openRegistrationModal() {
+      this.showRegistrationModal = true;
+      // Fermer le modal d'événement avant d'ouvrir le modal d'inscription
+      this.closeModal();
     },
     getFormattedDate(event) {
       // Pour les dates au format du composant
@@ -320,7 +341,7 @@ export default {
 /* Hero Section */
 .events-hero {
   background: linear-gradient(135deg, #fff 0%, #f5f7fa 100%);
-  padding: 112px 64px 80px;
+  padding: 35px;
   position: relative;
   overflow: hidden;
   text-align: center;
@@ -380,7 +401,7 @@ export default {
 
 /* Events Section */
 .events-section {
-  max-width: 1200px;
+  max-width: 80%;
   margin: 32px auto;
 }
 
@@ -432,6 +453,9 @@ export default {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .event-card:hover {
@@ -483,6 +507,14 @@ export default {
 
 .event-content {
   padding: 30px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.event-header {
+  margin-bottom: 20px;
+  flex-grow: 0;
 }
 
 .event-title {
@@ -490,13 +522,23 @@ export default {
   font-weight: 700;
   color: #2A3040;
   margin-bottom: 16px;
+  min-height: 32px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .event-description {
   font-size: 16px;
   line-height: 1.6;
   color: #4D5259;
-  margin-bottom: 20px;
+  margin-bottom: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 76px;
 }
 
 .event-details-container {
@@ -504,6 +546,7 @@ export default {
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 24px;
+  flex-grow: 0;
 }
 
 .event-details {
@@ -514,8 +557,9 @@ export default {
 
 .detail {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   color: #4D5259;
+  min-height: 24px;
 }
 
 .detail i {
@@ -523,6 +567,15 @@ export default {
   margin-right: 12px;
   color: #FBB018;
   font-size: 16px;
+}
+
+.detail span {
+  flex: 1;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .event-details-expanded {
@@ -533,12 +586,22 @@ export default {
 
 .event-btn {
   width: 100%;
-  margin-top: 10px;
+  background-color: #EB1A3A;
+  margin-top: auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.event-btn:hover {
+  background-color: #d1122f;
+  color: white;
 }
 
 /* Call to Action */
 .events-cta {
-  max-width: 1200px;
+  max-width: 80%;
   margin: 32px auto;
   background: linear-gradient(135deg, #EB1A3A 0%, #FBB018 100%);
   color: white;
@@ -567,6 +630,12 @@ export default {
   background-color: white;
   color: #EB1A3A;
   font-weight: 700;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60%;
+  margin: 0 auto;
 }
 
 .cta-btn:hover {
@@ -612,12 +681,13 @@ export default {
   }
 
   .events-title {
-    font-size: 32px;
-    padding-bottom: 15px;
+    font-size: 20px;
+    margin-bottom: 12px;
+    min-height: 28px;
   }
   
   .events-description {
-    font-size: 16px;
+    font-size: 14px;
     padding: 0 16px;
   }
 
@@ -643,11 +713,13 @@ export default {
   .event-title {
     font-size: 20px;
     margin-bottom: 12px;
+    min-height: 28px;
   }
   
   .event-description {
     font-size: 14px;
-    margin-bottom: 16px;
+    margin-bottom: 0;
+    min-height: 68px;
   }
 
   .event-details-container {
@@ -656,14 +728,12 @@ export default {
   }
   
   .event-details {
-    margin-bottom: 15px;
+    gap: 12px;
   }
   
   .detail {
-    display: flex;
-    align-items: center;
-    margin-bottom: 12px;
-    color: #4D5259;
+    min-height: 22px;
+    margin-bottom: 0;
   }
   
   .detail i {
@@ -728,6 +798,7 @@ export default {
   
   .section-title {
     font-size: 16px;
+    color: #EB1A3A;
   }
   
   .modal-info-section {
@@ -790,6 +861,18 @@ export default {
   
   .modal-flyer {
     height: 180px;
+  }
+  
+  .event-title {
+    min-height: 26px;
+  }
+  
+  .event-description {
+    min-height: 60px;
+  }
+  
+  .detail {
+    min-height: 20px;
   }
 }
 
@@ -1164,4 +1247,5 @@ export default {
   font-size: 18px;
   color: #333;
 }
+
 </style> 

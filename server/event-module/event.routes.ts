@@ -2,6 +2,7 @@
 import { Router, Request, Response } from 'express';
 import { EventService } from './event.service';
 import { CreateEventDto, UpdateEventDto } from './event.model';
+import { upload, handleUploadErrors, deleteFile } from '../utils/file-upload';
 
 const router = Router();
 // Instancier le service
@@ -43,6 +44,22 @@ router.get('/events/:id', async (req: Request, res: Response) => {
 
 // Importer les middlewares d'authentification
 import { authenticate, requireEditor } from '../auth-module/auth.middleware';
+
+// POST /api/v2/admin/events/upload - Upload d'une image pour un événement
+router.post('/admin/events/upload', authenticate, requireEditor, upload.single('image'), handleUploadErrors, (req: Request, res: Response) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'Aucun fichier n\'a été uploadé' });
+    }
+    
+    // Retourner le chemin relatif de l'image pour stockage dans la base de données
+    const imagePath = `/uploads/${req.file.filename}`;
+    res.status(200).json({ imagePath });
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    res.status(500).json({ message: 'Failed to upload image' });
+  }
+});
 
 // POST /api/v2/admin/events - Créer un nouvel événement
 router.post('/admin/events', authenticate, requireEditor, async (req: Request, res: Response) => {
@@ -114,8 +131,23 @@ router.put('/admin/events/:id', authenticate, requireEditor, async (req: Request
 router.delete('/admin/events/:id', authenticate, requireEditor, async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
+    // Récupérer l'événement pour obtenir le chemin de l'image
+    const event = await eventService.findEventById(id);
+    
+    // Supprimer l'événement de la base de données
     const deleted = await eventService.deleteEvent(id);
+    
     if (deleted) {
+      // Si l'événement avait une image, la supprimer du système de fichiers
+      if (event && event.image) {
+        try {
+          await deleteFile(event.image);
+        } catch (fileError) {
+          console.error(`Error deleting image file for event ${id}:`, fileError);
+          // On continue même si la suppression du fichier échoue
+        }
+      }
+      
       res.status(204).send(); // 204 No Content (succès sans corps de réponse)
     } else {
       res.status(404).json({ message: `Event with id ${id} not found` });

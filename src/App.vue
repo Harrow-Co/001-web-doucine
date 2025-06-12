@@ -1,20 +1,52 @@
 <template>
   <div id="app">
-    <Navbar />
-    <router-view />
-    <Footer />
+    <!-- Afficher Navbar et Footer seulement si ce n'est pas une route admin -->
+    <template v-if="!isAdminRoute"  >
+      <Navbar @open-registration-modal="openRegistrationModal"/>
+      <router-view @open-registration-modal="openRegistrationModal" />
+      <Footer />
+      <RegistrationModal :show="showRegistrationModal" @close="closeRegistrationModal" />
+    </template>
+    
+    <!-- Pour les routes admin, afficher uniquement le contenu sans Navbar ni Footer -->
+    <template v-else>
+      <router-view />
+    </template>
+
   </div>
 </template>
 
 <script>
 import Navbar from "./components/layout/Navbar.vue";
 import Footer from "./components/layout/TheFooter.vue";
+import RegistrationModal from "./components/modals/RegistrationModal.vue";
 
 export default {
   name: "App",
   components: {
     Navbar,
-    Footer
+    Footer,
+    RegistrationModal
+  },
+  data() {
+    return {
+      showRegistrationModal: false
+    };
+  },
+  methods: {
+    openRegistrationModal() {
+      this.showRegistrationModal = true;
+    },
+    closeRegistrationModal() {
+      this.showRegistrationModal = false;
+    }
+  },
+  computed: {
+    // Détecter si la route actuelle est une route d'administration
+    isAdminRoute() {
+      // Vérifier si le chemin de la route commence par '/admin'
+      return this.$route.path.startsWith('/admin');
+    }
   },
   mounted() {
     // Détecter la navigation au clavier pour l'accessibilité

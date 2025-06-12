@@ -48,32 +48,32 @@ const routes = [
     name: "ConditionsUtilisation",
     component: () => import("../views/legal/ConditionsUtilisation.vue"),
   },
-  // Routes pour les actions
-  {
-    path: "/actions/domicile",
-    name: "SoutienDomicile",
-    component: () => import("../views/actions/SoutienDomicile.vue"),
-  },
-  {
-    path: "/actions/activites",
-    name: "ActivitesSociales",
-    component: () => import("../views/actions/ActivitesSociales.vue"),
-  },
-  {
-    path: "/actions/bien-etre",
-    name: "AteliersBienEtre",
-    component: () => import("../views/actions/AteliersBienEtre.vue"),
-  },
-  {
-    path: "/actions/prevention",
-    name: "PreventionSante",
-    component: () => import("../views/actions/PreventionSante.vue"),
-  },
-  {
-    path: "/actions/administratif",
-    name: "SoutienAdministratif",
-    component: () => import("../views/actions/SoutienAdministratif.vue"),
-  },
+  // // Routes pour les actions
+  // {
+  //   path: "/actions/domicile",
+  //   name: "SoutienDomicile",
+  //   component: () => import("../views/actions/SoutienDomicile.vue"),
+  // },
+  // {
+  //   path: "/actions/activites",
+  //   name: "ActivitesSociales",
+  //   component: () => import("../views/actions/ActivitesSociales.vue"),
+  // },
+  // {
+  //   path: "/actions/bien-etre",
+  //   name: "AteliersBienEtre",
+  //   component: () => import("../views/actions/AteliersBienEtre.vue"),
+  // },
+  // {
+  //   path: "/actions/prevention",
+  //   name: "PreventionSante",
+  //   component: () => import("../views/actions/PreventionSante.vue"),
+  // },
+  // {
+  //   path: "/actions/administratif",
+  //   name: "SoutienAdministratif",
+  //   component: () => import("../views/actions/SoutienAdministratif.vue"),
+  // },
   {
     path: '/contact',
     name: 'ContactPage',

@@ -17,14 +17,14 @@
             <i class="fas fa-map-marker-alt"></i>
             <div>
               <h3>Adresse</h3>
-              <p>123 Avenue des Soins, 75000 Paris</p>
+              <p>17 rue du vieux puits, 97351 Matoury </p>
             </div>
           </div>
           <div class="info-item">
             <i class="fas fa-phone-alt"></i>
             <div>
               <h3>Téléphone</h3>
-              <p>06 94 20 52 31</p>
+              <p>0694 20 52 31</p>
             </div>
           </div>
           <div class="info-item">
@@ -139,6 +139,10 @@
 
 <script>
 import axios from 'axios';
+import { apiConfig } from '../../utils/imageUtils';
+
+// Utiliser l'URL de l'API depuis l'utilitaire
+const API_URL = apiConfig.getApiUrl();
 
 export default {
   name: 'ContactView',
@@ -205,7 +209,7 @@ export default {
       
       try {
         const response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/contact-messages`, 
+          `${API_URL}/contact-messages`, 
           { data: this.formData }
         );
         

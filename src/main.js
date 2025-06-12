@@ -5,7 +5,9 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 import '@fortawesome/fontawesome-free/css/all.css';
-// Importer la configuration Axios pour activer les intercepteurs
+
+import './assets/styles/main.css';
+
 import './admin/services/axiosConfig';
 
 const app = createApp(App);

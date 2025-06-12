@@ -1,0 +1,173 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Styles globaux pour l'admin */
+@layer components {
+  /* Boutons */
+  .btn {
+    @apply px-5 py-2.5 rounded-md font-medium transition-all duration-200 flex items-center gap-3;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-primary-600 hover:shadow-md;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200;
+  }
+  
+  .btn-danger {
+    @apply bg-danger text-white hover:bg-danger-600 hover:shadow-md;
+  }
+  
+  .btn-warning {
+    @apply bg-secondary text-gray-800 hover:bg-secondary-600 hover:shadow-md;
+  }
+  
+  /* Cards */
+  .card {
+    @apply bg-white rounded-xl shadow-sm p-6;
+  }
+  
+  .card-hover {
+    @apply hover:shadow-md transition-all duration-300 hover:-translate-y-1;
+  }
+  
+  /* Containers */
+  .admin-container {
+    @apply px-4 py-6 w-full;
+  }
+  
+  .admin-section {
+    @apply mb-8;
+  }
+  
+  /* Headers */
+  .section-title {
+    @apply text-xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-100 relative;
+  }
+  
+  .section-title::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-16 h-1 bg-primary rounded-full transform translate-y-[1px];
+  }
+  
+  /* Forms */
+  .form-group {
+    @apply mb-6;
+  }
+  
+  .form-label {
+    @apply block mb-2 text-sm font-medium text-gray-700;
+  }
+  
+  .form-input {
+    @apply w-full p-3 text-base border border-gray-300 rounded-md transition-colors focus:border-primary focus:ring-primary;
+  }
+  
+  /* Tables */
+  .table-container {
+    @apply overflow-x-visible bg-white rounded-xl shadow-sm w-full;
+  }
+  
+  .table {
+    @apply min-w-full divide-y divide-gray-200 table-fixed;
+  }
+  
+  .table-header {
+    @apply bg-gray-50;
+  }
+  
+  .table-header-cell {
+    @apply px-6 py-3.5 text-left text-sm font-medium text-gray-500 uppercase tracking-wider;
+  }
+  
+  .table-body {
+    @apply bg-white divide-y divide-gray-200;
+  }
+  
+  .table-row {
+    @apply hover:bg-gray-50 transition-colors duration-150;
+  }
+  
+  .table-cell {
+    @apply px-6 py-4 text-sm text-gray-500;
+  }
+  
+  /* Modal */
+  .modal-backdrop {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 backdrop-blur-sm;
+  }
+  
+  .modal-content {
+    @apply bg-white rounded-xl p-6 w-full max-w-md shadow-xl;
+  }
+  
+  .modal-title {
+    @apply text-xl font-semibold text-gray-800 mb-4;
+  }
+  
+  .modal-actions {
+    @apply flex justify-end gap-3 mt-6;
+  }
+
+  /* Page title */
+  .page-title {
+    @apply text-2xl font-bold text-gray-800 mb-6;
+  }
+
+  /* Admin page header */
+  .page-header {
+    @apply flex justify-between items-center mb-8 pb-4 border-b border-gray-100;
+  }
+  
+  /* Dashboard specific */
+  .dashboard-welcome {
+    @apply bg-gradient-to-r from-primary to-primary-600 rounded-xl p-8 flex justify-between items-center mb-8 shadow-lg text-white overflow-hidden relative;
+  }
+  
+  /* Calendar view */
+  .calendar-container {
+    @apply bg-white rounded-xl shadow-sm p-6 overflow-hidden;
+  }
+  
+  .calendar-header {
+    @apply flex justify-between items-center mb-6;
+  }
+  
+  .calendar-grid {
+    @apply grid grid-cols-7 gap-1;
+  }
+  
+  .calendar-day {
+    @apply p-3 text-center border border-gray-100 relative min-h-[80px];
+  }
+  
+  .calendar-day-header {
+    @apply text-xs font-medium text-gray-500 mb-2;
+  }
+  
+  .calendar-day-number {
+    @apply inline-block w-6 h-6 rounded-full text-sm;
+  }
+  
+  .calendar-day-current {
+    @apply bg-primary text-white;
+  }
+  
+  .calendar-event {
+    @apply text-xs p-1 rounded mt-1 truncate bg-primary bg-opacity-10 text-primary border-l-2 border-primary;
+  }
+  
+  /* Responsive tables */
+  @media (max-width: 768px) {
+    .table-container {
+      @apply overflow-x-auto rounded-xl;
+    }
+    
+    .table {
+      @apply w-full;
+    }
+  }
+} 
