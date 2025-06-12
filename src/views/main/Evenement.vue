@@ -46,7 +46,7 @@
              :style="{'--delay': `${0.1 + index * 0.1}s`}"
              @click="openModal(event)">
           <div class="event-image-container">
-            <img :src="event.image" :alt="event.titre" class="event-image" />
+            <img :src="getImageUrl(event.image)" :alt="event.titre" class="event-image" />
             <div class="event-date animate-pulse">
               <span class="day">{{ event.date.jour }}</span>
               <span class="month">{{ event.date.mois }}</span>
@@ -98,7 +98,7 @@
         <div class="" v-if="selectedEvent">
           <div class="modal-columns">
             <div class="modal-flyer">
-              <img :src="selectedEvent.image" :alt="selectedEvent.titre" class="flyer-image" />
+              <img :src="getImageUrl(selectedEvent.image)" :alt="selectedEvent.titre" class="flyer-image" />
             </div>
             
             <div class="modal-details">
@@ -191,6 +191,7 @@
 import * as dateFormatter from "@/utils/dateFormatter";
 import eventService from "@/services/eventService";
 import RegistrationModal from "@/components/modals/RegistrationModal.vue";
+import { getImageUrl } from "@/utils/imageUtils";
 
 export default {
   name: 'PageEvenement',
@@ -213,6 +214,8 @@ export default {
   },
   
   methods: {
+    getImageUrl,
+    
     async loadEvents() {
       try {
         this.loading = true;
